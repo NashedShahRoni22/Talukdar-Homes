@@ -49,7 +49,7 @@ export default function LandingBanner() {
               cursorStyle=""
               typeSpeed={70}
               deleteSpeed={50}
-              delaySpeed={1000}
+              delaySpeed={2500}
             />
           </span>
         </h2>
