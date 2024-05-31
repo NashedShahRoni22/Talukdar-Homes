@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className={`${location.pathname === "/" ? "absolute top-0 z-50 bg-none" : "bg-black/90"} min-w-full flex items-center justify-between`}>
       {/* mobile view  */}
       <div className="lg:hidden relative">
-        <button className="ml-5" onClick={() => setShow(!show)}>
+        <button className="pl-5 py-2.5 md:py-5  md:pl-10" onClick={() => setShow(!show)}>
           <HiMiniBars3BottomLeft className="text-white text-3xl" />
         </button>
         {show && (
@@ -55,8 +55,8 @@ export default function Navbar() {
       </div>
 
       {/* logo here  */}
-      <div>
-        <h5 className="font-extrabold text-primary uppercase p-2.5 md:pr-5 ml-20 text-2xl md:text-4xl">
+      <div className="pr-5 py-2.5 md:py-5  md:pr-10">
+        <h5 className="font-extrabold text-primary uppercase ml-20 text-2xl md:text-4xl">
           TH
         </h5>
       </div>
