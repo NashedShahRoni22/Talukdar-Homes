@@ -80,12 +80,12 @@ export default function Footer() {
               We’re here to answer all your questions. Fill out our contact form
               and we’ll connect you with the people who can help.
             </p>
-            <button className="bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
-              Submit{" "}
+            <Link to={"/contact"} className="bg-white text-black hover:text-white font-semibold hover:bg-primary flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
+              Contact{" "}
               <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
                 <MdOutlineArrowOutward />
               </span>
-            </button>
+            </Link>
           </div>
         </div>
         <div className="my-5 md:my-10 bg-gray-600 h-0.5 w-full"></div>
