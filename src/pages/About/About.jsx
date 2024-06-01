@@ -69,8 +69,8 @@ export default function About() {
           <div className="md:w-1/2 hidden md:hidden  lg:block">
             <img src={aboutimg} alt="" className="w-full" />
           </div>
-          <div className="flex md:gap-6 md:flex-col w-1/2 lg:hidden mt-5 md:mt-0">
-            <div className="bg-black text-white p-8 md:p-10 ">
+          <div className="flex md:gap-6 md:flex-col md:w-1/2 lg:hidden mt-5 md:mt-0">
+            <div className="bg-black text-white p-8 md:p-10 w-1/2">
               <p className="text-6xl">
                 <IoTrophyOutline />
               </p>
@@ -79,7 +79,7 @@ export default function About() {
                 Completed <br /> Project
               </p>
             </div>
-            <div className="bg-[#FF792D] text-white p-8 md:p-10 ">
+            <div className="bg-[#FF792D] text-white p-8 md:p-10 w-1/2">
               <p className="text-6xl">
                 <BsBuildings />
               </p>

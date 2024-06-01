@@ -19,7 +19,6 @@ export default function LandingBanner() {
   return (
     <section className="relative">
       <Swiper
-        spaceBetween={30}
         centeredSlides={true}
         fadeEffect={true}
         autoplay={{
