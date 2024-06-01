@@ -33,7 +33,7 @@ export default function Navbar() {
       } min-w-full flex items-center justify-between`}
     >
       {/* mobile view  */}
-      <div className="lg:hidden relative">
+      <div className="lg:hidden relative z-50">
         <button
           className="pl-5 py-2.5 md:py-5  md:pl-10"
           onClick={() => setShow(!show)}
@@ -53,7 +53,8 @@ export default function Navbar() {
             <div className="flex flex-col gap-2.5 md:gap-5 mt-5 ml-5">
               {menus.map((m, i) => (
                 <Link
-                  key={i}
+                  key={i} 
+                  onClick={()=> setShow(!show)}
                   className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
                   to={m.link}
                 >
