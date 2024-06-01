@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "../shared/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
+import Footer from "../shared/Footer";
 
 export default function Main() {
   const location = useLocation();
@@ -12,6 +13,7 @@ export default function Main() {
     <div>
       <Navbar />
       <Outlet />
+      <Footer/>
     </div>
   );
 }

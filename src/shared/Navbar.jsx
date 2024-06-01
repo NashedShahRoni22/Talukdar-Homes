@@ -5,13 +5,39 @@ import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const location = useLocation();
-  console.log(location);
   const [show, setShow] = useState(false);
+  const menus = [
+    {
+      name: "Home",
+      link: "/",
+    },
+    {
+      name: "Service",
+      link: "/",
+    },
+    {
+      name: "About",
+      link: "/about",
+    },
+    {
+      name: "Contact",
+      link: "/contact",
+    },
+  ];
   return (
-    <nav className={`${location.pathname === "/" ? "absolute top-0 z-50 bg-none" : "bg-black/90"} min-w-full flex items-center justify-between`}>
+    <nav
+      className={`${
+        location.pathname === "/"
+          ? "absolute top-0 z-50 bg-none"
+          : "bg-black/90"
+      } min-w-full flex items-center justify-between`}
+    >
       {/* mobile view  */}
       <div className="lg:hidden relative">
-        <button className="pl-5 py-2.5 md:py-5  md:pl-10" onClick={() => setShow(!show)}>
+        <button
+          className="pl-5 py-2.5 md:py-5  md:pl-10"
+          onClick={() => setShow(!show)}
+        >
           <HiMiniBars3BottomLeft className="text-white text-3xl" />
         </button>
         {show && (
@@ -25,30 +51,15 @@ export default function Navbar() {
               </button>
             </div>
             <div className="flex flex-col gap-2.5 md:gap-5 mt-5 ml-5">
-              <Link
-                className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
-                to={"/"}
-              >
-                Home
-              </Link>
-              <Link
-                className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
-                to={"/contact"}
-              >
-                Services
-              </Link>
-              <Link
-                className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
-                to={"/contact"}
-              >
-                About
-              </Link>
-              <Link
-                className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
-                to={"/contact"}
-              >
-                Contact
-              </Link>
+              {menus.map((m, i) => (
+                <Link
+                  key={i}
+                  className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
+                  to={m.link}
+                >
+                  {m.name}
+                </Link>
+              ))}
             </div>
           </div>
         )}
@@ -63,18 +74,11 @@ export default function Navbar() {
 
       {/* desktop view  */}
       <div className="hidden text-white lg:flex gap-10 mr-20">
-        <Link className="font-semibold" to={"/"}>
-          Home
-        </Link>
-        <Link className="font-semibold" to={"/contact"}>
-          Services
-        </Link>
-        <Link className="font-semibold" to={"/contact"}>
-          About
-        </Link>
-        <Link className="font-semibold" to={"/contact"}>
-          Contact
-        </Link>
+        {menus.map((m, i) => (
+          <Link className="font-semibold" to={m.link}>
+            {m.name}
+          </Link>
+        ))}
       </div>
     </nav>
   );

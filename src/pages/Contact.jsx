@@ -24,41 +24,52 @@ export default function Contact() {
             For more information and how we can meet your needs, please fill out
             the form <br /> below and someone from our team will be in touch.
           </p>
-          <div className="bg-gray-100 p-8 md:p-16">
-            <div className="grid md:grid-cols-2 gap-10">
-              <Input
-                required
-                variant="static"
-                label="Name"
-                placeholder="Name"
-              />
-              <Input
-                required
-                variant="static"
-                label="Phone Number"
-                placeholder="Phone Number"
-              />
-              <Input
-                required
-                variant="static"
-                label="Email"
-                placeholder="Email"
-              />
+          <div className="flex flex-col gap-5 md:gap-10 lg:flex-row">
+            <div className="lg:w-1/2 bg-gray-100 p-8 md:p-16">
+              <div className="grid md:grid-cols-2 gap-10">
+                <Input
+                  required
+                  variant="static"
+                  label="Name"
+                  placeholder="Name"
+                />
+                <Input
+                  required
+                  variant="static"
+                  label="Phone Number"
+                  placeholder="Phone Number"
+                />
+                <Input
+                  required
+                  variant="static"
+                  label="Email"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="mt-10">
+                <Textarea
+                  required
+                  variant="static"
+                  label="Message"
+                  placeholder="Say something..."
+                />
+              </div>
+              <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
+                Submit{" "}
+                <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
+                  <MdOutlineArrowOutward />
+                </span>
+              </button>
             </div>
-            <div className="mt-10">
-              <Textarea
-                required
-                variant="static"
-                label="Message"
-                placeholder="Say something..."
-              />
-            </div>
-            <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
-              Submit{" "}
-              <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
-                <MdOutlineArrowOutward />
-              </span>
-            </button>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58434.41293126398!2d90.37190220000002!3d23.742001000000013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755bf51e7aee4ff%3A0x21c88cabfebf5243!2sIBN%20Sina%20Specialized%20Hospital!5e0!3m2!1sen!2sbd!4v1717257208235!5m2!1sen!2sbd"
+              width="100%"
+              height="500"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              className="lg:w-1/2"
+            ></iframe>
           </div>
         </form>
       </div>
