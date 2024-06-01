@@ -21,6 +21,7 @@ export default function LandingBanner() {
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
+        fadeEffect={true}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,

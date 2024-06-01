@@ -8,9 +8,9 @@ export default function Contact() {
       <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase">
         Contact
       </h5>
-      <div className="flex flex-col md:flex-row gap-5 md:gap-10 md:items-center text-primary">
+      <div className="flex flex-col md:flex-row gap-5 md:gap-10 md:items-center">
         <div className="h-1 w-[50px] bg-primary"></div>
-        <p>get in touch</p>
+        <p className="text-primary">get in touch</p>
         <p className="text-2xl md:text-4xl lg:text-6xl font-extrabold uppercase">
           WE’D LOVE TO <br /> HEAR FROM YOU
         </p>
@@ -54,7 +54,7 @@ export default function Contact() {
                   placeholder="Say something..."
                 />
               </div>
-              <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
+              <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
                 Submit{" "}
                 <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
                   <MdOutlineArrowOutward />
