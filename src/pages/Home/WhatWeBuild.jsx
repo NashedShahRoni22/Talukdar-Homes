@@ -548,6 +548,9 @@ export default function WhatWeBuild() {
         <div className="mt-10 md:mt-20 grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10">
           {data.map((d, i) => (
             <div
+              data-aos="fade-down"
+              data-aos-easing="linear"
+              data-aos-duration="1500"
               key={i}
               className="group relative flex flex-col gap-2.5 md:gap-5 border border-gray-600 hover:border-primary hover:shadow-xl p-5 md:p-10"
             >

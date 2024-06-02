@@ -25,7 +25,12 @@ export default function Contact() {
             the form <br /> below and someone from our team will be in touch.
           </p>
           <div className="flex flex-col gap-5 md:gap-10 lg:flex-row">
-            <div className="lg:w-1/2 bg-gray-100 p-8 md:p-16">
+            <div
+              className="lg:w-1/2 bg-gray-100 p-8 md:p-16 shadow"
+              data-aos="fade-right"
+              data-aos-easing="linear"
+              data-aos-duration="1500"
+            >
               <div className="grid md:grid-cols-2 gap-10">
                 <Input
                   required
@@ -69,6 +74,9 @@ export default function Contact() {
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               className="lg:w-1/2"
+              data-aos="fade-left"
+              data-aos-easing="linear"
+              data-aos-duration="1500"
             ></iframe>
           </div>
         </form>

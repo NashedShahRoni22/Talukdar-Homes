@@ -48,7 +48,9 @@ export default function About() {
         </div>
         <div className="relative mt-10 md:mt-20">
           <div className="md:flex gap-5">
-            <div className="md:w-1/2">
+            <div className="md:w-1/2" data-aos="fade-right"
+              data-aos-easing="linear"
+              data-aos-duration="1500">
               <p className="text-xl md:text-2xl ">
                 As a national leader in our industry, we are revolutionizing
                 what you expect from a contractor.
@@ -68,7 +70,9 @@ export default function About() {
                 </span>
               </button>
             </div>
-            <div className="md:w-1/2 hidden md:hidden  lg:block">
+            <div className="md:w-1/2 hidden md:hidden  lg:block" data-aos="fade-left"
+              data-aos-easing="linear"
+              data-aos-duration="1500">
               <img src={aboutimg} alt="" className="w-full" />
             </div>
             <div className="flex md:gap-6 md:flex-col md:w-1/2 lg:hidden mt-5 md:mt-0">

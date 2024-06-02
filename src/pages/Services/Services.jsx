@@ -40,7 +40,13 @@ export default function Services() {
         </div> */}
       <div className="mt-10 md:mt-20 grid md:grid-cols-2 lg:grid-cols-4">
         {data.map((d, i) => (
-          <div key={i} className="relative group overflow-hidden">
+          <div
+            key={i}
+            className="relative group overflow-hidden"
+            data-aos="fade-up"
+            data-aos-easing="linear"
+            data-aos-duration="1500"
+          >
             <img
               src={d.img}
               alt=""
