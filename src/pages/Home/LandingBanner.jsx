@@ -34,7 +34,7 @@ export default function LandingBanner() {
       >
         {slides.map((s, i) => (
           <SwiperSlide key={i}>
-            <img src={s} alt="" className="w-full z-0 h-[50vh] lg:h-[100vh]" />
+            <img src={s} alt="" className="w-full z-0 h-[50vh] lg:h-[100vh]" loading="lazy" />
           </SwiperSlide>
         ))}
       </Swiper>

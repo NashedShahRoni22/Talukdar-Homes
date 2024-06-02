@@ -545,7 +545,7 @@ export default function WhatWeBuild() {
             WHAT WE BUILD
           </p>
         </div>
-        <div className="mt-5 md:mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10">
+        <div className="mt-10 md:mt-20 grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10">
           {data.map((d, i) => (
             <div
               key={i}

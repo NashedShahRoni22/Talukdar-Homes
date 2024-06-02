@@ -4,6 +4,7 @@ import Contact from "../Contact";
 import KeywordsMerque from "./KeywordsMerque";
 import WhatWeBuild from "./WhatWeBuild";
 import About from "../About/About";
+import Testimmonial from "./Testimmonial";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <WhatWeBuild/>
       <About/>
       <KeywordsMerque/>
+      <Testimmonial/>
       <Contact/>
     </main>
   );

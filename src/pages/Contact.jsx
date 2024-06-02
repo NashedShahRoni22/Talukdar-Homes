@@ -5,10 +5,10 @@ import { MdOutlineArrowOutward } from "react-icons/md";
 export default function Contact() {
   return (
     <section className="mx-5 md:container md:mx-auto flex flex-col my-5 md:my-10 gap-5 md:gap-10">
-      <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase">
+      <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase text-end">
         Contact
       </h5>
-      <div className="flex flex-col md:flex-row gap-5 md:gap-10 md:items-center">
+      <div className="flex flex-col md:flex-row gap-5 md:gap-10 md:items-center mt-10 md:mt-20">
         <div className="h-1 w-[50px] bg-primary"></div>
         <p className="text-primary">get in touch</p>
         <p className="text-2xl md:text-4xl lg:text-6xl font-extrabold uppercase">
