@@ -139,7 +139,7 @@ export default function About() {
               <img src={about2} alt="" className="w-full h-full object-cover" />
             </div>
           )}
-          <div className="bg-[#F3F5FA] lg:w-1/2 p-10">
+          <div className="bg-secondary lg:w-1/2 p-10">
             <div className="flex gap-2">
               <button
                 onClick={() => setView(1)}

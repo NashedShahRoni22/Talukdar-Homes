@@ -1,5 +1,6 @@
 import React from "react";
 import { BiCopyright, BiWorld } from "react-icons/bi";
+import { BsFacebook, BsLinkedin, BsTwitter, BsWhatsapp, BsYoutube } from "react-icons/bs";
 import { MdEmail, MdOutlineArrowOutward } from "react-icons/md";
 import { PiPhoneCall } from "react-icons/pi";
 import { Link } from "react-router-dom";
@@ -12,7 +13,7 @@ export default function Footer() {
     },
     {
       name: "Service",
-      link: "/",
+      link: "/services",
     },
     {
       name: "About",
@@ -21,6 +22,10 @@ export default function Footer() {
     {
       name: "Contact",
       link: "/contact",
+    },
+    {
+      name: "Blogs",
+      link: "/",
     },
   ];
   return (
@@ -63,6 +68,13 @@ export default function Footer() {
             <h5 className="font-extrabold text-primary uppercase text-2xl md:text-4xl">
               TH
             </h5>
+            <div className="mt-5 md:mt-10 flex gap-5">
+              <BsFacebook className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+              <BsTwitter className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+              <BsLinkedin className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+              <BsYoutube className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+              <BsWhatsapp className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+            </div>
           </div>
           <div className="flex gap-5">
             {menus.map((m, i) => (

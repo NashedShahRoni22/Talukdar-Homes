@@ -536,7 +536,7 @@ export default function WhatWeBuild() {
     },
   ];
   return (
-    <section className="my-5 py-5 md:my-10 md:py-10 relative min-h-screen flex flex-col justify-center items-center">
+    <section className="my-5 py-5 md:my-10 md:py-10 lg:my-0 lg:py-0 relative lg:min-h-screen flex flex-col justify-center items-center">
       <div className="mx-5 md:container md:mx-auto">
         <div className="flex flex-col md:flex-row gap-5 md:gap-10 md:items-center">
           <div className="h-1 w-[50px] bg-primary"></div>
@@ -559,9 +559,9 @@ export default function WhatWeBuild() {
                 {d.title}
               </p>
               <p className="text-gray-600">{d.desc.slice(0, 150)}</p>
-              <button className="bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
+              <button className="mt-5 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
                 Explore{" "}
-                <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
+                <span className="bg-primary p-2.5 rounded-full text-white">
                   <MdOutlineArrowOutward />
                 </span>
               </button>

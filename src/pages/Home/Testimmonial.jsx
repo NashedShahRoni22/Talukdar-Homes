@@ -30,7 +30,7 @@ export default function Testimmonial() {
     },
   ];
   return (
-    <section className="py-10 md:py-20 lg:min-h-screen bg-gray-300">
+    <section className="py-10 md:py-20 lg:min-h-screen bg-secondary">
       <div className="mx-5 md:container md:mx-auto">
         <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase text-end">
           Testimonial
@@ -75,7 +75,7 @@ export default function Testimmonial() {
             >
               <FaQuoteLeft className="text-2xl md:text-4xl text-primary" />
               <p className="mt-5 md:mt-10 text-lg md:text-2xl text-gray-600">
-                "{d.text.slice(0, 250)}"
+                {d.text.slice(0, 200)}
               </p>
               <p className="mt-5 md:mt-10 md:text-xl font-semibold text-primary">
                 {d.author}

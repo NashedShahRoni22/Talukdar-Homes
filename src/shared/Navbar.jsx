@@ -13,7 +13,7 @@ export default function Navbar() {
     },
     {
       name: "Service",
-      link: "/",
+      link: "/services",
     },
     {
       name: "About",
@@ -22,6 +22,10 @@ export default function Navbar() {
     {
       name: "Contact",
       link: "/contact",
+    },
+    {
+      name: "Blogs",
+      link: "/",
     },
   ];
   return (
