@@ -67,7 +67,7 @@ export default function Contact() {
               </button>
             </div>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58434.41293126398!2d90.37190220000002!3d23.742001000000013!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755bf51e7aee4ff%3A0x21c88cabfebf5243!2sIBN%20Sina%20Specialized%20Hospital!5e0!3m2!1sen!2sbd!4v1717257208235!5m2!1sen!2sbd"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3305.100741363432!2d150.81423279999998!3d-34.0669317!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12ee56212a5ca7%3A0x4582dc036b180230!2ssuit%2015%2F186%20Queen%20St%2C%20Campbelltown%20NSW%202560%2C%20Australia!5e0!3m2!1sen!2sbd!4v1717400130764!5m2!1sen!2sbd"
               width="100%"
               height="500"
               allowfullscreen=""

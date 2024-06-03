@@ -1,5 +1,5 @@
 import React from "react";
-import tower from "../../assets/tower.png";
+import tower from "../../assets/hook.png";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
 export default function WhatWeBuild() {
@@ -573,7 +573,7 @@ export default function WhatWeBuild() {
         </div>
       </div>
       <img
-        className="hidden lg:block absolute right-0 top-0"
+        className="hidden lg:block absolute right-0 -top-16"
         src={tower}
         alt=""
       />
