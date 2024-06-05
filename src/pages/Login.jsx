@@ -2,8 +2,8 @@ import { Button, Input } from '@material-tailwind/react'
 
 import { useNavigate } from 'react-router-dom'
 const Login = () => {
- const loginEmail = 'admin@smartmovefinancial.com.au'
- const loginPassword = '@smartmove2024'
+ const loginEmail = 'admin@talukdarhomes.com.au'
+ const loginPassword = '@talukdarhomes2024'
  const navigate = useNavigate()
  const handleLogin = (e) => {
    e.preventDefault()
@@ -11,7 +11,7 @@ const Login = () => {
    const email = form.email.value
    const password = form.password.value
    if (email === loginEmail && password === loginPassword) {
-     localStorage.setItem('smfAccessToken', '@smartmove2024')
+     localStorage.setItem('thAccessToken', '@talukdarhomes2024')
      navigate('/admin')
    } else {
      window.alert('Enter valid email & password')

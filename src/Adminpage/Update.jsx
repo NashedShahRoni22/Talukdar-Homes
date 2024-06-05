@@ -113,7 +113,7 @@ const Update = () => {
           <ReactQuill theme='snow' value={value} onChange={setValue} />
           <Button
             onClick={() => updateService(service?.id)}
-            className='bg-primary mt-2.5 flex gap-2 items-center w-fit'
+            className='bg-blue-500 mt-2.5 flex gap-2 items-center w-fit'
           >
             Update
             {updateLoader && <Spinner className='h-4 w-4' />}

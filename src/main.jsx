@@ -16,16 +16,6 @@ import AdminContact from './Adminpage/AdminContact.jsx'
 import Update from './Adminpage/Update.jsx'
 import PrivateRoute from './components/PrivateRoute.jsx'
 import Login from './pages/Login.jsx'
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Main from "./layout/Main.jsx";
-import Home from "./pages/Home/Home.jsx";
-import Contact from "./pages/Contact.jsx";
-import { ThemeProvider } from "@material-tailwind/react";
-import About from "./pages/About/About.jsx";
-import Services from "./pages/Services/Services.jsx";
 import Construction from "./pages/Services/Details/Construction.jsx";
 import Renovation from "./pages/Services/Details/Renovation.jsx";
 import Development from "./pages/Services/Details/Development.jsx";
@@ -71,7 +61,6 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin',
-
     element: (
       <PrivateRoute>
         <Admin />
@@ -79,7 +68,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/admin/appointment',
+        path: '/admin',
         element: <Appointment />,
       },
       {
@@ -95,7 +84,7 @@ const router = createBrowserRouter([
         element: <ManageService />,
       },
       {
-        path: '/admin/update_service/',
+        path: '/admin/update_service/:slug/:id',
         element: <Update />,
       },
     ],

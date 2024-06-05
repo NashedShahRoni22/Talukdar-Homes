@@ -80,10 +80,10 @@ const AddService = () => {
   return (
     <form className='mt-5 md:mt-0 md:p-5 lg:p-10' onSubmit={addService}>
       <div className='flex justify-between'>
-        <h5 className='text-xl md:text-3xl text-primary font-semibold'>
-          Add Service
+        <h5 className='text-xl md:text-3xl text-blue-600 font-semibold'>
+          Add Product
         </h5>
-        <Button type='submit' className='bg-primary flex gap-2 items-center'>
+        <Button type='submit' className='bg-blue-500 flex gap-2 items-center'>
           Submit
           {loader && <Spinner className='h-4 w-4' />}
         </Button>
@@ -97,20 +97,20 @@ const AddService = () => {
             onChange={(e) => setIcon(e.target.files[0])}
           />
         </div>
-        <div className='flex flex-col gap-2.5'>
+        {/* <div className='flex flex-col gap-2.5'>
           <label>Select Thumbnail</label>
           <input
             type='file'
             className=''
             onChange={(e) => setThumbnail(e.target.files[0])}
           />
-        </div>
+        </div> */}
         <div className='flex flex-col gap-2.5'>
           <label>Enter Title</label>
           <input
             type='text'
             name='title'
-            className='px-4 py-2 outline-none border border-primary rounded'
+            className='px-4 py-2 outline-none border border-blue-500 rounded'
             placeholder='Enter Title'
           />
         </div>
@@ -119,7 +119,7 @@ const AddService = () => {
           <input
             type='text'
             name='slogan'
-            className='px-4 py-2 outline-none border border-primary rounded'
+            className='px-4 py-2 outline-none border border-blue-500 rounded'
             placeholder='Enter Slogan'
           />
         </div>

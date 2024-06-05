@@ -159,7 +159,7 @@ const AdminContact = () => {
                     <td className='p-4 flex'>
                       <button
                         onClick={() => handleOpen(appointment)}
-                        className='px-2 py-1 shadow-md rounded-full border border-primary text-primary flex items-center gap-2'
+                        className='px-2 py-1 shadow-md rounded-full border border-blue-500 text-blue-600 flex items-center gap-2'
                       >
                         <AiFillEye className='text-xl' />
                         View
@@ -174,30 +174,30 @@ const AdminContact = () => {
         {renderPaginationButtons()}
 
         <Dialog open={open} handler={handleOpen} size='lg'>
-          <DialogHeader className='text-primary'>
+          <DialogHeader className='text-blue-600'>
             Loan type : {singleAppointment?.service_title}
           </DialogHeader>
 
           <DialogBody className=''>
             <p className=''>
-              <span className='font-semibold text-primary'> Name : </span>
+              <span className='font-semibold text-blue-600'> Name : </span>
               {singleAppointment?.name}
             </p>
             <p className='mt-2.5'>
-              <span className='font-semibold text-primary'>Phone : </span>
+              <span className='font-semibold text-blue-600'>Phone : </span>
               {singleAppointment?.phone}
             </p>
             <p className='mt-2.5 fo'>
-              <span className='font-semibold text-primary'>Email : </span>
+              <span className='font-semibold text-blue-600'>Email : </span>
               {singleAppointment?.email}
             </p>
             <p className='mt-2.5'>
-              <span className='font-semibold text-primary'>Address : </span>
+              <span className='font-semibold text-blue-600'>Address : </span>
               <br />
               {singleAppointment?.address}
             </p>
             <p className='mt-2.5'>
-              <span className='font-semibold text-primary'>Message : </span>
+              <span className='font-semibold text-blue-600'>Message : </span>
               <br />
               {singleAppointment?.message}
             </p>
@@ -206,7 +206,7 @@ const AdminContact = () => {
             <div className='flex min-w-full'>
               <Button
                 onClick={handleOpen}
-                className='mr-4 bg-primary'
+                className='mr-4 bg-blue-500'
                 size='sm'
               >
                 <span>Close</span>
