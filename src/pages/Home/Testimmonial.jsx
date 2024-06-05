@@ -86,7 +86,7 @@ export default function Testimmonial() {
         </Swiper>
       </div>
       <p className="flex justify-center items-center gap-2.5 mt-5 text-sm font-semibold lg:hidden">
-        Slilde to right <BsArrowRightCircleFill />
+        Slilde to right<BsArrowRightCircleFill />
       </p>
     </section>
   );
