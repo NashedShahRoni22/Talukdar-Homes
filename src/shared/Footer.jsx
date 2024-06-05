@@ -42,9 +42,7 @@ export default function Footer() {
             <PiPhoneCall className="text-2xl md:text-4xl text-gray-600" />
             <div>
               <p className="text-gray-600 md:text-xl font-semibold">Call Us</p>
-              <p className="text-white text-xl md:text-2xl">
-                0452 246 490
-              </p>
+              <p className="text-white text-xl md:text-2xl">0452 246 490</p>
             </div>
           </div>
           <div className="flex gap-5 ">
@@ -85,6 +83,7 @@ export default function Footer() {
           <div className="flex gap-5">
             {menus.map((m, i) => (
               <Link
+                key={i}
                 className="font-semibold text-white hover:text-primary"
                 to={m.link}
               >

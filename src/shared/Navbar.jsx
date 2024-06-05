@@ -80,7 +80,7 @@ export default function Navbar() {
       {/* desktop view  */}
       <div className="hidden text-white lg:flex gap-10 mr-20">
         {menus.map((m, i) => (
-          <Link className="font-semibold hover:text-primary" to={m.link}>
+          <Link key={i} className="font-semibold hover:text-primary" to={m.link}>
             {m.name}
           </Link>
         ))}
