@@ -1,24 +1,31 @@
 import React from "react";
-import image from "../../assets/about2.jpg";
+import construction from "../../assets/Services/construction.jpg";
+import architecture from "../../assets/Services/architecture.jpg";
+import renovation from "../../assets/Services/renovation.jpg";
+import supply from "../../assets/Services/supply.jpg";
 import { MdOutlineArrowOutward } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function Services() {
   const data = [
     {
       title: "Construction",
-      img: image,
+      img: construction,
+      link:"/construction_services"
     },
     {
       title: "Material Supply",
-      img: image,
+      img: supply,
     },
     {
       title: "House Renovation",
-      img: image,
+      img: renovation,
+      link:"/renovation_services"
     },
     {
       title: "Development",
-      img: image,
+      img: architecture,
+      link:"/development_services"
     },
   ];
   return (
@@ -56,12 +63,12 @@ export default function Services() {
               <p className="text-xl md:text-2xl lg:text-4xl font-extrabold text-white">
                 {d.title}
               </p>
-              <button className="mt-5 bg-black text-white hover:text-black hover:bg-white hidden group-hover:flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
+              <Link to={d.link} className="mt-5 bg-black text-white hover:text-black hover:bg-white hidden group-hover:flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
                 Explore{" "}
                 <span className="bg-primary p-2.5 rounded-full text-white">
                   <MdOutlineArrowOutward />
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
         ))}

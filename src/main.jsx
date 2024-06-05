@@ -8,6 +8,9 @@ import Contact from "./pages/Contact.jsx";
 import { ThemeProvider } from "@material-tailwind/react";
 import About from "./pages/About/About.jsx";
 import Services from "./pages/Services/Services.jsx";
+import Construction from "./pages/Services/Details/Construction.jsx";
+import Renovation from "./pages/Services/Details/Renovation.jsx";
+import Development from "./pages/Services/Details/Development.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +32,18 @@ const router = createBrowserRouter([
       {
         path: "/services",
         element: <Services />,
+      },
+      {
+        path: "/construction_services",
+        element: <Construction />,
+      },
+      {
+        path: "/renovation_services",
+        element: <Renovation />,
+      },
+      {
+        path: "/development_services",
+        element: <Development />,
       },
     ],
   },
