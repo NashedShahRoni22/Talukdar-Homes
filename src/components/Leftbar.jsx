@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-
+import { GoSignOut } from 'react-icons/go'
 
 const Leftbar = () => {
  const menus = [
@@ -8,11 +8,15 @@ const Leftbar = () => {
      link: '/admin/appointment',
    },
    {
-     name: 'Add Service',
+     name: 'Contact Message',
+     link: '/admin/contact',
+   },
+   {
+     name: 'Add Product',
      link: '/admin/addService',
    },
    {
-     name: 'Manage Service',
+     name: 'Manage Product',
      link: '/admin/manageService',
    },
  ]
@@ -27,6 +31,16 @@ const Leftbar = () => {
           {m.name}
         </Link>
       ))}
+      <div className='flex justify-center absolute bottom-4 min-w-full'>
+        <Link
+          className='px-4 py-2 text-sm bg-red-500 text-white w-fit rounded shadow flex gap-2 items-center'
+          to='/'
+          onClick={() => localStorage.removeItem('smfAccessToken')}
+        >
+          {' '}
+          <GoSignOut className='text-xl' /> Log Out
+        </Link>
+      </div>
     </div>
   )
 }

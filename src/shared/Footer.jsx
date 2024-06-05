@@ -1,6 +1,12 @@
 import React from "react";
 import { BiCopyright, BiWorld } from "react-icons/bi";
-import { BsFacebook, BsLinkedin, BsTwitter, BsWhatsapp, BsYoutube } from "react-icons/bs";
+import {
+  BsFacebook,
+  BsLinkedin,
+  BsTwitter,
+  BsWhatsapp,
+  BsYoutube,
+} from "react-icons/bs";
 import { MdEmail, MdOutlineArrowOutward } from "react-icons/md";
 import { PiPhoneCall } from "react-icons/pi";
 import { Link } from "react-router-dom";
@@ -36,8 +42,8 @@ export default function Footer() {
             <PiPhoneCall className="text-2xl md:text-4xl text-gray-600" />
             <div>
               <p className="text-gray-600 md:text-xl font-semibold">Call Us</p>
-              <p className="text-white text-xl md:text-2xl lg:text-3xl">
-                12345678
+              <p className="text-white text-xl md:text-2xl">
+                0452 246 490
               </p>
             </div>
           </div>
@@ -47,7 +53,7 @@ export default function Footer() {
               <p className="text-gray-600 md:text-xl font-semibold">
                 Need Support
               </p>
-              <p className="text-white text-xl md:text-2xl lg:text-3xl">
+              <p className="text-white text-xl md:text-2xl">
                 support@example.com
               </p>
             </div>
@@ -56,8 +62,8 @@ export default function Footer() {
             <BiWorld className="text-2xl md:text-4xl text-gray-600" />
             <div>
               <p className="text-gray-600 md:text-xl font-semibold">Office</p>
-              <p className="text-white text-xl md:text-2xl lg:text-3xl">
-                2972 Westheimer Rd
+              <p className="text-white text-xl md:text-2xl">
+                Suit 15/186 Queen St, Campbelltown NSW 2560
               </p>
             </div>
           </div>
@@ -69,11 +75,11 @@ export default function Footer() {
               TH
             </h5>
             <div className="mt-5 md:mt-10 flex gap-5">
-              <BsFacebook className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
-              <BsTwitter className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
-              <BsLinkedin className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
-              <BsYoutube className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
-              <BsWhatsapp className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary"/>
+              <BsFacebook className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary" />
+              <BsTwitter className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary" />
+              <BsLinkedin className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary" />
+              <BsYoutube className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary" />
+              <BsWhatsapp className="text-xl md:text-2xl lg:text-3xl text-white hover:text-primary" />
             </div>
           </div>
           <div className="flex gap-5">
@@ -92,7 +98,10 @@ export default function Footer() {
               We’re here to answer all your questions. Fill out our contact form
               and we’ll connect you with the people who can help.
             </p>
-            <Link to={"/contact"} className="bg-white text-black hover:text-white font-semibold hover:bg-primary flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300">
+            <Link
+              to={"/contact"}
+              className="bg-white text-black hover:text-white font-semibold hover:bg-primary flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-transparent  w-fit group ease-linear duration-300"
+            >
               Contact{" "}
               <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
                 <MdOutlineArrowOutward />
@@ -104,7 +113,11 @@ export default function Footer() {
         <div className="mt-5 md:mt-10">
           <p className="flex gap-2.5 items-center text-white justify-center">
             {" "}
-            <BiCopyright /> 2024 <Link to="/" className="text-primary font-semibold">Talukdar Home</Link> All Rights Reserved{" "}
+            <BiCopyright /> 2024{" "}
+            <Link to="/" className="text-primary font-semibold">
+              Talukdar Home
+            </Link>{" "}
+            All Rights Reserved{" "}
           </p>
         </div>
       </section>

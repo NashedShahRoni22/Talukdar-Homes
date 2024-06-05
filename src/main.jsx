@@ -12,6 +12,10 @@ import Admin from './layout/Admin.jsx'
 import AddService from './Adminpage/AddService.jsx'
 import ManageService from './Adminpage/ManageService.jsx'
 import Appointment from './Adminpage/Appointment.jsx'
+import AdminContact from './Adminpage/AdminContact.jsx'
+import Update from './Adminpage/Update.jsx'
+import PrivateRoute from './components/PrivateRoute.jsx'
+import Login from './pages/Login.jsx'
 
 const router = createBrowserRouter([
   {
@@ -37,12 +41,25 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: '/login',
+    element: <Login />,
+  },
+  {
     path: '/admin',
-    element: <Admin />,
+
+    element: (
+      <PrivateRoute>
+        <Admin />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: '/admin/appointment',
-        element: <Appointment/>,
+        element: <Appointment />,
+      },
+      {
+        path: '/admin/contact',
+        element: <AdminContact />,
       },
       {
         path: '/admin/addService',
@@ -51,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: '/admin/manageService',
         element: <ManageService />,
+      },
+      {
+        path: '/admin/update_service/',
+        element: <Update />,
       },
     ],
   },

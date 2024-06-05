@@ -1,6 +1,6 @@
-import React from 'react'
-import tower from '../../assets/tower.png'
-import { MdOutlineArrowOutward } from 'react-icons/md'
+import React from "react";
+import tower from "../../assets/tower.png";
+import { MdOutlineArrowOutward } from "react-icons/md";
 
 export default function WhatWeBuild() {
   const data = [
@@ -583,6 +583,11 @@ export default function WhatWeBuild() {
           alt=''
         />
       </div>
+      <img
+        className="hidden lg:block absolute right-0 top-0"
+        src={tower}
+        alt=""
+      />
     </section>
   )
 }
