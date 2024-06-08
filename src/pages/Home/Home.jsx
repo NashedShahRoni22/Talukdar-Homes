@@ -9,14 +9,14 @@ import Services from "../Services/Services";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main>
       <LandingBanner />
-      <WhatWeBuild/>
-      <Services/>
-      <About/>
-      <KeywordsMerque/>
-      <Testimmonial/>
-      <Contact/>
+      <WhatWeBuild />
+      <Services />
+      <About />
+      <KeywordsMerque />
+      <Testimmonial />
+      <Contact />
     </main>
   );
 }

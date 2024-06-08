@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoaderPage from "../Adminpage/LoaderPage";
 
-const ManageService = () => {
+const ManageBlog = () => {
   const [loading, setLoading] = useState(false);
   const [services, setServices] = useState([]);
   //get services
@@ -46,13 +46,13 @@ const ManageService = () => {
       ) : (
         <>
           <h5 className="p-5 text-xl font-semibold text-blue">
-            Total Products: {services?.length}
+            Total Blogs: {services?.length}
           </h5>
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
             {services?.map((s, i) => (
               <div
                 key={i}
-                className="shadow hover:shadow-orange-600  flex  flex-col gap-5  justify-between items-center p-10 rounded-3xl duration-300 ease-linear"
+                className="shadow hover:shadow-blue-500  flex  flex-col gap-5  justify-between items-center p-10 rounded-3xl duration-300 ease-linear"
               >
                 <div>
                   <img src={s?.icon} alt="" className="size-12 md:size-18" />
@@ -64,7 +64,7 @@ const ManageService = () => {
                 <div className="flex gap-2">
                   <Link
                     to={`/admin/update_service/${s?.slug}/${s?.id}`}
-                    className="bg-orange-600 text-white px-2.5 py-1.5 shadow rounded"
+                    className="bg-blue-500 text-white px-2.5 py-1.5 shadow rounded"
                   >
                     Update
                   </Link>
@@ -84,4 +84,4 @@ const ManageService = () => {
   );
 };
 
-export default ManageService;
+export default ManageBlog;

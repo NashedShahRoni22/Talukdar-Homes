@@ -19,6 +19,8 @@ import Login from './pages/Login.jsx'
 import Construction from "./pages/Services/Details/Construction.jsx";
 import Renovation from "./pages/Services/Details/Renovation.jsx";
 import Development from "./pages/Services/Details/Development.jsx";
+import AddBlog from './Adminpage/AddBlog.jsx'
+import ManageBlog from './Adminpage/ManageBlog.jsx'
 
 const router = createBrowserRouter([
   {
@@ -86,6 +88,14 @@ const router = createBrowserRouter([
       {
         path: '/admin/update_service/:slug/:id',
         element: <Update />,
+      },
+      {
+        path: '/admin/add_blog',
+        element: <AddBlog />,
+      },
+      {
+        path: '/admin/manage_blog',
+        element: <ManageBlog />,
       },
     ],
   },

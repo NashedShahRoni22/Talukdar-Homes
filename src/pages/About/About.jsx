@@ -5,6 +5,7 @@ import { BsBuildings } from "react-icons/bs";
 import aboutimg from "../../assets/about.jpg";
 import about1 from "../../assets/about1.jpg";
 import about2 from "../../assets/about2.jpg";
+import { Link } from "react-router-dom";
 export default function About() {
   const [view, setView] = useState(1);
   const vision = {
@@ -63,12 +64,12 @@ export default function About() {
                 medium-density residential, in the Northern City and South
                 England.
               </p>
-              <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
+              <Link to={'/services'} className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
                 Explore
                 <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
                   <MdOutlineArrowOutward />
                 </span>
-              </button>
+              </Link>
             </div>
             <div className="md:w-1/2 hidden md:hidden  lg:block" data-aos="fade-left"
               data-aos-easing="linear"

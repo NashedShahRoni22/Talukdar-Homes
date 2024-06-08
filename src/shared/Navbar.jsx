@@ -45,7 +45,7 @@ export default function Navbar() {
           <HiMiniBars3BottomLeft className="text-white text-3xl" />
         </button>
         {show && (
-          <div className=" bg-white min-w-[300px] md:min-w-[500px] min-h-screen shadow rounded absolute top-0 left-0 p-5">
+          <div className=" bg-white min-w-[300px] md:min-w-[500px] min-h-screen shadow rounded fixed top-0 left-0 p-5">
             <div className="flex justify-between items-center">
               <h5 className="font-extrabold uppercase text-2xl md:text-4xl text-primary">
                 TH

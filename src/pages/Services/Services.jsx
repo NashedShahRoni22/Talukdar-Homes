@@ -60,7 +60,7 @@ export default function Services() {
               className="md:h-[650px] object-cover group-hover:scale-110 group-hover:-rotate-6 ease-linear duration-300"
             />
             <div className="absolute top-0 left-0 bg-black/80 group-hover:bg-black/50 h-full w-full flex flex-col justify-center items-center">
-              <p className="text-xl md:text-2xl lg:text-4xl font-extrabold text-white">
+              <p className="text-xl md:text-2xl lg:text-4xl font-extrabold text-white text-center">
                 {d.title}
               </p>
               <Link to={d.link} className="mt-5 bg-black text-white hover:text-black hover:bg-white hidden group-hover:flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">

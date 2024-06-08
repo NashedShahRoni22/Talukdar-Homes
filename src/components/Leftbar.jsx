@@ -20,6 +20,14 @@ const Leftbar = () => {
       name: "Manage Product",
       link: "/admin/manageService",
     },
+    {
+      name: "Add Blog",
+      link: "/admin/add_blog",
+    },
+    {
+      name: "Manage Blog",
+      link: "/admin/manage_blog",
+    },
   ];
   return (
     <div className="flex flex-col p-5 shadow-xl min-h-screen sticky top-0">

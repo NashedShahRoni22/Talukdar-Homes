@@ -42,7 +42,7 @@ export default function Footer() {
             <PiPhoneCall className="text-2xl md:text-4xl text-gray-600" />
             <div>
               <p className="text-gray-600 md:text-xl font-semibold">Call Us</p>
-              <p className="text-white text-xl md:text-2xl">0452 246 490</p>
+              <p className="text-white lg:text-xl">0452 246 490</p>
             </div>
           </div>
           <div className="flex gap-5 ">
@@ -51,7 +51,7 @@ export default function Footer() {
               <p className="text-gray-600 md:text-xl font-semibold">
                 Need Support
               </p>
-              <p className="text-white text-xl md:text-2xl">
+              <p className="text-white lg:text-xl">
                 support@example.com
               </p>
             </div>
@@ -60,7 +60,7 @@ export default function Footer() {
             <BiWorld className="text-2xl md:text-4xl text-gray-600" />
             <div>
               <p className="text-gray-600 md:text-xl font-semibold">Office</p>
-              <p className="text-white text-xl md:text-2xl">
+              <p className="text-white lg:text-xl">
                 Suit 15/186 Queen St, Campbelltown NSW 2560
               </p>
             </div>

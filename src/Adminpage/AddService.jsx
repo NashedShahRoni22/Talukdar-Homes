@@ -44,15 +44,15 @@ const AddService = () => {
     setLoader(true)
     e.preventDefault()
     const title = e.target.title.value
-    const slogan = e.target.slogan.value
+    const price = e.target.price.value
 
-    console.log(icon, title, thumbnail, slogan, value)
+    console.log(icon, title, thumbnail, price, value)
 
     const formData = new FormData()
     formData.append('icon', icon)
     formData.append('title', title)
     formData.append('thumbnail', thumbnail)
-    formData.append('slogan', slogan)
+    formData.append('price', price)
     formData.append('content', value)
     try {
       const response = await fetch(
@@ -80,17 +80,17 @@ const AddService = () => {
   return (
     <form className='mt-5 md:mt-0 md:p-5 lg:p-10' onSubmit={addService}>
       <div className='flex justify-between'>
-        <h5 className='text-xl md:text-3xl text-blue-600 font-semibold'>
+        <h5 className='text-xl md:text-3xl text-orange-600 font-semibold'>
           Add Product
         </h5>
-        <Button type='submit' className='bg-blue-500 flex gap-2 items-center'>
+        <Button type='submit' className='bg-orange-600 flex gap-2 items-center'>
           Submit
           {loader && <Spinner className='h-4 w-4' />}
         </Button>
       </div>
       <div className='grid md:grid-cols-2 gap-2.5 md:gap-5 mt-5 md:mt-10'>
         <div className='flex flex-col gap-2.5'>
-          <label>Select Icon</label>
+          <label>Select Image</label>
           <input
             type='file'
             className=''
@@ -106,23 +106,23 @@ const AddService = () => {
           />
         </div> */}
         <div className='flex flex-col gap-2.5'>
-          <label>Enter Title</label>
+          <label>Enter Name</label>
           <input
             type='text'
             name='title'
-            className='px-4 py-2 outline-none border border-blue-500 rounded'
-            placeholder='Enter Title'
+            className='px-4 py-2 outline-none border border-gray-400 rounded'
+            placeholder='Enter Name'
           />
         </div>
-        <div className='flex flex-col gap-2.5'>
-          <label>Enter Slogan</label>
+        {/* <div className='flex flex-col gap-2.5'>
+          <label>Enter Price</label>
           <input
-            type='text'
-            name='slogan'
-            className='px-4 py-2 outline-none border border-blue-500 rounded'
-            placeholder='Enter Slogan'
+            type='number'
+            name='price'
+            className='px-4 py-2 outline-none border border-gray-400 rounded'
+            placeholder='Enter Price'
           />
-        </div>
+        </div> */}
       </div>
       <div className='mt-5 flex flex-col gap-2.5'>
         <label className=''>Enter Content</label>

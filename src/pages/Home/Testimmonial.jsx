@@ -14,21 +14,37 @@ import { FaQuoteLeft } from "react-icons/fa";
 export default function Testimmonial() {
   const data = [
     {
-      text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel ipsam, quia illo quod blanditiis culpa corporis excepturi? Autem est et, illum accusamus placeat eos aperiam commodi odio dolores voluptates ducimus consequatur vero nisi, deleniti beatae. Consequatur quisquam ad, minima voluptatibus, libero alias iusto necessitatibus voluptatem rem laboriosam ducimus aliquid adipisci!",
-      author: "Md Sajjadul Islam",
-      desg: "Software Engineer, Microsoft",
+      text: "Working with this company was a fantastic experience. They were professional, timely, and their quality of work is outstanding. Our home renovation exceeded our expectations.",
+      author: "John Anderson",
+      desg: "Homeowner, Sydney",
     },
     {
-      text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel ipsam, quia illo quod blanditiis culpa corporis excepturi? Autem est et, illum accusamus placeat eos aperiam commodi odio dolores voluptates ducimus consequatur vero nisi, deleniti beatae. Consequatur quisquam ad, minima voluptatibus, libero alias iusto necessitatibus voluptatem rem laboriosam ducimus aliquid adipisci!",
-      author: "Md Sajjadul Islam",
-      desg: "Software Engineer, Microsoft",
+      text: "From start to finish, the team was incredibly supportive and attentive to our needs. The construction of our new home was seamless and the materials used were top-notch. Highly recommend!",
+      author: "Emma Thompson",
+      desg: "Homeowner, Melbourne",
     },
     {
-      text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel ipsam, quia illo quod blanditiis culpa corporis excepturi? Autem est et, illum accusamus placeat eos aperiam commodi odio dolores voluptates ducimus consequatur vero nisi, deleniti beatae. Consequatur quisquam ad, minima voluptatibus, libero alias iusto necessitatibus voluptatem rem laboriosam ducimus aliquid adipisci!",
-      author: "Md Sajjadul Islam",
-      desg: "Software Engineer, Microsoft",
+      text: "Their expertise in home development and renovation is unparalleled. The attention to detail and dedication to delivering quality service truly impressed us.",
+      author: "David Lee",
+      desg: "Real Estate Developer, Brisbane",
+    },
+    {
+      text: "The renovation project was completed on time and within budget. The team was professional and communicated effectively throughout the process. We are very pleased with the results.",
+      author: "Sophia Martinez",
+      desg: "Homeowner, Perth",
+    },
+    {
+      text: "The company provided excellent service in supplying high-quality materials for our home construction. Their customer service was exceptional, ensuring all our needs were met promptly.",
+      author: "Liam Nguyen",
+      desg: "Construction Manager, Adelaide",
+    },
+    {
+      text: "Their commitment to excellence is evident in every aspect of their work. Our home looks beautiful, and the renovation process was hassle-free thanks to their professional approach.",
+      author: "Olivia Brown",
+      desg: "Homeowner, Canberra",
     },
   ];
+  
   return (
     <section className="py-10 md:py-20 lg:min-h-screen bg-secondary">
       <div className="mx-5 md:container md:mx-auto">
