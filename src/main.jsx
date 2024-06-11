@@ -21,6 +21,7 @@ import Renovation from "./pages/Services/Details/Renovation.jsx";
 import Development from "./pages/Services/Details/Development.jsx";
 import AddBlog from './Adminpage/AddBlog.jsx'
 import ManageBlog from './Adminpage/ManageBlog.jsx'
+import Material from './pages/Services/Details/Material.jsx'
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
         path: "/development_services",
         element: <Development />,
       },
+      {
+        path: "/material_services",
+        element: <Material />,
+      },
     ],
   },
   {
@@ -86,7 +91,7 @@ const router = createBrowserRouter([
         element: <ManageService />,
       },
       {
-        path: '/admin/update_service/:slug/:id',
+        path: '/admin/update_service/:slug',
         element: <Update />,
       },
       {

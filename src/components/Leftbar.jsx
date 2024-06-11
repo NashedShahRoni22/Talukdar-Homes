@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
 import { BiChevronRightCircle } from "react-icons/bi";
 
-const Leftbar = () => {
+const Leftbar = ({setShow}) => {
   const menus = [
     {
       name: "Appointment",
@@ -36,6 +36,7 @@ const Leftbar = () => {
         <Link
           key={i}
           to={m.link}
+          onClick={()=> setShow(false)}
           className="shadow p-2.5 min-w-full text-center md:text-left flex justify-between items-center"
         >
           {m.name}

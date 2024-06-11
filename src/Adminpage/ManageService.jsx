@@ -8,7 +8,7 @@ const ManageService = () => {
   //get services
   useEffect(() => {
     setLoading(true);
-    fetch("https://api.smartmovefinancial.com.au/api/services")
+    fetch("https://api.talukderhomes.com.au/api/products")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
@@ -21,7 +21,7 @@ const ManageService = () => {
   const deleteService = async (id) => {
     try {
       const response = await fetch(
-        `https://api.smartmovefinancial.com.au/api/service/delete/${id}`,
+        `https://api.talukderhomes.com.au/api/products/delete/${id}`,
         {
           method: "GET",
         }
@@ -30,7 +30,7 @@ const ManageService = () => {
       if (data.status === true) {
         const updatedServices = services.filter((s) => s.id !== id);
         setServices(updatedServices);
-        window.alert("Service deleted successfully!");
+        window.alert("Product deleted successfully!");
       }
 
       // Handle response data as needed
@@ -48,32 +48,31 @@ const ManageService = () => {
           <h5 className="p-5 text-xl font-semibold text-blue">
             Total Products: {services?.length}
           </h5>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
             {services?.map((s, i) => (
               <div
                 key={i}
-                className="shadow hover:shadow-orange-600  flex  flex-col gap-5  justify-between items-center p-10 rounded-3xl duration-300 ease-linear"
+                className="shadow hover:shadow-orange-600  justify-between items-center rounded-xl duration-300 ease-linear"
               >
                 <div>
-                  <img src={s?.icon} alt="" className="size-12 md:size-18" />
+                  <img src={s?.image} alt="" className="h-[250px] w-full" />
                 </div>
-                <p className="text-xl md:text-2xl font-bold text-center">
-                  {s?.title}
-                </p>
-                <p className="md:text-xl text-center">{s?.slogan}</p>
-                <div className="flex gap-2">
-                  <Link
-                    to={`/admin/update_service/${s?.slug}/${s?.id}`}
-                    className="bg-orange-600 text-white px-2.5 py-1.5 shadow rounded"
-                  >
-                    Update
-                  </Link>
-                  <button
-                    onClick={() => deleteService(s?.id)}
-                    className="bg-red-400 text-white px-2.5 py-1.5 shadow rounded"
-                  >
-                    Delete
-                  </button>
+                <div className="p-2.5">
+                  <p className="font-semibold text-center">{s?.title}</p>
+                  <div className="flex gap-2 justify-center mt-2.5">
+                    <Link
+                      to={`/admin/update_service/${s?.slug}`}
+                      className="bg-orange-600 text-white px-2 py-1 shadow rounded"
+                    >
+                      Update
+                    </Link>
+                    <button
+                      onClick={() => deleteService(s?.id)}
+                      className="bg-red-400 text-white px-2 py-1 shadow rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

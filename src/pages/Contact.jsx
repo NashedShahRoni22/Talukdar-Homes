@@ -1,8 +1,57 @@
 import { Input, Textarea } from "@material-tailwind/react";
-import React from "react";
+import React, { useState } from "react";
 import { MdOutlineArrowOutward } from "react-icons/md";
 
 export default function Contact() {
+  const [loader, setLoader] = useState(false);
+  const handleContact = async (e) => {
+    setLoader(true);
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const phone = form.phone.value;
+    const address = form.address.value;
+    const message = form.message.value;
+    const postData = {
+      name,
+      email,
+      phone,
+      address,
+      message,
+    };
+    console.log(postData);
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("email", email);
+    formData.append("address", address);
+    formData.append("message", message);
+    try {
+      const response = await fetch(
+        "https://api.talukderhomes.com.au/api/contacts/store",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            // Add any necessary headers, such as authorization
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.status === true) {
+        window.alert(data.msg);
+        form.reset();
+        console.log(data);
+        setLoader(false);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      setLoader(false);
+    }
+  };
   return (
     <section className="mx-5 md:container md:mx-auto flex flex-col my-5 md:my-10 gap-5 md:gap-10">
       <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase text-end">
@@ -16,7 +65,7 @@ export default function Contact() {
         </p>
       </div>
       <div>
-        <form action="" className="flex flex-col gap-8 md:gap-16">
+        <form onSubmit={handleContact} className="flex flex-col gap-8 md:gap-16">
           <p className="text-xl md:text-2xl lg:text-4xl font-extrabold capitalize">
             Information Request
           </p>
@@ -36,18 +85,28 @@ export default function Contact() {
                   required
                   variant="static"
                   label="Name"
+                  name="name"
                   placeholder="Name"
                 />
                 <Input
                   required
                   variant="static"
                   label="Phone Number"
+                  name="phone"
                   placeholder="Phone Number"
                 />
                 <Input
                   required
                   variant="static"
                   label="Email"
+                  name="email"
+                  placeholder="Email"
+                />
+                <Input
+                  required
+                  variant="static"
+                  label="Email"
+                  name="address"
                   placeholder="Email"
                 />
               </div>
@@ -56,12 +115,13 @@ export default function Contact() {
                   required
                   variant="static"
                   label="Message"
+                  name="message"
                   placeholder="Say something..."
                 />
               </div>
               <button className="mt-10 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
                 Submit{" "}
-                <span className="bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300">
+                <span className={`bg-primary group-hover:bg-black p-2.5 rounded-full text-white ease-linear duration-300 ${loader && "animate-spin"}`}>
                   <MdOutlineArrowOutward />
                 </span>
               </button>

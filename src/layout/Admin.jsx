@@ -18,7 +18,7 @@ const Admin = () => {
           )}
         </button>
       </div>
-      {show && <Leftbar />}
+      {show && <Leftbar setShow={setShow} />}
       <div className='lg:flex mx-5 md:mx-0'>
         <div className='hidden lg:block lg:w-1/6 '>
           <Leftbar />

@@ -22,7 +22,7 @@ const Appointment = () => {
    }
    //get appointment..
    useEffect(() => {
-     fetch('https://api.smartmovefinancial.com.au/api/appointments')
+     fetch('https://api.talukderhomes.com.au/api/appointments')
        .then((res) => res.json())
        .then((data) => {
          setAppointments(data.data)
@@ -33,11 +33,11 @@ const Appointment = () => {
    //Delete Appointment
    const handaleDeleteAppointment = (oneAppointment) => {
      const aggre = window.confirm(
-       `You want to delete, ${oneAppointment.first_name}. appointment for ${oneAppointment.service_title} ?`
+       `You want to delete, ${oneAppointment.first_name}. appointment for ${oneAppointment.service_name} ?`
      )
      if (aggre) {
        fetch(
-         `https://api.smartmovefinancial.com.au/api/appointment/delete/${oneAppointment.id}`
+         `https://api.talukderhomes.com.au/api/appointments/delete/${oneAppointment.id}`
        )
          .then((res) => res.json())
          .then((data) => {
@@ -133,7 +133,7 @@ const Appointment = () => {
                         color='blue-gray'
                         className='font-normal'
                       >
-                        {appointment?.service_title}
+                        {appointment?.service_name}
                       </Typography>
                     </td>
                     <td className='p-4'>
@@ -182,7 +182,7 @@ const Appointment = () => {
 
         <Dialog open={open} handler={handleOpen} size='lg'>
           <DialogHeader className='text-orange-600'>
-            Service type : {singleAppointment?.service_title}
+            Service type : {singleAppointment?.service_name}
           </DialogHeader>
 
           <DialogBody className=''>

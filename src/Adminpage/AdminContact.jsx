@@ -13,7 +13,7 @@ const AdminContact = () => {
   const [open, setOpen] = useState(false)
   const [loader, setLoader] = useState(true)
   const [appointments, setAppointments] = useState([])
-  console.log(appointments)
+  // console.log(appointments);
   const [singleAppointment, setSingleAppointment] = useState({})
 
   const TABLE_HEAD = ['Name', 'Phone number', 'Email', 'View']
@@ -24,7 +24,7 @@ const AdminContact = () => {
   }
   //get contacts
   useEffect(() => {
-    fetch('https://api.smartmovefinancial.com.au/api/contacts')
+    fetch('https://api.talukderhomes.com.au/api/contacts')
       .then((res) => res.json())
       .then((data) => {
         setAppointments(data.data)
@@ -39,7 +39,7 @@ const AdminContact = () => {
     )
     if (aggre) {
       fetch(
-        `https://api.smartmovefinancial.com.au/api/contact/delete/${oneAppointment.id}`
+        `https://api.talukderhomes.com.au/api/contacts/delete/${oneAppointment.id}`
       )
         .then((res) => res.json())
         .then((data) => {

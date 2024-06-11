@@ -72,9 +72,9 @@ export default function Navbar() {
 
       {/* logo here  */}
       <div className="pr-5 py-2.5 md:py-5  md:pr-10">
-        <h5 className="font-extrabold text-primary uppercase ml-20 text-2xl md:text-4xl">
+        <Link to={"/"} className="font-extrabold text-primary uppercase ml-20 text-2xl md:text-4xl">
           TH
-        </h5>
+        </Link>
       </div>
 
       {/* desktop view  */}

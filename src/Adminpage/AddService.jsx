@@ -9,7 +9,6 @@ const AddService = () => {
   const [loader, setLoader] = useState(false)
   const [value, setValue] = useState('')
   const [icon, setIcon] = useState('')
-  const [thumbnail, setThumbnail] = useState('')
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6] }],
@@ -44,19 +43,13 @@ const AddService = () => {
     setLoader(true)
     e.preventDefault()
     const title = e.target.title.value
-    const price = e.target.price.value
-
-    console.log(icon, title, thumbnail, price, value)
-
     const formData = new FormData()
-    formData.append('icon', icon)
+    formData.append('image', icon)
     formData.append('title', title)
-    formData.append('thumbnail', thumbnail)
-    formData.append('price', price)
     formData.append('content', value)
     try {
       const response = await fetch(
-        '',
+        'https://api.talukderhomes.com.au/api/products/store',
         {
           method: 'POST',
           body: formData,
@@ -97,14 +90,6 @@ const AddService = () => {
             onChange={(e) => setIcon(e.target.files[0])}
           />
         </div>
-        {/* <div className='flex flex-col gap-2.5'>
-          <label>Select Thumbnail</label>
-          <input
-            type='file'
-            className=''
-            onChange={(e) => setThumbnail(e.target.files[0])}
-          />
-        </div> */}
         <div className='flex flex-col gap-2.5'>
           <label>Enter Name</label>
           <input
@@ -114,15 +99,6 @@ const AddService = () => {
             placeholder='Enter Name'
           />
         </div>
-        {/* <div className='flex flex-col gap-2.5'>
-          <label>Enter Price</label>
-          <input
-            type='number'
-            name='price'
-            className='px-4 py-2 outline-none border border-gray-400 rounded'
-            placeholder='Enter Price'
-          />
-        </div> */}
       </div>
       <div className='mt-5 flex flex-col gap-2.5'>
         <label className=''>Enter Content</label>
