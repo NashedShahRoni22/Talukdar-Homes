@@ -55,20 +55,20 @@ const ManageService = () => {
                 className="shadow hover:shadow-orange-600  justify-between items-center rounded-xl duration-300 ease-linear"
               >
                 <div>
-                  <img src={s?.image} alt="" className="h-[250px] w-full" />
+                  <img src={s?.product_image[0]?.image} alt="" className="h-[250px] w-full" loading="lazy" />
                 </div>
                 <div className="p-2.5">
-                  <p className="font-semibold text-center">{s?.title}</p>
+                  <p className="font-semibold">{s?.title}</p>
                   <div className="flex gap-2 justify-center mt-2.5">
                     <Link
                       to={`/admin/update_service/${s?.slug}`}
-                      className="bg-orange-600 text-white px-2 py-1 shadow rounded"
+                      className="bg-orange-600 text-white py-1.5 shadow rounded w-full text-center"
                     >
                       Update
                     </Link>
                     <button
                       onClick={() => deleteService(s?.id)}
-                      className="bg-red-400 text-white px-2 py-1 shadow rounded"
+                      className="bg-red-400 text-white py-1.5 shadow rounded w-full text-center"
                     >
                       Delete
                     </button>

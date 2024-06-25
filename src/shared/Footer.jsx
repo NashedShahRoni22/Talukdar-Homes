@@ -52,7 +52,7 @@ export default function Footer() {
                 Need Support
               </p>
               <p className="text-white lg:text-xl">
-                support@example.com
+                info@talukderhomes.com.au
               </p>
             </div>
           </div>

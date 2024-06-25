@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 // import required modules
-import { EffectCoverflow, Pagination } from "swiper/modules";
+import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 import { BsArrowRightCircleFill } from "react-icons/bs";
 import { FaQuoteLeft } from "react-icons/fa";
 
@@ -72,6 +72,10 @@ export default function Testimmonial() {
             modifier: 1,
             slideShadows: true,
           }}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           breakpoints={{
             768: {
               slidesPerView: 1,
@@ -81,7 +85,7 @@ export default function Testimmonial() {
             },
           }}
           // pagination={true}
-          modules={[EffectCoverflow, Pagination]}
+          modules={[EffectCoverflow, Pagination, Autoplay]}
           className="mySwiper mt-10 lg:mt-20"
         >
           {data.map((d, i) => (

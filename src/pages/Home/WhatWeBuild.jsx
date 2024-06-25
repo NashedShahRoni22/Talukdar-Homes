@@ -230,7 +230,7 @@ export default function WhatWeBuild() {
           </defs>
         </svg>
       ),
-      title: "Comercial",
+      title: "Residential",
       desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum ipsam eius totam molestiae temporibus accusantium voluptatum. Perspiciatisqui perferendis dolor dicta commodi aperiam, cum optio blanditiiseos quasi asperiores numquam, eum aliquam pariatur, fugiat liberoitaque rerum inventore hic rem ad id sed. Eos eum eius repellendusnemo nisi maxime.",
     },
     {
@@ -531,7 +531,7 @@ export default function WhatWeBuild() {
           </defs>
         </svg>
       ),
-      title: "Industrial",
+      title: "Comercial",
       desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum ipsam eius totam molestiae temporibus accusantium voluptatum. Perspiciatisqui perferendis dolor dicta commodi aperiam, cum optio blanditiiseos quasi asperiores numquam, eum aliquam pariatur, fugiat liberoitaque rerum inventore hic rem ad id sed. Eos eum eius repellendusnemo nisi maxime.",
     },
   ];
@@ -551,9 +551,9 @@ export default function WhatWeBuild() {
             data-aos-easing="linear"
             data-aos-duration="1500"
             key={i}
-            className="group relative flex flex-col gap-2.5 md:gap-5 border border-gray-600 hover:border-primary hover:shadow-xl p-5 md:p-10 "
+            className="group relative flex flex-col gap-2.5 md:gap-5 border border-gray-600 hover:border-primary hover:shadow-xl p-5 md:p-10  ease-linear duration-300"
           >
-            <div className="size-12 border flex justify-center items-center absolute bottom-0 right-0 font-semibold bg-black/90 group-hover:bg-primary text-white">
+            <div className="size-12 border flex justify-center items-center absolute bottom-0 right-0 font-semibold bg-black/90 group-hover:bg-primary text-white ease-linear duration-300">
               {i + 1}
             </div>
             {d.icon}
@@ -561,9 +561,9 @@ export default function WhatWeBuild() {
               {d.title}
             </p>
             <p className="text-gray-600">{d.desc.slice(0, 150)}</p>
-            <Link to={'/services'} className="mt-5 bg-black text-white hover:text-black hover:bg-white flex gap-2 items-center px-5 py-2 rounded shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
+            <Link to={'/services'} className="mt-5 bg-black text-white hover:text-black hover:bg-white group flex gap-2 items-center px-5 py-2 rounded shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
               Explore{" "}
-              <span className="bg-primary p-2.5 rounded-full text-white">
+              <span className="bg-primary p-2.5 rounded-full text-white group-hover:rotate-45 ease-linear duration-300">
                 <MdOutlineArrowOutward />
               </span>
             </Link>

@@ -22,6 +22,7 @@ import Development from "./pages/Services/Details/Development.jsx";
 import AddBlog from './Adminpage/AddBlog.jsx'
 import ManageBlog from './Adminpage/ManageBlog.jsx'
 import Material from './pages/Services/Details/Material.jsx'
+import MaterialDetails from './pages/Services/Details/MaterialDetails.jsx'
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "/material_services",
         element: <Material />,
+      },
+      {
+        path: "/service_details/:slug",
+        element: <MaterialDetails />,
       },
     ],
   },

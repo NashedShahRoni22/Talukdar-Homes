@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
-import { BiChevronRightCircle } from "react-icons/bi";
+import { BiChevronRight } from "react-icons/bi";
 
 const Leftbar = ({setShow}) => {
   const menus = [
@@ -40,7 +40,7 @@ const Leftbar = ({setShow}) => {
           className="shadow p-2.5 min-w-full text-center md:text-left flex justify-between items-center"
         >
           {m.name}
-          <BiChevronRightCircle className="text-primary text-xl" />
+          <BiChevronRight className="text-primary text-xl" />
         </Link>
       ))}
       <div className="flex justify-center absolute bottom-4 min-w-full">

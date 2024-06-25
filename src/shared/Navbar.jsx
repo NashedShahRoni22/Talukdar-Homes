@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BiChevronRight } from "react-icons/bi";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
@@ -14,6 +15,10 @@ export default function Navbar() {
     {
       name: "Service",
       link: "/services",
+    },
+    {
+      name: "Material",
+      link: "/material_services",
     },
     {
       name: "About",
@@ -59,10 +64,11 @@ export default function Navbar() {
                 <Link
                   key={i} 
                   onClick={()=> setShow(!show)}
-                  className="text-xl md:text-3xl font-semibold border-b-2 border-transparent hover:border-primary ease-linear duration-300"
+                  className="text-xl md:text-3xl font-semibold flex justify-between items-center group hover:text-primary ease-linear duration-300"
                   to={m.link}
                 >
                   {m.name}
+                  <BiChevronRight className="hidden group-hover:block ease-linear duration-300"/>
                 </Link>
               ))}
             </div>

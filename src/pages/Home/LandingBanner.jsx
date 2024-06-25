@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 // Import your custom styles
 import "./LandingBanner.css"; // Import your custom CSS file
 
@@ -28,7 +28,6 @@ export default function LandingBanner() {
         pagination={{
           clickable: true,
         }}
-        // navigation={true}
         modules={[Autoplay, Pagination]}
         className="mySwiper z-0"
       >
