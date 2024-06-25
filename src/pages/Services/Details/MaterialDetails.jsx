@@ -74,25 +74,26 @@ const MaterialDetails = () => {
           />
         </div>
       )}
-      <Dialog open={open} handler={handleOpen} size="xs">
-        <DialogHeader>Connect us</DialogHeader>
+      <Dialog open={open} handler={handleOpen} size="xs" className="border-4 border-primary">
+        <DialogHeader className="text-primary">Connect us</DialogHeader>
         <DialogBody>
-          <div className="flex gap-2 items-center text-black py-2.5 px-4 border shadow rounded">
-            <MdEmail className="text-xl text-primary" />{" "}
-            info@talukderhomes.com.au
-          </div>
-          <div className="flex gap-2 items-center text-black py-2.5 px-4 mt-2 border shadow rounded">
-            <MdPhone className="text-xl text-primary" /> 0452 246 490
-          </div>
+            <a
+              href="mailto:info@talukderhomes.com.au?subject=Want%20some%20information%20about%20material%20supply"
+              className="flex gap-2 items-center text-primary hover:bg-black duration-300 ease-linear p-4 rounded"
+            >
+              <MdEmail className="text-4xl md:text-6xl" />
+              <span className="font-semibold">info@talukderhomes.com.au</span>
+            </a>
+            <a
+              href="tel:0452246490"
+              className="flex gap-2 items-center text-primary hover:bg-black duration-300 ease-linear p-4 rounded"
+            >
+              <MdPhone className="text-4xl md:text-6xl" />
+              <span className="font-semibold">0452 246 490</span>
+            </a>
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-            size="sm"
-          >
+          <Button className="bg-primary" onClick={handleOpen} size="sm">
             <span>Close</span>
           </Button>
         </DialogFooter>
