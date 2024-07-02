@@ -41,7 +41,6 @@ const Appointment = () => {
        )
          .then((res) => res.json())
          .then((data) => {
-           console.log(data)
            if (data.status === true) {
              const newQueryData = appointments.filter(
                (appoint) => appoint.id !== oneAppointment.id

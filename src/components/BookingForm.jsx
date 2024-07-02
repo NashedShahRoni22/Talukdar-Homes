@@ -19,7 +19,6 @@ export default function BookingForm({ handleOpen }) {
   const [message, setMessage] = useState("");
 
   const [services, setServices] = useState([]);
-  // console.log(services);
 
   //get services
   useEffect(() => {
@@ -36,19 +35,7 @@ export default function BookingForm({ handleOpen }) {
   const addAppointment = async (e) => {
     setLoader(true);
     e.preventDefault();
-
-    console.log(
-      firstName,
-      loanType,
-      lastName,
-      phoneNumber,
-      email,
-      address,
-      message
-    );
-
     const formData = new FormData();
-
     formData.append("service_id", loanType);
     formData.append("first_name", firstName);
     formData.append("last_name", lastName);
@@ -71,7 +58,6 @@ export default function BookingForm({ handleOpen }) {
       if (data.status === true) {
         window.alert(data.msg);
         handleOpen();
-        console.log(data);
         setLoader(false);
       }
     } catch (error) {

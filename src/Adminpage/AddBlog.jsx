@@ -45,9 +45,6 @@ const AddBlog = () => {
     e.preventDefault();
     const title = e.target.title.value;
     const price = e.target.price.value;
-
-    console.log(icon, title, thumbnail, price, value);
-
     const formData = new FormData();
     formData.append("icon", icon);
     formData.append("title", title);

@@ -20,7 +20,6 @@ export default function Contact() {
       address,
       message,
     };
-    console.log(postData);
     const formData = new FormData();
 
     formData.append("name", name);
@@ -44,7 +43,6 @@ export default function Contact() {
       if (data.status === true) {
         window.alert(data.msg);
         form.reset();
-        console.log(data);
         setLoader(false);
       }
     } catch (error) {

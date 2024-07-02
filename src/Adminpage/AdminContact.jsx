@@ -13,7 +13,6 @@ const AdminContact = () => {
   const [open, setOpen] = useState(false)
   const [loader, setLoader] = useState(true)
   const [appointments, setAppointments] = useState([])
-  // console.log(appointments);
   const [singleAppointment, setSingleAppointment] = useState({})
 
   const TABLE_HEAD = ['Name', 'Phone number', 'Email', 'View']
@@ -43,7 +42,6 @@ const AdminContact = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
           if (data.status === true) {
             const newQueryData = appointments.filter(
               (appoint) => appoint.id !== oneAppointment.id

@@ -13,6 +13,7 @@ import { MdEmail, MdPhone } from "react-icons/md";
 const MaterialDetails = () => {
   const { slug } = useParams();
   const [service, setService] = useState({});
+  // console.log(service);
   const [loader, setLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const [focusImage, setFocusImage] = useState();

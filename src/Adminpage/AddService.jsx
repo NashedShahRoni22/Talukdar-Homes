@@ -10,6 +10,7 @@ const AddService = () => {
   const [loader, setLoader] = useState(false);
   const [value, setValue] = useState(null);
   const [title, setTitle] = useState(null);
+  const [metaDesc, setMetaDesc] = useState(null);
   const [images, setImages] = useState(null);
   // Function to handle file input change
   const handleImageChange = (e) => {
@@ -62,6 +63,7 @@ const AddService = () => {
     });
     formData.append("title", title);
     formData.append("content", value);
+    formData.append("meta_description", metaDesc);
     try {
       const response = await fetch(
         "https://api.talukderhomes.com.au/api/products/store",
@@ -74,7 +76,6 @@ const AddService = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
       if (data.status === true) {
         window.alert(data.msg);
         setLoader(false);
@@ -96,7 +97,7 @@ const AddService = () => {
           Add Product
         </h5>
         <Button
-          disabled={images === null || value === null || title === null}
+          disabled={images === null || value === null || title === null || metaDesc === null}
           type="submit"
           className="bg-orange-600 flex gap-2 items-center"
         >
@@ -143,6 +144,18 @@ const AddService = () => {
           className="px-4 py-2 outline-none border border-gray-400 rounded"
           placeholder="Enter Name"
           onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2.5">
+        <label className="font-semibold">Enter Meta Description</label>
+        <textarea
+          type="text"
+          name="description"
+          className="px-4 py-2 outline-none border border-gray-400 rounded"
+          placeholder="Enter Meta Description"
+          onChange={(e) => setMetaDesc(e.target.value)}
+          required
         />
       </div>
       <div className="mt-5 flex flex-col gap-2.5">

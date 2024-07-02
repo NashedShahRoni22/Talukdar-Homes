@@ -9,16 +9,15 @@ import LoaderPage from "../Adminpage/LoaderPage";
 const Update = () => {
   const { slug } = useParams();
   const [service, setService] = useState({});
+  // console.log(service);
   const [focusImage, setFocusImage] = useState();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
   const [updateLoader, setUpdateLoader] = useState(false);
   //manage data
   const [value, setValue] = useState("");
-  const [icon, setIcon] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
   const [title, setTitle] = useState("");
-  const [slogan, setSlogan] = useState("");
+  const [metaDesc, setMetaDesc] = useState(null);
 
   //get service
   useEffect(() => {
@@ -30,9 +29,8 @@ const Update = () => {
           setService(data.data);
           setValue(data.data.content);
           setFocusImage(data?.data?.product_image[0]?.image);
-          // setIcon(data.data.icon);
-          // setThumbnail(data.data.thumbnail);
           setTitle(data.data.title);
+          setMetaDesc(data.data.meta_description);
           setLoader(false);
         }
       });
@@ -41,15 +39,11 @@ const Update = () => {
   // update service
   const updateService = async (id) => {
     setUpdateLoader(true);
-
-    // console.log("Inside Function",icon, title, thumbnail, slogan, value);
-
     const formData = new FormData();
-    formData.append("image", icon);
+   
     formData.append("title", title);
-    //  formData.append('thumbnail', thumbnail)
-    //  formData.append('slogan', slogan)
     formData.append("content", value);
+    formData.append("meta_description", metaDesc);
 
     try {
       const response = await fetch(
@@ -110,6 +104,13 @@ const Update = () => {
             className="px-4 py-2 border w-full"
             defaultValue={title}
             onChange={(e) => setTitle(e.target.value)}
+            type="text"
+          />
+          <label className="font-semibold">Enter Meta Description</label>
+          <textarea
+            className="px-4 py-2 border w-full"
+            defaultValue={metaDesc}
+            onChange={(e) => setMetaDesc(e.target.value)}
             type="text"
           />
           <label className="font-semibold">Update Content</label>
