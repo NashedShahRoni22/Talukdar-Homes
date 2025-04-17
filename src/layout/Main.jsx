@@ -24,10 +24,10 @@ export default function Main() {
       {/* make appointment  */}
       <button
         onClick={handleOpen}
-        className="fixed right-5 bottom-5 bg-black text-white hover:text-primary hover:bg-white flex gap-2 items-center p-2.5 md:px-5  md:py-2 rounded-full shadow border-2 hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300"
+        className="fixed z-50 right-5 bottom-5 bg-black text-white flex gap-2 items-center p-2.5 rounded-full shadow border-2 hover:shadow-xl hover:border-primary  w-fit group"
       >
         <IoCalendarOutline className="text-xl md:text-3xl" />
-        <span className="hidden md:block">Book Now</span>
+        <span className="hidden md:group-hover:block ease-linear duration-700">Book Now</span>
       </button>
       <Dialog open={open} handler={handleOpen}>
         <BookingForm handleOpen={handleOpen} />

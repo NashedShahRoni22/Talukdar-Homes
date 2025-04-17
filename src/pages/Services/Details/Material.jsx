@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoaderPage from "../../../Adminpage/LoaderPage";
 import { Link } from "react-router-dom";
-import { BsEyeFill } from "react-icons/bs";
+import { FaCartPlus } from "react-icons/fa";
 
 export default function Material() {
   const [loading, setLoading] = useState(false);
@@ -24,33 +24,36 @@ export default function Material() {
         <LoaderPage />
       ) : (
         <>
-          <h5 className="text-xl md:text-3xl font-semibold text-blue">
-            Material Products: {services?.length}
-          </h5>
-          <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-10 min-h-screen">
+          <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-10 min-h-screen">
             {services?.map((s, i) => (
-              <div
+              <Link
+                to={`/service_details/${s?.slug}`}
                 key={i}
-                className="shadow hover:shadow-orange-600  justify-between items-center rounded duration-300 ease-linear h-fit group"
+                className="shadow-lg hover:shadow-primary rounded border duration-300 ease-linear h-fit group"
               >
                 <div>
                   <img
                     src={s?.product_image[0]?.image}
                     alt=""
-                    className="h-[150px] md:h-[250px] w-full"
+                    className="h-[200px] md:h-[250px] w-full rounded-t"
                     loading="lazy"
                   />
                 </div>
-                <div className="p-2.5 flex flex-col gap-2.5">
-                  <p className="font-semibold text-center">{s?.title}</p>
-                  <Link
-                    to={`/service_details/${s?.slug}`}
-                    className="w-full py-1.5 shadow rounded flex items-center justify-center gap-2 border border-primary text-primary group-hover:bg-primary group-hover:text-white duration-300 ease-linear"
-                  >
-                    <BsEyeFill className="text-xl"/> View
-                  </Link>
+                <div className="p-4 flex justify-between items-end">
+                  <div>
+                    <p className="text-lg">{s?.title}</p>
+                    <p className="text-xl text-primary">
+                      $150 AUD{" "}
+                      <span className="text-sm line-through text-gray-600">
+                        $100
+                      </span>
+                    </p>
+                  </div>
+                  <button className="p-4 shadow rounded flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary hover:text-white duration-300 ease-linear">
+                    <FaCartPlus className="text-xl" />
+                  </button>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </>

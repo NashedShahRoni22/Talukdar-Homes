@@ -18,8 +18,12 @@ export default function Footer() {
       link: "/",
     },
     {
-      name: "Service",
+      name: "Services",
       link: "/services",
+    },
+    {
+      name: "Products",
+      link: "/products",
     },
     {
       name: "About",
@@ -51,9 +55,7 @@ export default function Footer() {
               <p className="text-gray-600 md:text-xl font-semibold">
                 Need Support
               </p>
-              <p className="text-white lg:text-xl">
-                info@talukderhomes.com.au
-              </p>
+              <p className="text-white lg:text-xl">info@talukderhomes.com.au</p>
             </div>
           </div>
           <div className="flex gap-5">

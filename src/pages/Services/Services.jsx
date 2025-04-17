@@ -16,7 +16,7 @@ export default function Services() {
     {
       title: "Material Supply",
       img: supply,
-      link:"/material_services"
+      link:"/products"
     },
     {
       title: "House Renovation",

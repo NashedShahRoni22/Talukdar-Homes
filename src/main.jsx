@@ -15,7 +15,6 @@ import Appointment from './Adminpage/Appointment.jsx'
 import AdminContact from './Adminpage/AdminContact.jsx'
 import Update from './Adminpage/Update.jsx'
 import PrivateRoute from './components/PrivateRoute.jsx'
-import Login from './pages/Login.jsx'
 import Construction from "./pages/Services/Details/Construction.jsx";
 import Renovation from "./pages/Services/Details/Renovation.jsx";
 import Development from "./pages/Services/Details/Development.jsx";
@@ -23,6 +22,8 @@ import AddBlog from './Adminpage/AddBlog.jsx'
 import ManageBlog from './Adminpage/ManageBlog.jsx'
 import Material from './pages/Services/Details/Material.jsx'
 import MaterialDetails from './pages/Services/Details/MaterialDetails.jsx'
+import NotFound from './pages/NotFound.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
 
 const router = createBrowserRouter([
   {
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
         element: <Development />,
       },
       {
-        path: "/material_services",
+        path: "/products",
         element: <Material />,
       },
       {
@@ -69,7 +70,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
+    element: <AdminLogin />,
   },
   {
     path: '/admin',
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:"*",
+    element: <NotFound/>
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
