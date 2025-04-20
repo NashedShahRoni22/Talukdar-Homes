@@ -27,7 +27,7 @@ export default function Material() {
           <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-10 min-h-screen">
             {services?.map((s, i) => (
               <Link
-                to={`/service_details/${s?.slug}`}
+                to={`/service-details/${s?.slug}`}
                 key={i}
                 className="shadow-lg hover:shadow-primary rounded border duration-300 ease-linear h-fit group"
               >

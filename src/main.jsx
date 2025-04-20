@@ -13,7 +13,6 @@ import AddService from './Adminpage/AddService.jsx'
 import ManageService from './Adminpage/ManageService.jsx'
 import Appointment from './Adminpage/Appointment.jsx'
 import AdminContact from './Adminpage/AdminContact.jsx'
-import Update from './Adminpage/Update.jsx'
 import PrivateRoute from './components/PrivateRoute.jsx'
 import Construction from "./pages/Services/Details/Construction.jsx";
 import Renovation from "./pages/Services/Details/Renovation.jsx";
@@ -24,6 +23,15 @@ import Material from './pages/Services/Details/Material.jsx'
 import MaterialDetails from './pages/Services/Details/MaterialDetails.jsx'
 import NotFound from './pages/NotFound.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
+import Dashboard from './Adminpage/Dashboard.jsx'
+import UpdateService from './Adminpage/UpdateService.jsx'
+import Customers from './Adminpage/Customers.jsx'
+import Orders from './Adminpage/Orders.jsx'
+import AddCategory from './Adminpage/AddCategory.jsx'
+import AddSubcategory from './Adminpage/AddSubcategory.jsx'
+import AddProduct from './Adminpage/AddProduct.jsx'
+import ManageProducts from './Adminpage/ManageProducts.jsx'
+import UpdateProduct from './Adminpage/UpdateProduct.jsx'
 
 const router = createBrowserRouter([
   {
@@ -47,15 +55,15 @@ const router = createBrowserRouter([
         element: <Services />,
       },
       {
-        path: "/construction_services",
+        path: "/construction-services",
         element: <Construction />,
       },
       {
-        path: "/renovation_services",
+        path: "/renovation-services",
         element: <Renovation />,
       },
       {
-        path: "/development_services",
+        path: "/development-services",
         element: <Development />,
       },
       {
@@ -63,7 +71,7 @@ const router = createBrowserRouter([
         element: <Material />,
       },
       {
-        path: "/service_details/:slug",
+        path: "/service-details/:slug",
         element: <MaterialDetails />,
       },
     ],
@@ -82,31 +90,63 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin',
+        element: <Dashboard />,
+      },
+      {
+        path: '/admin/appointments',
         element: <Appointment />,
       },
       {
-        path: '/admin/contact',
+        path: '/admin/contacts',
         element: <AdminContact />,
       },
       {
-        path: '/admin/addService',
+        path: '/admin/customers',
+        element: <Customers />,
+      },
+      {
+        path: '/admin/orders',
+        element: <Orders />,
+      },
+      {
+        path: '/admin/add-service',
         element: <AddService />,
       },
       {
-        path: '/admin/manageService',
+        path: '/admin/manage-service',
         element: <ManageService />,
       },
       {
-        path: '/admin/update_service/:slug',
-        element: <Update />,
+        path: '/admin/update-service/:slug',
+        element: <UpdateService />,
       },
       {
-        path: '/admin/add_blog',
+        path: '/admin/add-blog',
         element: <AddBlog />,
       },
       {
-        path: '/admin/manage_blog',
+        path: '/admin/manage-blog',
         element: <ManageBlog />,
+      },
+      {
+        path: '/admin/add-category',
+        element: <AddCategory />,
+      },
+      {
+        path: '/admin/add-subcategory',
+        element: <AddSubcategory />,
+      },
+      {
+        path: '/admin/add-product',
+        element: <AddProduct />,
+      },
+      {
+        path: '/admin/manage-products',
+        element: <ManageProducts />,
+      },
+      {
+        path: '/admin/update-product/:slug',
+        element: <UpdateProduct />,
       },
     ],
   },

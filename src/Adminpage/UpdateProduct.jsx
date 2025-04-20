@@ -4,9 +4,9 @@ import { Button, Spinner } from "@material-tailwind/react";
 
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router-dom";
-import LoaderPage from "../Adminpage/LoaderPage";
+import LoaderPage from "./LoaderPage";
 
-const Update = () => {
+const UpdateProduct = () => {
   const { slug } = useParams();
   const [service, setService] = useState({});
   // console.log(service);
@@ -128,4 +128,4 @@ const Update = () => {
   );
 };
 
-export default Update;
+export default UpdateProduct;

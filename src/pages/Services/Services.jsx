@@ -11,7 +11,7 @@ export default function Services() {
     {
       title: "Construction",
       img: construction,
-      link:"/construction_services"
+      link:"/construction-services"
     },
     {
       title: "Material Supply",
@@ -21,12 +21,12 @@ export default function Services() {
     {
       title: "House Renovation",
       img: renovation,
-      link:"/renovation_services"
+      link:"/renovation-services"
     },
     {
       title: "Development",
       img: architecture,
-      link:"/development_services"
+      link:"/development-services"
     },
   ];
   return (

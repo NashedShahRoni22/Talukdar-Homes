@@ -98,7 +98,7 @@ const AdminContact = () => {
   return (
     <div>
       <p className='p-5 text-xl font-semibold text-blue'>
-        Contact Message : {appointments.length}
+        Messages : {appointments.length}
       </p>
       <div>
         {loader ? (
