@@ -95,15 +95,15 @@ const Appointment = () => {
      )
    }
   return (
-    <div>
-      <p className='p-5 text-xl font-semibold'>
+    <div className='p-5 '>
+      <h5 className='font-semibold'>
         Appointments : {appointments.length}
-      </p>
+      </h5>
       <div>
         {loader ? (
           <LoaderPage />
         ) : (
-          <Card className='m-5 h-full overflow-auto'>
+          <Card className='mt-5 h-full overflow-auto'>
             <table className='w-full min-w-max table-auto text-left'>
               <thead>
                 <tr>

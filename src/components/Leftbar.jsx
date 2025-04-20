@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
-import { BiChevronDown, BiChevronRight } from "react-icons/bi";
+import {
+  BiChevronDown,
+  BiChevronDownSquare,
+  BiChevronRight,
+  BiChevronUpCircle,
+  BiChevronUpSquare,
+} from "react-icons/bi";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { useState } from "react";
 import {
@@ -57,10 +63,10 @@ const Leftbar = ({ setShow }) => {
           name: "Category",
           link: "/admin/add-category",
         },
-        {
-          name: "Subcategory",
-          link: "/admin/add-subcategory",
-        },
+        // {
+        //   name: "Subcategory",
+        //   link: "/admin/add-subcategory",
+        // },
         {
           name: "Add Product",
           link: "/admin/add-product",
@@ -116,20 +122,30 @@ const Leftbar = ({ setShow }) => {
               onClick={() => setShow(false)}
               className="p-2.5 min-w-full text-sm font-semibold text-center md:text-left flex items-center gap-2.5"
             >
-              <span className="p-2 rounded-full shadow text-primary bg-orange-50">{m.icon}</span>
+              <span className="p-2 rounded-full shadow text-primary bg-orange-50">
+                {m.icon}
+              </span>
               {m.name}
             </Link>
           ) : (
             <>
               <button
-                onClick={() => setShowChild({ state: !showChild.state, id: m.id })}
+                onClick={() =>
+                  setShowChild({ state: !showChild.state, id: m.id })
+                }
                 className="p-2.5 min-w-full text-sm font-semibold text-center md:text-left flex justify-between items-center"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="p-2 rounded-full shadow text-primary bg-orange-50">{m.icon}</span>
+                  <span className="p-2 rounded-full shadow text-primary bg-orange-50">
+                    {m.icon}
+                  </span>
                   {m.name}
                 </div>
-                <BiChevronDown />
+                {showChild.state && showChild.id === m.id ? (
+                  <BiChevronUpSquare className="text-xl text-primary" />
+                ) : (
+                  <BiChevronDownSquare className="text-xl text-primary" />
+                )}
               </button>
               {showChild.state && showChild.id === m.id && (
                 <div className="ml-8 flex flex-col gap-2.5">

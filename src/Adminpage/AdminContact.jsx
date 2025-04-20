@@ -96,15 +96,15 @@ const AdminContact = () => {
     )
   }
   return (
-    <div>
-      <p className='p-5 text-xl font-semibold text-blue'>
+    <div className='p-5'>
+      <h5 className='font-semibold'>
         Messages : {appointments.length}
-      </p>
+      </h5>
       <div>
         {loader ? (
           <LoaderPage />
         ) : (
-          <Card className='m-5 h-full overflow-auto'>
+          <Card className='mt-5 h-full overflow-auto'>
             <table className='w-full min-w-max table-auto text-left'>
               <thead>
                 <tr>
