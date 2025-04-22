@@ -52,7 +52,7 @@ const AddBlog = () => {
     formData.append("price", price);
     formData.append("content", value);
     try {
-      const response = await fetch("", {
+      const response = await fetch("https://api.talukderhomes.com.au/api/blogs/store", {
         method: "POST",
         body: formData,
         headers: {
