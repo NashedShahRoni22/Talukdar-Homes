@@ -12,6 +12,13 @@ export default function AddCategory() {
   const [title, setTitle] = useState("");
   const [editingSubId, setEditingSubId] = useState("");
   const [editedSubTitle, setEditedSubTitle] = useState("");
+  const [editingParentId, setEditingParentId] = useState(null);
+  const [editedParentTitle, setEditedParentTitle] = useState("");
+
+  const handleSubCategoryClose = () => {
+    setEditingSubId(null);
+    setEditedSubTitle("");
+  };
 
   // Fetch all categories
   const fetchCategories = () => {
@@ -61,17 +68,17 @@ export default function AddCategory() {
   };
 
   // Update Sub-category
-  const updateSubCategory = async (parentId) => {
+  const updateSubCategory = async (parentId, childrenId) => {
     setLoader(true);
 
     const payload = {
-      title: editedSubTitle,
+      title: editedSubTitle ? editedSubTitle : editedParentTitle,
       parent_id: parentId,
     };
 
     try {
       const res = await fetch(
-        `https://api.talukderhomes.com.au/api/categories/update/${parentId}`,
+        `https://api.talukderhomes.com.au/api/categories/update/${childrenId ? childrenId : parentId}`,
         {
           method: "POST",
           headers: {
@@ -90,6 +97,7 @@ export default function AddCategory() {
         setLoader(false);
         setTitle("");
         setParentId("");
+        handleSubCategoryClose();
       }
     } catch (err) {
       console.log("Error:", err);
@@ -181,18 +189,58 @@ export default function AddCategory() {
             className="shadow rounded h-[350px] overflow-y-auto relative"
           >
             <div className="bg-primary text-white p-2.5 flex justify-between items-center">
-              <h5 className=" text-center font-semibold">{c?.title}</h5>
-              <button
-                className={`p-2 shadow rounded-full bg-gray-50 ${
-                  loader
-                    ? "text-gray-400 cursor-default"
-                    : "text-red-500 cursor-pointer"
-                }`}
-                onClick={() => deleteCategory(c?.id)}
-                disabled={loader}
-              >
-                <MdDelete className="text-xl" />
-              </button>
+              {editingParentId === c?.id ? (
+                <div className="flex items-center gap-1 w-full">
+                  <input
+                    type="text"
+                    value={editedParentTitle}
+                    onChange={(e) => setEditedParentTitle(e.target.value)}
+                    className="px-1.5 py-1 border text-sm rounded w-full focus:outline-none text-black"
+                  />
+                  <button
+                    onClick={() => updateSubCategory(c?.id)}
+                    className="p-1.5 rounded-full bg-green-50"
+                  >
+                    <BiCheck className="text-green-500 text-xl" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingParentId(null);
+                      setEditedParentTitle("");
+                    }}
+                    className="p-1.5 rounded-full bg-red-50"
+                  >
+                    <CgClose className="text-red-500 text-xl" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h5 className="text-center font-semibold">{c?.title}</h5>
+                  <div className="flex items-center gap-1">
+                    <button
+                      className="p-2 shadow rounded-full bg-gray-50 text-orange-500"
+                      onClick={() => {
+                        setEditingParentId(c?.id);
+                        setEditedParentTitle(c?.title);
+                      }}
+                      disabled={loader}
+                    >
+                      <BiEdit className="text-xl" />
+                    </button>
+                    <button
+                      className={`p-2 shadow rounded-full bg-gray-50 ${
+                        loader
+                          ? "text-gray-400 cursor-default"
+                          : "text-red-500 cursor-pointer"
+                      }`}
+                      onClick={() => deleteCategory(c?.id)}
+                      disabled={loader}
+                    >
+                      <MdDelete className="text-xl" />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Child Categories List */}
@@ -213,16 +261,15 @@ export default function AddCategory() {
                           className="px-1.5 py-1 border text-sm rounded w-full focus:outline-none"
                         />
                         <button
-                          onClick={() => updateSubCategory(cc?.parent_id)}
+                          onClick={() =>
+                            updateSubCategory(cc?.parent_id, cc?.id)
+                          }
                           className="p-1.5 rounded-full bg-green-50"
                         >
                           <BiCheck className="text-green-500 text-xl" />
                         </button>
                         <button
-                          onClick={() => {
-                            setEditingSubId(null);
-                            setEditedSubTitle("");
-                          }}
+                          onClick={handleSubCategoryClose}
                           className="p-1.5 rounded-full bg-red-50"
                         >
                           <CgClose className="text-red-500 text-xl" />
@@ -244,7 +291,7 @@ export default function AddCategory() {
                           <BiEdit className="text-orange-500 text-xl" />
                         </button>
                         <button
-                          onClick={() => deleteCategory(c?.id)}
+                          onClick={() => deleteCategory(cc?.id)}
                           className="p-1.5 rounded-full hover:bg-red-100"
                         >
                           <MdDelete className="text-red-500 text-xl" />

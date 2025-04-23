@@ -6,6 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import InputField from "../components/admin/InputField";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
+import { MdOutlineClose } from "react-icons/md";
 
 const modules = {
   toolbar: [
@@ -43,6 +44,8 @@ const AddProduct = () => {
   const [value, setValue] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [images, setImages] = useState(null);
+  const [attributeInput, setAttributeInput] = useState("");
+  const [attributes, setAttributes] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     category_id: "",
@@ -54,7 +57,6 @@ const AddProduct = () => {
     is_best_selling: "0",
     on_flash_sale: "0",
     shipping_charge: "",
-    attributes: ["m", "xl", "lg"],
   });
 
   // Check whether all the form fields are filled or not
@@ -68,9 +70,30 @@ const AddProduct = () => {
     !formData.shipping_charge.trim() ||
     !thumbnail ||
     !images?.length ||
-    !formData.attributes.length ||
+    !attributes.length ||
     !value ||
     value.replace(/<[^>]*>/g, "").trim() === "";
+
+  // handle add sub-categories array in local state
+  const handleAttributes = (e) => {
+    if (!attributeInput) {
+      return;
+    }
+
+    if (e.key === "Enter" || e.type === "click") {
+      e.preventDefault();
+      setAttributes([...attributes, attributeInput]);
+      setAttributeInput("");
+    }
+  };
+
+  // remove attribute from local attributes array
+  const removeAttribute = (indexToRemove) => {
+    const filteredAttributes = attributes.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setAttributes(filteredAttributes);
+  };
 
   // Fetch all categories
   const fetchCategories = () => {
@@ -131,7 +154,7 @@ const AddProduct = () => {
       payload.append("thumbnail", thumbnail);
     }
 
-    formData.attributes.forEach((attribute) => {
+    attributes.forEach((attribute) => {
       payload.append(`attributes[size]`, attribute);
     });
 
@@ -147,7 +170,7 @@ const AddProduct = () => {
         {
           method: "POST",
           body: payload,
-        },
+        }
       );
 
       const data = await res.json();
@@ -275,25 +298,72 @@ const AddProduct = () => {
         handleInputChange={handleInputChange}
       />
 
-      {/* category select dropdown */}
-      <div className="flex flex-col gap-2.5">
-        <label className="font-semibold">Category</label>
-        <select
-          className="rounded border border-gray-400 px-4 py-2 outline-none"
-          value={formData.category_id}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, category_id: e.target.value }))
-          }
-        >
-          <option value="" disabled>
-            --- Please select a category ---
-          </option>
-          {categories?.map((category) => (
-            <option key={category?.id} value={category?.id}>
-              {category?.title}
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
+        {/* category select dropdown */}
+        <div className="flex flex-col gap-2.5">
+          <label className="font-semibold">Category</label>
+          <select
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            value={formData.category_id}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, category_id: e.target.value }))
+            }
+          >
+            <option value="" disabled>
+              --- Please select a category ---
             </option>
-          ))}
-        </select>
+            {categories?.map((category) => (
+              <option key={category?.id} value={category?.id}>
+                {category?.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* attribute input field */}
+        <div className="flex flex-col gap-2.5">
+          <label htmlFor="attributeName" className="font-semibold">
+            Attribute Name
+          </label>
+
+          <div className="flex items-center px-4 justify-between border border-gray-400 rounded pr-1">
+            <input
+              type="text"
+              id="attributeName"
+              name="attributeName"
+              value={attributeInput}
+              onChange={(e) => setAttributeInput(e.target.value)}
+              onKeyDown={handleAttributes}
+              className="w-full outline-none py-2"
+            />
+            {attributeInput && (
+              <button
+                className="bg-orange-500 min-w-fit cursor-pointer rounded px-4 py-1 text-white"
+                onClick={handleAttributes}
+              >
+                Add
+              </button>
+            )}
+          </div>
+
+          {/* attributes */}
+          <div className="flex flex-wrap gap-1.5">
+            {attributes.map((attribute, i) => (
+              <div
+                key={i}
+                className="bg-orange-50 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-sm text-orange-500"
+              >
+                <p>{attribute}</p>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => removeAttribute(i)}
+                >
+                  <MdOutlineClose className="text-lg" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
@@ -309,7 +379,7 @@ const AddProduct = () => {
 
         {/* discount price */}
         <InputField
-          label="Discount Price"
+          label="Discount Percentage(%)"
           id="discount_price"
           name="discount"
           value={formData.discount}
