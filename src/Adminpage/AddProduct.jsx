@@ -4,6 +4,8 @@ import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
+import InputField from "../components/admin/InputField";
+import CheckBoxFeat from "../components/admin/CheckBoxFeat";
 
 const modules = {
   toolbar: [
@@ -39,10 +41,8 @@ const AddProduct = () => {
   const [loader, setLoader] = useState(false);
   const [categories, setCategories] = useState([]);
   const [value, setValue] = useState(null);
-  const [title, setTitle] = useState(null);
-  const [metaDesc, setMetaDesc] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
   const [images, setImages] = useState(null);
-
   const [formData, setFormData] = useState({
     title: "",
     category_id: "",
@@ -50,12 +50,27 @@ const AddProduct = () => {
     description: "",
     discount: "",
     quantity: "",
-    is_featured: "",
-    is_best_selling: "",
-    on_flash_sale: "",
+    is_featured: "0",
+    is_best_selling: "0",
+    on_flash_sale: "0",
     shipping_charge: "",
-    attributesSize: "",
+    attributes: ["m", "xl", "lg"],
   });
+
+  // Check whether all the form fields are filled or not
+  const isDisabled =
+    !formData.title.trim() ||
+    !formData.category_id.trim() ||
+    !formData.price.trim() ||
+    !formData.description.trim() ||
+    !formData.discount.trim() ||
+    !formData.quantity.trim() ||
+    !formData.shipping_charge.trim() ||
+    !thumbnail ||
+    !images?.length ||
+    !formData.attributes.length ||
+    !value ||
+    value.replace(/<[^>]*>/g, "").trim() === "";
 
   // Fetch all categories
   const fetchCategories = () => {
@@ -72,8 +87,18 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
-  // Function to handle file input change
-  const handleImageChange = (e) => {
+  // Handle input field and chekbox
+  const handleInputChange = (e) => {
+    const { value, name } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Function to handle thumbnail and gallery images
+  const handleImageChange = (e, thumbnail) => {
+    if (thumbnail) {
+      return setThumbnail(e.target.files[0]);
+    }
+
     const fileList = e.target.files;
     const imageList = Array.from(fileList);
     setImages(imageList);
@@ -85,67 +110,120 @@ const AddProduct = () => {
   };
 
   // Add new product
-  const addService = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    /* setLoader(true);
-    const formData = new FormData();
-    images.forEach((image, index) => {
-      formData.append(`image[${index}]`, image);
+    setLoader(true);
+
+    const payload = new FormData();
+    payload.append("title", formData.title);
+    payload.append("category_id", formData.category_id);
+    payload.append("price", formData.price);
+    payload.append("description", formData.description);
+    payload.append("discount", formData.discount);
+    payload.append("quantity", formData.quantity);
+    payload.append("is_featured", formData.is_featured);
+    payload.append("is_best_selling", formData.is_best_selling);
+    payload.append("on_flash_sal", formData.on_flash_sale);
+    payload.append("shipping_charge", formData.shipping_charge);
+    // payload.append("content", value); // TODO: not mentioned in the api
+    if (thumbnail) {
+      payload.append("thumbnail", thumbnail);
+    }
+
+    formData.attributes.forEach((attribute) => {
+      payload.append(`attributes[size]`, attribute);
     });
-    formData.append("title", title);
-    formData.append("content", value);
-    formData.append("meta_description", metaDesc);
+
+    if (images?.length) {
+      images.forEach((img) => {
+        payload.append("gallery[]", img);
+      });
+    }
+
     try {
-      const response = await fetch(
+      const res = await fetch(
         "https://api.talukderhomes.com.au/api/products/store",
         {
           method: "POST",
-          body: formData,
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
-        }
+          body: payload,
+        },
       );
-      const data = await response.json();
+
+      const data = await res.json();
       if (data.status === true) {
         window.alert(data.msg);
         setLoader(false);
-        navigate("/admin/manageService");
+        navigate("/admin/manage-products");
       }
-      // Handle response data as needed
     } catch (error) {
       console.error("Error:", error);
       setLoader(false);
-    } */
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
     <form
-      className="mt-5 md:mt-0 md:p-5 lg:p-10 flex flex-col gap-2.5"
-      onSubmit={addService}
+      className="mt-5 flex flex-col gap-2.5 md:mt-0 md:p-5 lg:p-10"
+      onSubmit={handleSubmit}
     >
       <div className="flex justify-between">
-        <h5 className="text-xl md:text-3xl text-orange-600 font-semibold">
+        <h5 className="text-xl font-semibold text-orange-600 md:text-3xl">
           Add Product
         </h5>
 
         <Button
-          disabled={
-            images === null ||
-            value === null ||
-            title === null ||
-            metaDesc === null
-          }
+          className="flex items-center gap-2 bg-orange-600"
           type="submit"
-          className="bg-orange-600 flex gap-2 items-center"
+          disabled={isDisabled || loader}
         >
           Submit
           {loader && <Spinner className="h-4 w-4" />}
         </Button>
       </div>
 
-      {/* image field */}
+      {/* thumbnail image field */}
+      <div>
+        <label className="font-semibold">
+          Select Thumbnail{" "}
+          <span className="text-xs font-semibold text-red-500">
+            (Maximum Image Size is 2MB)
+          </span>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleImageChange(e, true)}
+          style={{ display: "none" }}
+          id="thumbnail-img"
+        />
+        <label
+          htmlFor="thumbnail-img"
+          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
+        >
+          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
+          <p className="text-xs font-semibold">Choose Thumbnail</p>
+        </label>
+      </div>
+
+      {/* thumbnail image preview */}
+      {thumbnail && (
+        <div className="aspect-w-1 aspect-h-1 relative">
+          <IoCloseCircleSharp
+            className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+            onClick={() => setThumbnail(null)}
+          />
+          <img
+            src={URL.createObjectURL(thumbnail)}
+            alt="thumbnail image"
+            className="h-[200px] w-full rounded object-cover md:h-[250px]"
+          />
+        </div>
+      )}
+
+      {/* images gallery field */}
       <div className="flex flex-col gap-2.5">
         <label className="font-semibold">
           Select Image{" "}
@@ -163,50 +241,45 @@ const AddProduct = () => {
         />
         <label
           htmlFor="image-upload-input"
-          className="flex items-center gap-2 px-4 py-2 border shadow rounded hover:shadow-orange-600 w-fit cursor-pointer"
+          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
         >
-          <IoImagesSharp className="text-xl text-lightColor text-orange-600" />
+          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
           <p className="text-xs font-semibold">Choose Images</p>
         </label>
       </div>
 
       {/* Render preview of uploaded images */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
         {images?.map((image, index) => (
-          <div key={index} className="relative aspect-w-1 aspect-h-1">
+          <div key={index} className="aspect-w-1 aspect-h-1 relative">
             <IoCloseCircleSharp
-              className="absolute top-2 right-2 text-red-500 shadow cursor-pointer text-xl"
+              className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
               onClick={() => removeImage(index)}
             />
             <img
               src={URL.createObjectURL(image)}
               alt={`Uploaded Image ${index + 1}`}
-              className="object-cover rounded h-[200px] md:h-[250px] w-full"
+              className="h-[200px] w-full rounded object-cover md:h-[250px]"
             />
           </div>
         ))}
       </div>
 
       {/* name field */}
-      <div className="flex flex-col gap-2.5">
-        <label className="font-semibold">Enter Name</label>
-        <input
-          type="text"
-          name="title"
-          className="px-4 py-2 outline-none border border-gray-400 rounded"
-          placeholder="Enter Name"
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, title: e.target.value }))
-          }
-          required
-        />
-      </div>
+      <InputField
+        label="Name"
+        id="name"
+        name="title"
+        value={formData.title}
+        required={true}
+        handleInputChange={handleInputChange}
+      />
 
       {/* category select dropdown */}
       <div className="flex flex-col gap-2.5">
         <label className="font-semibold">Category</label>
         <select
-          className="px-4 py-2 outline-none border border-gray-400 rounded"
+          className="rounded border border-gray-400 px-4 py-2 outline-none"
           value={formData.category_id}
           onChange={(e) =>
             setFormData((prev) => ({ ...prev, category_id: e.target.value }))
@@ -223,97 +296,94 @@ const AddProduct = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2.5 gap-x-5">
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
         {/* price */}
-        <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Price</label>
-          <input
-            type="text"
-            name="price"
-            className="px-4 py-2 outline-none border border-gray-400 rounded"
-            placeholder="Enter Price"
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, price: e.target.value }))
-            }
-            required
-          />
-        </div>
+        <InputField
+          label="Price"
+          id="price"
+          name="price"
+          value={formData.price}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
 
         {/* discount price */}
-        <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Discount Price</label>
-          <input
-            type="text"
-            name="discount"
-            className="px-4 py-2 outline-none border border-gray-400 rounded"
-            placeholder="Enter Discount Price"
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, discount: e.target.value }))
-            }
-            required
-          />
-        </div>
+        <InputField
+          label="Discount Price"
+          id="discount_price"
+          name="discount"
+          value={formData.discount}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
 
         {/* shipping charge */}
-        <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Shipping Charge</label>
-          <input
-            type="text"
-            name="shipping"
-            className="px-4 py-2 outline-none border border-gray-400 rounded"
-            placeholder="Enter Shipping Charge"
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                shipping_charge: e.target.value,
-              }))
-            }
-            required
-          />
-        </div>
+        <InputField
+          label="Shipping Charge"
+          id="shipping_charge"
+          name="shipping_charge"
+          value={formData.shipping_charge}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
 
         {/* quantity */}
-        <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Quantity</label>
-          <input
-            type="text"
-            name="quantity"
-            className="px-4 py-2 outline-none border border-gray-400 rounded"
-            placeholder="Enter Quantity"
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                quantity: e.target.value,
-              }))
-            }
-            required
-          />
-        </div>
+        <InputField
+          label="Quantity"
+          id="quantity"
+          name="quantity"
+          value={formData.quantity}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
       </div>
 
-      {/* featured */}
-      <div className="flex flex-col gap-2.5">
-        <label>Featured</label>
-        <div className="flex items-center gap-2">
-          <input type="checkbox" name="featured" id="featuredYes" />{" "}
-          <label htmlFor="featuredYes">Yes</label>
-          <input type="checkbox" name="featured" id="featuredNo" />{" "}
-          <label htmlFor="featuredNo">No</label>
-        </div>
+      {/* checkboxes container */}
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-3">
+        {/* featured */}
+        <CheckBoxFeat
+          label="Featured"
+          name="is_featured"
+          id1="featuredYes"
+          id2="featuredNo"
+          value={formData.is_featured}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* best selling */}
+        <CheckBoxFeat
+          label="Best Selling"
+          name="is_best_selling"
+          id1="bestSellingYes"
+          id2="bestSellingNo"
+          value={formData.is_best_selling}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* flash sell */}
+        <CheckBoxFeat
+          label="Flash Sell"
+          name="on_flash_sale"
+          id1="flashSaleYes"
+          id2="flashSaleNo"
+          value={formData.on_flash_sale}
+          handleInputChange={handleInputChange}
+        />
       </div>
 
       {/* meta description field */}
       <div className="flex flex-col gap-2.5">
-        <label className="font-semibold">Enter Meta Description</label>
+        <label className="font-semibold">Meta Description</label>
         <textarea
+          className="rounded border border-gray-400 px-4 py-2 outline-none"
           type="text"
           name="description"
-          className="px-4 py-2 outline-none border border-gray-400 rounded"
-          placeholder="Enter Meta Description"
-          onChange={(e) => setMetaDesc(e.target.value)}
+          onChange={handleInputChange}
           required
         />
       </div>
+
+      {/* product content description */}
       <div className="mt-5 flex flex-col gap-2.5">
         <label className="font-semibold">Enter Content</label>
         <ReactQuill
@@ -322,7 +392,7 @@ const AddProduct = () => {
           onChange={setValue}
           modules={modules}
           formats={formats}
-          className="py-2 w-full h-[300px]"
+          className="h-[300px] w-full py-2"
         />
       </div>
     </form>
