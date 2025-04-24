@@ -58,6 +58,18 @@ const AddProduct = () => {
     on_flash_sale: "0",
     shipping_charge: "",
   });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState("");
+
+  useEffect(() => {
+    const foundCategory = categories.find(
+      (category) => category.id == formData.category_id
+    );
+
+    if (foundCategory) {
+      setSubCategories(foundCategory.children);
+    }
+  }, [categories, formData.category_id]);
 
   // Check whether all the form fields are filled or not
   const isDisabled =
@@ -140,7 +152,10 @@ const AddProduct = () => {
 
     const payload = new FormData();
     payload.append("title", formData.title);
-    payload.append("category_id", formData.category_id);
+    payload.append(
+      "category_id",
+      subCategory ? subCategory : formData.category_id
+    );
     payload.append("price", formData.price);
     payload.append("description", formData.description);
     payload.append("discount", formData.discount);
@@ -320,8 +335,28 @@ const AddProduct = () => {
           </select>
         </div>
 
-        {/* attribute input field */}
+        {/* sub-category select dropdown */}
         <div className="flex flex-col gap-2.5">
+          <label className="font-semibold">Sub-Category</label>
+          <select
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            value={subCategory}
+            onChange={(e) => setSubCategory(e.target.value)}
+            required={subCategory ? true : false}
+          >
+            <option value="" disabled>
+              --- Please select a sub-category ---
+            </option>
+            {subCategories?.map((subCategory) => (
+              <option key={subCategory?.id} value={subCategory?.id}>
+                {subCategory?.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* attribute input field */}
+        <div className="flex flex-col gap-2.5 col-span-full">
           <label htmlFor="attributeName" className="font-semibold">
             Attribute Name
           </label>
