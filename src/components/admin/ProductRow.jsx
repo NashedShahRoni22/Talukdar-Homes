@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default function ProductRow({ product, setProducts }) {
   const {
     id,
+    slug,
     thumbnail,
     title,
     price,
@@ -58,11 +59,15 @@ export default function ProductRow({ product, setProducts }) {
       <td className="px-2.5 py-2 text-center">{category?.title}</td>
       <td className="px-2.5 py-2 text-center">
         <div className="inline-flex items-center justify-center gap-2.5">
-          <button className="w-full" disabled={loading}>
+          <Link
+            className="w-full"
+            to={`/admin/update-product/${slug}`}
+            disabled={loading}
+          >
             <FiEdit
               className={`transition-all duration-200 ease-in-out hover:text-green-500 ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
             />
-          </button>
+          </Link>
 
           <button className="w-full" onClick={handleDelete} disabled={loading}>
             <MdDeleteOutline

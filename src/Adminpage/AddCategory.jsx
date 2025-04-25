@@ -12,9 +12,10 @@ export default function AddCategory() {
   const [title, setTitle] = useState("");
   const [editingSubId, setEditingSubId] = useState("");
   const [editedSubTitle, setEditedSubTitle] = useState("");
-  const [editingParentId, setEditingParentId] = useState(null);
+  const [editingParentId, setEditingParentId] = useState("");
   const [editedParentTitle, setEditedParentTitle] = useState("");
 
+  // close sub-cateogory input field
   const handleSubCategoryClose = () => {
     setEditingSubId(null);
     setEditedSubTitle("");
@@ -49,7 +50,7 @@ export default function AddCategory() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-        }
+        },
       );
 
       const result = await response.json();
@@ -73,7 +74,7 @@ export default function AddCategory() {
 
     const payload = {
       title: editedSubTitle ? editedSubTitle : editedParentTitle,
-      parent_id: parentId,
+      ...(parentId && childrenId && { parent_id: parentId }),
     };
 
     try {
@@ -85,7 +86,7 @@ export default function AddCategory() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       const result = await res.json();
@@ -98,6 +99,8 @@ export default function AddCategory() {
         setTitle("");
         setParentId("");
         handleSubCategoryClose();
+        setEditingParentId(null);
+        setEditedParentTitle("");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -114,7 +117,7 @@ export default function AddCategory() {
         `https://api.talukderhomes.com.au/api/categories/delete/${categoryId}`,
         {
           method: "GET", // Using GET (again, not recommended for deletion)
-        }
+        },
       );
 
       if (!response.ok) {
@@ -138,25 +141,25 @@ export default function AddCategory() {
 
   return (
     <div className="p-5">
-      <div className="flex justify-between items-center">
-        <h5 className="font-semibold mb-5">Add Category</h5>
+      <div className="flex items-center justify-between">
+        <h5 className="mb-5 font-semibold">Add Category</h5>
         {showEditBox ? (
-          <div className="px-2 mt-2 flex gap-1 items-center">
+          <div className="mt-2 flex items-center gap-1 px-2">
             <input
               type="text"
               placeholder="Category Name"
-              className="px-1.5 py-2 border text-sm rounded w-full  focus:outline-none"
+              className="w-full rounded border px-1.5 py-2 text-sm focus:outline-none"
               onChange={(e) => setTitle(e.target.value)}
             />
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setShowEditBox(false)}
-                className="p-1.5 rounded-full bg-orange-50"
+                className="rounded-full bg-orange-50 p-1.5"
               >
-                <CgClose className="text-orange-500 text-xl" />
+                <CgClose className="text-xl text-orange-500" />
               </button>
               <button
-                className={`p-1.5 rounded-full  ${
+                className={`rounded-full p-1.5 ${
                   loader
                     ? "cursor-default bg-gray-100"
                     : "cursor-pointer bg-red-50"
@@ -165,9 +168,9 @@ export default function AddCategory() {
                 disabled={loader}
               >
                 {loader ? (
-                  <ImSpinner className="text-lg text-gray-600 animate-spin" />
+                  <ImSpinner className="animate-spin text-lg text-gray-600" />
                 ) : (
-                  <BiCheck className="text-red-500 text-xl" />
+                  <BiCheck className="text-xl text-red-500" />
                 )}
               </button>
             </div>
@@ -175,42 +178,46 @@ export default function AddCategory() {
         ) : (
           <button
             onClick={() => setShowEditBox(true)}
-            className="px-2.5 py-1.5 flex gap-2 items-center bg-primary text-white shadow rounded text-xs font-semibold"
+            className="flex items-center gap-2 rounded bg-primary px-2.5 py-1.5 text-xs font-semibold text-white shadow"
           >
             <BiPlus className="text-xl" />
             New Category
           </button>
         )}
       </div>
-      <div className="mt-5 grid grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="mt-5 grid grid-cols-2 gap-5 lg:grid-cols-3">
         {categories.map((c, i) => (
           <div
             key={i}
-            className="shadow rounded h-[350px] overflow-y-auto relative"
+            className="relative h-[350px] overflow-y-auto rounded shadow"
           >
-            <div className="bg-primary text-white p-2.5 flex justify-between items-center">
+            <div className="flex items-center justify-between bg-primary p-2.5 text-white">
               {editingParentId === c?.id ? (
-                <div className="flex items-center gap-1 w-full">
+                <div className="flex w-full items-center gap-1">
                   <input
                     type="text"
                     value={editedParentTitle}
                     onChange={(e) => setEditedParentTitle(e.target.value)}
-                    className="px-1.5 py-1 border text-sm rounded w-full focus:outline-none text-black"
+                    className="w-full rounded border px-1.5 py-1 text-sm text-black focus:outline-none"
                   />
                   <button
                     onClick={() => updateSubCategory(c?.id)}
-                    className="p-1.5 rounded-full bg-green-50"
+                    className="rounded-full bg-green-50 p-1.5"
                   >
-                    <BiCheck className="text-green-500 text-xl" />
+                    {loader ? (
+                      <ImSpinner className="animate-spin text-lg text-gray-600" />
+                    ) : (
+                      <BiCheck className="text-xl text-green-500" />
+                    )}
                   </button>
                   <button
                     onClick={() => {
                       setEditingParentId(null);
                       setEditedParentTitle("");
                     }}
-                    className="p-1.5 rounded-full bg-red-50"
+                    className="rounded-full bg-red-50 p-1.5"
                   >
-                    <CgClose className="text-red-500 text-xl" />
+                    <CgClose className="text-xl text-red-500" />
                   </button>
                 </div>
               ) : (
@@ -218,7 +225,7 @@ export default function AddCategory() {
                   <h5 className="text-center font-semibold">{c?.title}</h5>
                   <div className="flex items-center gap-1">
                     <button
-                      className="p-2 shadow rounded-full bg-gray-50 text-orange-500"
+                      className="rounded-full bg-gray-50 p-2 text-orange-500 shadow"
                       onClick={() => {
                         setEditingParentId(c?.id);
                         setEditedParentTitle(c?.title);
@@ -228,10 +235,10 @@ export default function AddCategory() {
                       <BiEdit className="text-xl" />
                     </button>
                     <button
-                      className={`p-2 shadow rounded-full bg-gray-50 ${
+                      className={`rounded-full bg-gray-50 p-2 shadow ${
                         loader
-                          ? "text-gray-400 cursor-default"
-                          : "text-red-500 cursor-pointer"
+                          ? "cursor-default text-gray-400"
+                          : "cursor-pointer text-red-500"
                       }`}
                       onClick={() => deleteCategory(c?.id)}
                       disabled={loader}
@@ -248,31 +255,31 @@ export default function AddCategory() {
               {c?.children?.map((cc, k) => (
                 <li
                   key={k}
-                  className="border-b py-1.5 px-2.5 flex items-center justify-between"
+                  className="flex items-center justify-between border-b px-2.5 py-1.5"
                 >
                   {editingSubId === cc?.id ? (
                     <>
                       {/* Child Category Name Update Input Field */}
-                      <div className="flex items-center gap-1 w-full">
+                      <div className="flex w-full items-center gap-1">
                         <input
                           type="text"
                           value={editedSubTitle}
                           onChange={(e) => setEditedSubTitle(e.target.value)}
-                          className="px-1.5 py-1 border text-sm rounded w-full focus:outline-none"
+                          className="w-full rounded border px-1.5 py-1 text-sm focus:outline-none"
                         />
                         <button
                           onClick={() =>
                             updateSubCategory(cc?.parent_id, cc?.id)
                           }
-                          className="p-1.5 rounded-full bg-green-50"
+                          className="rounded-full bg-green-50 p-1.5"
                         >
-                          <BiCheck className="text-green-500 text-xl" />
+                          <BiCheck className="text-xl text-green-500" />
                         </button>
                         <button
                           onClick={handleSubCategoryClose}
-                          className="p-1.5 rounded-full bg-red-50"
+                          className="rounded-full bg-red-50 p-1.5"
                         >
-                          <CgClose className="text-red-500 text-xl" />
+                          <CgClose className="text-xl text-red-500" />
                         </button>
                       </div>
                     </>
@@ -282,19 +289,19 @@ export default function AddCategory() {
                       <span>{cc?.title}</span>
                       <div>
                         <button
-                          className="p-1.5 rounded-full hover:bg-orange-50"
+                          className="rounded-full p-1.5 hover:bg-orange-50"
                           onClick={() => {
                             setEditingSubId(cc?.id);
                             setEditedSubTitle(cc?.title);
                           }}
                         >
-                          <BiEdit className="text-orange-500 text-xl" />
+                          <BiEdit className="text-xl text-orange-500" />
                         </button>
                         <button
                           onClick={() => deleteCategory(cc?.id)}
-                          className="p-1.5 rounded-full hover:bg-red-100"
+                          className="rounded-full p-1.5 hover:bg-red-100"
                         >
-                          <MdDelete className="text-red-500 text-xl" />
+                          <MdDelete className="text-xl text-red-500" />
                         </button>
                       </div>
                     </>
@@ -304,25 +311,25 @@ export default function AddCategory() {
             </ul>
 
             {parentId === c?.id ? (
-              <div className="px-2 mt-2 flex gap-1 items-center">
+              <div className="mt-2 flex items-center gap-1 px-2">
                 <input
                   type="text"
                   placeholder="Category Name"
-                  className="px-1.5 py-2 border text-sm rounded w-full  focus:outline-none"
+                  className="w-full rounded border px-1.5 py-2 text-sm focus:outline-none"
                   onChange={(e) => setTitle(e.target.value)}
                 />
                 <div className="flex items-center gap-1">
                   {/* cancel btn to add new category */}
                   <button
                     onClick={() => setParentId("")}
-                    className="p-1.5 rounded-full bg-orange-50"
+                    className="rounded-full bg-orange-50 p-1.5"
                   >
-                    <CgClose className="text-orange-500 text-xl" />
+                    <CgClose className="text-xl text-orange-500" />
                   </button>
 
                   {/* add new category */}
                   <button
-                    className={`p-1.5 rounded-full  ${
+                    className={`rounded-full p-1.5 ${
                       loader
                         ? "cursor-default bg-gray-100"
                         : "cursor-pointer bg-red-50"
@@ -331,16 +338,16 @@ export default function AddCategory() {
                     disabled={loader}
                   >
                     {loader ? (
-                      <ImSpinner className="text-lg text-gray-600 animate-spin" />
+                      <ImSpinner className="animate-spin text-lg text-gray-600" />
                     ) : (
-                      <BiCheck className="text-red-500 text-xl" />
+                      <BiCheck className="text-xl text-red-500" />
                     )}
                   </button>
                 </div>
               </div>
             ) : (
               <button
-                className="bg-primary flex gap-2 items-center justify-center absolute bottom-0 left-0 w-full py-1.5 text-sm font-semibold text-white"
+                className="absolute bottom-0 left-0 flex w-full items-center justify-center gap-2 bg-primary py-1.5 text-sm font-semibold text-white"
                 onClick={() => setParentId(c?.id)}
               >
                 <BiPlus className="text-2xl" />

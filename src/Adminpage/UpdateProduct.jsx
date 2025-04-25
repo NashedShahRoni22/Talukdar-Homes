@@ -1,130 +1,529 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Button, Spinner } from "@material-tailwind/react";
-
+import { useEffect, useState } from "react";
+import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import ReactQuill from "react-quill";
-import { useNavigate } from "react-router-dom";
-import LoaderPage from "./LoaderPage";
+import { useNavigate, useParams } from "react-router-dom";
+import InputField from "../components/admin/InputField";
+import { MdOutlineClose } from "react-icons/md";
+import CheckBoxFeat from "../components/admin/CheckBoxFeat";
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image", "video", "code-block"],
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+];
 
 const UpdateProduct = () => {
   const { slug } = useParams();
-  const [service, setService] = useState({});
-  // console.log(service);
-  const [focusImage, setFocusImage] = useState();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const [updateLoader, setUpdateLoader] = useState(false);
-  //manage data
-  const [value, setValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [metaDesc, setMetaDesc] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [value, setValue] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
+  const [images, setImages] = useState(null);
+  const [attributeInput, setAttributeInput] = useState("");
+  const [attributes, setAttributes] = useState([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    category_id: "",
+    price: "",
+    description: "",
+    discount: "",
+    quantity: "",
+    is_featured: "0",
+    is_best_selling: "0",
+    on_flash_sale: "0",
+    shipping_charge: "",
+  });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState("");
 
-  //get service
+  // fetch product details to add default field value
   useEffect(() => {
-    setLoader(true);
     fetch(`https://api.talukderhomes.com.au/api/products/${slug}`)
       .then((res) => res.json())
-      .then((data) => {
-        if (data.status === true) {
-          setService(data.data);
-          setValue(data.data.content);
-          setFocusImage(data?.data?.product_image[0]?.image);
-          setTitle(data.data.title);
-          setMetaDesc(data.data.meta_description);
-          setLoader(false);
-        }
+      .then(({ data }) => {
+        setFormData((prev) => ({
+          ...prev,
+          title: data.title,
+          category_id: data.category_id,
+          price: data.price,
+          description: data.description,
+          discount: data.discount,
+          quantity: data.quantity,
+          is_featured: data.is_featured ? "1" : "0",
+          is_best_selling: data.is_best_selling ? "1" : "0",
+          on_flash_sale: data.on_flash_sale ? "1" : "0",
+          shipping_charge: data.shipping_charge,
+        }));
+
+        setSubCategory(data?.category?.id);
       });
-  }, []);
+  }, [slug]);
 
-  // update service
-  const updateService = async (id) => {
-    setUpdateLoader(true);
-    const formData = new FormData();
-   
-    formData.append("title", title);
-    formData.append("content", value);
-    formData.append("meta_description", metaDesc);
+  useEffect(() => {
+    const foundCategory = categories.find(
+      (category) => category.id == formData.category_id,
+    );
 
-    try {
-      const response = await fetch(
-        `https://api.talukderhomes.com.au/api/products/update/${id}`,
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            // Add any necessary headers, such as authorization
-          },
-        }
-      );
-      const data = await response.json();
-      if (data.status === true) {
-        window.alert(data.msg);
-        setUpdateLoader(false);
-        navigate("/admin/manageService");
-      }
-      // Handle response data as needed
-    } catch (error) {
-      console.error("Error:", error);
-      setUpdateLoader(false);
+    if (foundCategory) {
+      setSubCategories(foundCategory.children);
+    }
+  }, [categories, formData.category_id]);
+
+  // Check whether all the form fields are filled or not
+  const isDisabled =
+    !formData.title?.trim() ||
+    !formData.category_id?.trim() ||
+    !formData.price?.trim() ||
+    !formData.description?.trim() ||
+    !formData.discount?.trim() ||
+    !formData.quantity?.trim() ||
+    !formData.shipping_charge?.trim() ||
+    !thumbnail ||
+    !images?.length ||
+    !attributes.length ||
+    !value ||
+    value.replace(/<[^>]*>/g, "")?.trim() === "";
+
+  // handle add sub-categories array in local state
+  const handleAttributes = (e) => {
+    if (!attributeInput) {
+      return;
+    }
+
+    if (e.key === "Enter" || e.type === "click") {
+      e.preventDefault();
+      setAttributes([...attributes, attributeInput]);
+      setAttributeInput("");
     }
   };
+
+  // remove attribute from local attributes array
+  const removeAttribute = (indexToRemove) => {
+    const filteredAttributes = attributes.filter(
+      (_, index) => index !== indexToRemove,
+    );
+    setAttributes(filteredAttributes);
+  };
+
+  // Fetch all categories
+  const fetchCategories = () => {
+    setLoader(true);
+    fetch("https://api.talukderhomes.com.au/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setLoader(false);
+        setCategories(data.data);
+      });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Handle input field and chekbox
+  const handleInputChange = (e) => {
+    const { value, name } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Function to handle thumbnail and gallery images
+  const handleImageChange = (e, thumbnail) => {
+    if (thumbnail) {
+      return setThumbnail(e.target.files[0]);
+    }
+
+    const fileList = e.target.files;
+    const imageList = Array.from(fileList);
+    setImages(imageList);
+  };
+
+  // Function to remove an image from the state
+  const removeImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  // Add new product
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoader(true);
+
+    const payload = new FormData();
+    payload.append("title", formData.title);
+    payload.append(
+      "category_id",
+      subCategory ? subCategory : formData.category_id,
+    );
+    payload.append("price", formData.price);
+    payload.append("description", formData.description);
+    payload.append("discount", formData.discount);
+    payload.append("quantity", formData.quantity);
+    payload.append("is_featured", formData.is_featured);
+    payload.append("is_best_selling", formData.is_best_selling);
+    payload.append("on_flash_sal", formData.on_flash_sale);
+    payload.append("shipping_charge", formData.shipping_charge);
+    // payload.append("content", value); // TODO: not mentioned in the api
+    if (thumbnail) {
+      payload.append("thumbnail", thumbnail);
+    }
+
+    attributes.forEach((attribute) => {
+      payload.append(`attributes[size]`, attribute);
+    });
+
+    if (images?.length) {
+      images.forEach((img) => {
+        payload.append("gallery[]", img);
+      });
+    }
+
+    try {
+      const res = await fetch(
+        "https://api.talukderhomes.com.au/api/products/store",
+        {
+          method: "POST",
+          body: payload,
+        },
+      );
+
+      const data = await res.json();
+      if (data.status === true) {
+        window.alert(data.msg);
+        setLoader(false);
+        navigate("/admin/manage-products");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setLoader(false);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
-    <section className="mt-5 md:mt-0 md:p-5 lg:p-10 flex flex-col gap-2.5">
-      {loader ? (
-        <LoaderPage />
-      ) : (
-        <div className="flex flex-col gap-5">
-          <label className="font-semibold">Update Images</label>
-          <img
-            className="h-[40vh] w-fit"
-            src={focusImage}
-            alt=""
-            loading="lazy"
+    <form
+      className="mt-5 flex flex-col gap-2.5 md:mt-0 md:p-5 lg:p-10"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex justify-between">
+        <h5 className="text-xl font-semibold text-orange-600 md:text-3xl">
+          Update Product
+        </h5>
+
+        <Button
+          className="flex items-center gap-2 bg-orange-600"
+          type="submit"
+          disabled={isDisabled || loader}
+        >
+          Submit
+          {loader && <Spinner className="h-4 w-4" />}
+        </Button>
+      </div>
+
+      {/* thumbnail image field */}
+      <div>
+        <label className="font-semibold">
+          Select Thumbnail{" "}
+          <span className="text-xs font-semibold text-red-500">
+            (Maximum Image Size is 2MB)
+          </span>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleImageChange(e, true)}
+          style={{ display: "none" }}
+          id="thumbnail-img"
+        />
+        <label
+          htmlFor="thumbnail-img"
+          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
+        >
+          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
+          <p className="text-xs font-semibold">Choose Thumbnail</p>
+        </label>
+      </div>
+
+      {/* thumbnail image preview */}
+      {thumbnail && (
+        <div className="aspect-w-1 aspect-h-1 relative">
+          <IoCloseCircleSharp
+            className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+            onClick={() => setThumbnail(null)}
           />
-          <div className="flex gap-2.5 flex-wrap">
-            {service?.product_image?.map((spi, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={spi?.image}
-                  className={`size-16 cursor-pointer ${
-                    focusImage === spi?.image && "border border-primary"
-                  }`}
-                  alt=""
-                  onClick={() => setFocusImage(spi?.image)}
-                  loading="lazy"
-                />
-                {focusImage === spi?.image && (
-                  <div className="absolute h-full w-full bg-primary/50 top-0"></div>
-                )}
+          <img
+            src={URL.createObjectURL(thumbnail)}
+            alt="thumbnail image"
+            className="h-[200px] w-full rounded object-cover md:h-[250px]"
+          />
+        </div>
+      )}
+
+      {/* images gallery field */}
+      <div className="flex flex-col gap-2.5">
+        <label className="font-semibold">
+          Select Image{" "}
+          <span className="text-xs font-semibold text-red-500">
+            (Maximum Image Size is 2MB)
+          </span>{" "}
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageChange}
+          style={{ display: "none" }}
+          id="image-upload-input"
+        />
+        <label
+          htmlFor="image-upload-input"
+          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
+        >
+          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
+          <p className="text-xs font-semibold">Choose Images</p>
+        </label>
+      </div>
+
+      {/* Render preview of uploaded images */}
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+        {images?.map((image, index) => (
+          <div key={index} className="aspect-w-1 aspect-h-1 relative">
+            <IoCloseCircleSharp
+              className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+              onClick={() => removeImage(index)}
+            />
+            <img
+              src={URL.createObjectURL(image)}
+              alt={`Uploaded Image ${index + 1}`}
+              className="h-[200px] w-full rounded object-cover md:h-[250px]"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* name field */}
+      <InputField
+        label="Name"
+        id="name"
+        name="title"
+        value={formData.title}
+        required={true}
+        handleInputChange={handleInputChange}
+      />
+
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
+        {/* category select dropdown */}
+        <div className="flex flex-col gap-2.5">
+          <label className="font-semibold">Category</label>
+          <select
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            value={formData.category_id}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, category_id: e.target.value }))
+            }
+          >
+            <option value="" disabled>
+              --- Please select a category ---
+            </option>
+            {categories?.map((category) => (
+              <option key={category?.id} value={category?.id}>
+                {category?.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* sub-category select dropdown */}
+        <div className="flex flex-col gap-2.5">
+          <label className="font-semibold">Sub-Category</label>
+          <select
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            value={subCategory}
+            onChange={(e) => setSubCategory(e.target.value)}
+            required={subCategory ? true : false}
+          >
+            <option value="" disabled>
+              --- Please select a sub-category ---
+            </option>
+            {subCategories?.map((subCategory) => (
+              <option key={subCategory?.id} value={subCategory?.id}>
+                {subCategory?.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* attribute input field */}
+        <div className="col-span-full flex flex-col gap-2.5">
+          <label htmlFor="attributeName" className="font-semibold">
+            Attribute Name
+          </label>
+
+          <div className="flex items-center justify-between rounded border border-gray-400 px-4 pr-1">
+            <input
+              type="text"
+              id="attributeName"
+              name="attributeName"
+              value={attributeInput}
+              onChange={(e) => setAttributeInput(e.target.value)}
+              onKeyDown={handleAttributes}
+              className="w-full py-2 outline-none"
+            />
+            {attributeInput && (
+              <button
+                className="min-w-fit cursor-pointer rounded bg-orange-500 px-4 py-1 text-white"
+                onClick={handleAttributes}
+              >
+                Add
+              </button>
+            )}
+          </div>
+
+          {/* attributes */}
+          <div className="flex flex-wrap gap-1.5">
+            {attributes.map((attribute, i) => (
+              <div
+                key={i}
+                className="inline-flex items-center gap-1 rounded-lg bg-orange-50 px-2 py-0.5 text-sm text-orange-500"
+              >
+                <p>{attribute}</p>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => removeAttribute(i)}
+                >
+                  <MdOutlineClose className="text-lg" />
+                </button>
               </div>
             ))}
           </div>
-          <label className="font-semibold">Update Name</label>
-          <input
-            className="px-4 py-2 border w-full"
-            defaultValue={title}
-            onChange={(e) => setTitle(e.target.value)}
-            type="text"
-          />
-          <label className="font-semibold">Enter Meta Description</label>
-          <textarea
-            className="px-4 py-2 border w-full"
-            defaultValue={metaDesc}
-            onChange={(e) => setMetaDesc(e.target.value)}
-            type="text"
-          />
-          <label className="font-semibold">Update Content</label>
-          <ReactQuill theme="snow" value={value} onChange={setValue} />
-          <Button
-            onClick={() => updateService(service?.id)}
-            className="bg-primary mt-2.5 flex gap-2 items-center w-fit"
-          >
-            Update
-            {updateLoader && <Spinner className="h-4 w-4" />}
-          </Button>
         </div>
-      )}
-    </section>
+      </div>
+
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
+        {/* price */}
+        <InputField
+          label="Price"
+          id="price"
+          name="price"
+          value={formData.price}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* discount price */}
+        <InputField
+          label="Discount Amount"
+          id="discount_price"
+          name="discount"
+          value={formData.discount}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* shipping charge */}
+        <InputField
+          label="Shipping Charge"
+          id="shipping_charge"
+          name="shipping_charge"
+          value={formData.shipping_charge}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* quantity */}
+        <InputField
+          label="Quantity"
+          id="quantity"
+          name="quantity"
+          value={formData.quantity}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
+      </div>
+
+      {/* checkboxes container */}
+      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-3">
+        {/* featured */}
+        <CheckBoxFeat
+          label="Featured"
+          name="is_featured"
+          id1="featuredYes"
+          id2="featuredNo"
+          value={formData.is_featured}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* best selling */}
+        <CheckBoxFeat
+          label="Best Selling"
+          name="is_best_selling"
+          id1="bestSellingYes"
+          id2="bestSellingNo"
+          value={formData.is_best_selling}
+          handleInputChange={handleInputChange}
+        />
+
+        {/* flash sell */}
+        <CheckBoxFeat
+          label="Flash Sell"
+          name="on_flash_sale"
+          id1="flashSaleYes"
+          id2="flashSaleNo"
+          value={formData.on_flash_sale}
+          handleInputChange={handleInputChange}
+        />
+      </div>
+
+      {/* meta description field */}
+      <div className="flex flex-col gap-2.5">
+        <label className="font-semibold">Meta Description</label>
+        <textarea
+          className="rounded border border-gray-400 px-4 py-2 outline-none"
+          type="text"
+          name="description"
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+
+      {/* product content description */}
+      <div className="mt-5 flex flex-col gap-2.5">
+        <label className="font-semibold">Enter Content</label>
+        <ReactQuill
+          theme="snow"
+          value={value}
+          onChange={setValue}
+          modules={modules}
+          formats={formats}
+          className="h-[300px] w-full py-2"
+        />
+      </div>
+    </form>
   );
 };
 

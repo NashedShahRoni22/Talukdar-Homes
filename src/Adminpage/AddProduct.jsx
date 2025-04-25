@@ -63,7 +63,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     const foundCategory = categories.find(
-      (category) => category.id == formData.category_id
+      (category) => category.id == formData.category_id,
     );
 
     if (foundCategory) {
@@ -102,7 +102,7 @@ const AddProduct = () => {
   // remove attribute from local attributes array
   const removeAttribute = (indexToRemove) => {
     const filteredAttributes = attributes.filter(
-      (_, index) => index !== indexToRemove
+      (_, index) => index !== indexToRemove,
     );
     setAttributes(filteredAttributes);
   };
@@ -154,7 +154,7 @@ const AddProduct = () => {
     payload.append("title", formData.title);
     payload.append(
       "category_id",
-      subCategory ? subCategory : formData.category_id
+      subCategory ? subCategory : formData.category_id,
     );
     payload.append("price", formData.price);
     payload.append("description", formData.description);
@@ -169,9 +169,11 @@ const AddProduct = () => {
       payload.append("thumbnail", thumbnail);
     }
 
-    attributes.forEach((attribute) => {
+    /* attributes.forEach((attribute) => {
       payload.append(`attributes[size]`, attribute);
-    });
+    }); */
+
+    payload.append(`attributes[size]`, attributes);
 
     if (images?.length) {
       images.forEach((img) => {
@@ -185,7 +187,7 @@ const AddProduct = () => {
         {
           method: "POST",
           body: payload,
-        }
+        },
       );
 
       const data = await res.json();
@@ -356,12 +358,12 @@ const AddProduct = () => {
         </div>
 
         {/* attribute input field */}
-        <div className="flex flex-col gap-2.5 col-span-full">
+        <div className="col-span-full flex flex-col gap-2.5">
           <label htmlFor="attributeName" className="font-semibold">
             Attribute Name
           </label>
 
-          <div className="flex items-center px-4 justify-between border border-gray-400 rounded pr-1">
+          <div className="flex items-center justify-between rounded border border-gray-400 px-4 pr-1">
             <input
               type="text"
               id="attributeName"
@@ -369,11 +371,11 @@ const AddProduct = () => {
               value={attributeInput}
               onChange={(e) => setAttributeInput(e.target.value)}
               onKeyDown={handleAttributes}
-              className="w-full outline-none py-2"
+              className="w-full py-2 outline-none"
             />
             {attributeInput && (
               <button
-                className="bg-orange-500 min-w-fit cursor-pointer rounded px-4 py-1 text-white"
+                className="min-w-fit cursor-pointer rounded bg-orange-500 px-4 py-1 text-white"
                 onClick={handleAttributes}
               >
                 Add
@@ -386,7 +388,7 @@ const AddProduct = () => {
             {attributes.map((attribute, i) => (
               <div
                 key={i}
-                className="bg-orange-50 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-sm text-orange-500"
+                className="inline-flex items-center gap-1 rounded-lg bg-orange-50 px-2 py-0.5 text-sm text-orange-500"
               >
                 <p>{attribute}</p>
                 <button
@@ -414,7 +416,7 @@ const AddProduct = () => {
 
         {/* discount price */}
         <InputField
-          label="Discount Percentage(%)"
+          label="Discount Amount"
           id="discount_price"
           name="discount"
           value={formData.discount}
