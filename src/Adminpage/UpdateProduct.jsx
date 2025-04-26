@@ -40,9 +40,12 @@ const UpdateProduct = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
+  const [productId, setProductId] = useState("");
   const [categories, setCategories] = useState([]);
   const [value, setValue] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
+  const [imagesPreview, setImagesPreview] = useState([]);
   const [images, setImages] = useState(null);
   const [attributeInput, setAttributeInput] = useState("");
   const [attributes, setAttributes] = useState([]);
@@ -80,34 +83,34 @@ const UpdateProduct = () => {
           shipping_charge: data.shipping_charge,
         }));
 
+        setProductId(data?.id);
         setSubCategory(data?.category?.id);
+        setThumbnailPreview(data?.thumbnail);
+        setImagesPreview(data?.gallery);
       });
   }, [slug]);
 
+  // useEffect to handle default sub-catgory select dropdown
   useEffect(() => {
+    if (!categories.length || !formData.category_id) return;
+
     const foundCategory = categories.find(
-      (category) => category.id == formData.category_id,
+      (cat) => cat.id == formData.category_id,
     );
 
     if (foundCategory) {
       setSubCategories(foundCategory.children);
+    } else {
+      const parentCategory = categories.find((cat) =>
+        cat.children.some((child) => child.id == formData.category_id),
+      );
+      if (parentCategory) {
+        setFormData((prev) => ({ ...prev, category_id: parentCategory.id }));
+        setSubCategories(parentCategory.children);
+        setSubCategory(formData.category_id);
+      }
     }
   }, [categories, formData.category_id]);
-
-  // Check whether all the form fields are filled or not
-  const isDisabled =
-    !formData.title?.trim() ||
-    !formData.category_id?.trim() ||
-    !formData.price?.trim() ||
-    !formData.description?.trim() ||
-    !formData.discount?.trim() ||
-    !formData.quantity?.trim() ||
-    !formData.shipping_charge?.trim() ||
-    !thumbnail ||
-    !images?.length ||
-    !attributes.length ||
-    !value ||
-    value.replace(/<[^>]*>/g, "")?.trim() === "";
 
   // handle add sub-categories array in local state
   const handleAttributes = (e) => {
@@ -141,6 +144,7 @@ const UpdateProduct = () => {
       });
   };
 
+  // useEffect to fetch all catgories
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -204,7 +208,7 @@ const UpdateProduct = () => {
 
     try {
       const res = await fetch(
-        "https://api.talukderhomes.com.au/api/products/store",
+        `https://api.talukderhomes.com.au/api/products/update/${productId}`,
         {
           method: "POST",
           body: payload,
@@ -238,7 +242,7 @@ const UpdateProduct = () => {
         <Button
           className="flex items-center gap-2 bg-orange-600"
           type="submit"
-          disabled={isDisabled || loader}
+          disabled={loader}
         >
           Submit
           {loader && <Spinner className="h-4 w-4" />}
@@ -270,19 +274,22 @@ const UpdateProduct = () => {
       </div>
 
       {/* thumbnail image preview */}
-      {thumbnail && (
-        <div className="aspect-w-1 aspect-h-1 relative">
-          <IoCloseCircleSharp
-            className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
-            onClick={() => setThumbnail(null)}
-          />
-          <img
-            src={URL.createObjectURL(thumbnail)}
-            alt="thumbnail image"
-            className="h-[200px] w-full rounded object-cover md:h-[250px]"
-          />
-        </div>
-      )}
+      {thumbnail ||
+        (thumbnailPreview && (
+          <div className="aspect-w-1 aspect-h-1 relative">
+            <IoCloseCircleSharp
+              className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+              onClick={() => setThumbnail(null)}
+            />
+            <img
+              src={
+                thumbnail ? URL.createObjectURL(thumbnail) : thumbnailPreview
+              }
+              alt="thumbnail image"
+              className="h-[200px] w-full rounded object-contain md:h-[250px]"
+            />
+          </div>
+        ))}
 
       {/* images gallery field */}
       <div className="flex flex-col gap-2.5">
@@ -311,6 +318,23 @@ const UpdateProduct = () => {
 
       {/* Render preview of uploaded images */}
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+        {/* api gallery images  */}
+        {/* TODO: add api image delete feature */}
+        {imagesPreview?.map((image, index) => (
+          <div key={index} className="aspect-w-1 aspect-h-1 relative">
+            <IoCloseCircleSharp
+              className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+              onClick={() => removeImage(index)}
+            />
+            <img
+              src={image?.image}
+              alt={`Uploaded Image ${index + 1}`}
+              className="h-[200px] w-full rounded object-cover md:h-[250px]"
+              loading="lazy"
+            />
+          </div>
+        ))}
+        {/* local device images */}
         {images?.map((image, index) => (
           <div key={index} className="aspect-w-1 aspect-h-1 relative">
             <IoCloseCircleSharp
@@ -341,18 +365,23 @@ const UpdateProduct = () => {
         <div className="flex flex-col gap-2.5">
           <label className="font-semibold">Category</label>
           <select
-            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            name="category_id"
             value={formData.category_id}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, category_id: e.target.value }))
-            }
+            onChange={(e) => {
+              const selectedId = e.target.value;
+              setFormData((prev) => ({ ...prev, category_id: selectedId }));
+              const selectedCategory = categories.find(
+                (cat) => cat.id == selectedId,
+              );
+              setSubCategories(selectedCategory?.children || []);
+              setSubCategory("");
+            }}
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
           >
-            <option value="" disabled>
-              --- Please select a category ---
-            </option>
-            {categories?.map((category) => (
-              <option key={category?.id} value={category?.id}>
-                {category?.title}
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.title}
               </option>
             ))}
           </select>
@@ -362,17 +391,15 @@ const UpdateProduct = () => {
         <div className="flex flex-col gap-2.5">
           <label className="font-semibold">Sub-Category</label>
           <select
-            className="rounded border border-gray-400 px-4 py-2 outline-none"
+            name="sub_category_id"
             value={subCategory}
             onChange={(e) => setSubCategory(e.target.value)}
-            required={subCategory ? true : false}
+            className="rounded border border-gray-400 px-4 py-2 outline-none"
           >
-            <option value="" disabled>
-              --- Please select a sub-category ---
-            </option>
-            {subCategories?.map((subCategory) => (
-              <option key={subCategory?.id} value={subCategory?.id}>
-                {subCategory?.title}
+            <option value="">Select Sub Category</option>
+            {subCategories.map((sub) => (
+              <option key={sub.id} value={sub.id}>
+                {sub.title}
               </option>
             ))}
           </select>
@@ -404,7 +431,7 @@ const UpdateProduct = () => {
             )}
           </div>
 
-          {/* attributes */}
+          {/* TODO: render api attibutes along with user input attributes */}
           <div className="flex flex-wrap gap-1.5">
             {attributes.map((attribute, i) => (
               <div
@@ -506,6 +533,7 @@ const UpdateProduct = () => {
           className="rounded border border-gray-400 px-4 py-2 outline-none"
           type="text"
           name="description"
+          value={formData?.description}
           onChange={handleInputChange}
           required
         />
@@ -516,7 +544,7 @@ const UpdateProduct = () => {
         <label className="font-semibold">Enter Content</label>
         <ReactQuill
           theme="snow"
-          value={value}
+          value={value ? value : formData?.description}
           onChange={setValue}
           modules={modules}
           formats={formats}
