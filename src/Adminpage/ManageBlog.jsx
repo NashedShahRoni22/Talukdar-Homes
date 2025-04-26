@@ -8,7 +8,7 @@ const ManageBlog = () => {
   //get services
   useEffect(() => {
     setLoading(true);
-    fetch("https://api.smartmovefinancial.com.au/api/services")
+    fetch("https://api.talukderhomes.com.au/api/blogs")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
@@ -24,7 +24,7 @@ const ManageBlog = () => {
         `https://api.smartmovefinancial.com.au/api/service/delete/${id}`,
         {
           method: "GET",
-        }
+        },
       );
       const data = await response.json();
       if (data.status === true) {
@@ -36,41 +36,42 @@ const ManageBlog = () => {
       // Handle response data as needed
     } catch (error) {
       console.error("Error:", error);
-      setLoader(false);
+      setLoading(false);
     }
   };
+
   return (
     <section className="mt-5 md:mt-0 md:p-5 lg:p-10">
       {loading ? (
         <LoaderPage />
       ) : (
         <>
-          <h5 className="p-5 text-xl font-semibold text-blue">
+          <h5 className="text-blue p-5 text-xl font-semibold">
             Total Blogs: {services?.length}
           </h5>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-4">
             {services?.map((s, i) => (
               <div
                 key={i}
-                className="shadow hover:shadow-blue-500  flex  flex-col gap-5  justify-between items-center p-10 rounded-3xl duration-300 ease-linear"
+                className="flex flex-col items-center justify-between gap-5 rounded-3xl p-10 shadow duration-300 ease-linear hover:shadow-blue-500"
               >
                 <div>
-                  <img src={s?.icon} alt="" className="size-12 md:size-18" />
+                  <img src={s?.image} alt="" className="md:size-18 size-12" />
                 </div>
-                <p className="text-xl md:text-2xl font-bold text-center">
+                <p className="text-center text-xl font-bold md:text-2xl">
                   {s?.title}
                 </p>
-                <p className="md:text-xl text-center">{s?.slogan}</p>
+                <p className="text-center md:text-xl">{s?.slogan}</p>
                 <div className="flex gap-2">
                   <Link
                     to={`/admin/update_service/${s?.slug}/${s?.id}`}
-                    className="bg-blue-500 text-white px-2.5 py-1.5 shadow rounded"
+                    className="rounded bg-blue-500 px-2.5 py-1.5 text-white shadow"
                   >
                     Update
                   </Link>
                   <button
                     onClick={() => deleteService(s?.id)}
-                    className="bg-red-400 text-white px-2.5 py-1.5 shadow rounded"
+                    className="rounded bg-red-400 px-2.5 py-1.5 text-white shadow"
                   >
                     Delete
                   </button>

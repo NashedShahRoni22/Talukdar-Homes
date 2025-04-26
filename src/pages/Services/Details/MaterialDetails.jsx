@@ -13,7 +13,7 @@ import { MdEmail, MdPhone } from "react-icons/md";
 const MaterialDetails = () => {
   const { slug } = useParams();
   const [service, setService] = useState({});
-  // console.log(service);
+  console.log(service);
   const [loader, setLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const [focusImage, setFocusImage] = useState();
@@ -28,13 +28,14 @@ const MaterialDetails = () => {
       .then((data) => {
         if (data.status === true) {
           setService(data?.data);
-          setFocusImage(data?.data?.product_image[0]?.image);
+          setFocusImage(data?.data?.thumbnail);
           setLoader(false);
         }
       });
-  }, []);
+  }, [slug]);
+
   return (
-    <section className="mx-5 md:w-[50%] md:mx-auto py-5 md:py-10">
+    <section className="mx-5 py-5 md:mx-auto md:w-[50%] md:py-10">
       {loader ? (
         <LoaderPage />
       ) : (
@@ -47,8 +48,8 @@ const MaterialDetails = () => {
               loading="lazy"
             />
           </div>
-          <div className="flex gap-2.5 flex-wrap">
-            {service?.product_image?.map((spi, index) => (
+          <div className="flex flex-wrap gap-2.5">
+            {service?.gallery?.map((spi, index) => (
               <div key={index} className="relative">
                 <img
                   src={spi?.image}
@@ -60,13 +61,13 @@ const MaterialDetails = () => {
                   loading="lazy"
                 />
                 {focusImage === spi?.image && (
-                  <div className="absolute h-full w-full bg-primary/50 top-0"></div>
+                  <div className="absolute top-0 h-full w-full bg-primary/50"></div>
                 )}
               </div>
             ))}
           </div>
           <p className="font-semibold md:text-xl">{service?.title}</p>
-          <Button size="sm" onClick={handleOpen} className="bg-primary w-fit">
+          <Button size="sm" onClick={handleOpen} className="w-fit bg-primary">
             Order Now
           </Button>
           <div
@@ -75,23 +76,28 @@ const MaterialDetails = () => {
           />
         </div>
       )}
-      <Dialog open={open} handler={handleOpen} size="xs" className="border-4 border-primary">
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        size="xs"
+        className="border-4 border-primary"
+      >
         <DialogHeader className="text-primary">Connect us</DialogHeader>
         <DialogBody>
-            <a
-              href="mailto:info@talukderhomes.com.au?subject=Want%20some%20information%20about%20material%20supply"
-              className="flex gap-2 items-center text-primary hover:bg-black duration-300 ease-linear p-4 rounded"
-            >
-              <MdEmail className="text-4xl md:text-6xl" />
-              <span className="font-semibold">info@talukderhomes.com.au</span>
-            </a>
-            <a
-              href="tel:0452246490"
-              className="flex gap-2 items-center text-primary hover:bg-black duration-300 ease-linear p-4 rounded"
-            >
-              <MdPhone className="text-4xl md:text-6xl" />
-              <span className="font-semibold">0452 246 490</span>
-            </a>
+          <a
+            href="mailto:info@talukderhomes.com.au?subject=Want%20some%20information%20about%20material%20supply"
+            className="flex items-center gap-2 rounded p-4 text-primary duration-300 ease-linear hover:bg-black"
+          >
+            <MdEmail className="text-4xl md:text-6xl" />
+            <span className="font-semibold">info@talukderhomes.com.au</span>
+          </a>
+          <a
+            href="tel:0452246490"
+            className="flex items-center gap-2 rounded p-4 text-primary duration-300 ease-linear hover:bg-black"
+          >
+            <MdPhone className="text-4xl md:text-6xl" />
+            <span className="font-semibold">0452 246 490</span>
+          </a>
         </DialogBody>
         <DialogFooter>
           <Button className="bg-primary" onClick={handleOpen} size="sm">

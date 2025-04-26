@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LoaderPage from "../../../Adminpage/LoaderPage";
 import { Link } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { FaCartPlus } from "react-icons/fa";
 export default function Material() {
   const [loading, setLoading] = useState(false);
   const [services, setServices] = useState([]);
+
   //get services
   useEffect(() => {
     setLoading(true);
@@ -18,38 +19,39 @@ export default function Material() {
         }
       });
   }, []);
+
   return (
-    <section className="mx-5 md:container md:mx-auto my-5 md:my-10">
+    <section className="mx-5 my-5 md:container md:mx-auto md:my-10">
       {loading ? (
         <LoaderPage />
       ) : (
         <>
-          <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-10 min-h-screen">
+          <div className="mt-5 grid min-h-screen grid-cols-2 gap-5 md:gap-10 lg:grid-cols-4">
             {services?.map((s, i) => (
               <Link
                 to={`/service-details/${s?.slug}`}
                 key={i}
-                className="shadow-lg hover:shadow-primary rounded border duration-300 ease-linear h-fit group"
+                className="group h-fit rounded border shadow-lg duration-300 ease-linear hover:shadow-primary"
               >
                 <div>
                   <img
-                    src={s?.product_image[0]?.image}
+                    src={s?.thumbnail}
                     alt=""
-                    className="h-[200px] md:h-[250px] w-full rounded-t"
+                    className="h-[200px] w-full rounded-t md:h-[250px]"
                     loading="lazy"
                   />
                 </div>
-                <div className="p-4 flex justify-between items-end">
+                <div className="flex items-end justify-between p-4">
                   <div>
                     <p className="text-lg">{s?.title}</p>
                     <p className="text-xl text-primary">
                       $150 AUD{" "}
-                      <span className="text-sm line-through text-gray-600">
+                      <span className="text-sm text-gray-600 line-through">
                         $100
                       </span>
                     </p>
                   </div>
-                  <button className="p-4 shadow rounded flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary hover:text-white duration-300 ease-linear">
+                  <button className="flex items-center justify-center gap-2 rounded border border-primary p-4 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white">
                     <FaCartPlus className="text-xl" />
                   </button>
                 </div>
