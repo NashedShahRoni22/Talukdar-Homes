@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   BiHomeAlt,
   BiSolidCategoryAlt,
@@ -12,56 +12,57 @@ import { MdInfo, MdEmail } from "react-icons/md";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
+import { CartContext } from "../Providers/CartProvider";
+const menus = [
+  {
+    name: "Home",
+    link: "/",
+    icon: <BiHomeAlt />,
+  },
+  {
+    name: "Services",
+    link: "/services",
+    icon: <BiSolidCategoryAlt />,
+  },
+  {
+    name: "Products",
+    link: "/products",
+    icon: <BiPackage />,
+  },
+  {
+    name: "About",
+    link: "/about",
+    icon: <MdInfo />,
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+    icon: <MdEmail />,
+  },
+  {
+    name: "Blogs",
+    link: "/blogs",
+    icon: <BiBook />,
+  },
+  {
+    name: "Profile",
+    link: "/profile",
+    icon: <BiUser />,
+    className:
+      "p-2.5 flex justify-center items-center rounded-full bg-primary text-white",
+  },
+  {
+    name: "Cart",
+    link: "/cart",
+    icon: <BiCart />,
+    className:
+      "p-2.5 flex justify-center items-center rounded-full bg-primary text-white",
+  },
+];
 
 export default function Navbar() {
-  const location = useLocation();
+  const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
-  const menus = [
-    {
-      name: "Home",
-      link: "/",
-      icon: <BiHomeAlt />,
-    },
-    {
-      name: "Services",
-      link: "/services",
-      icon: <BiSolidCategoryAlt />,
-    },
-    {
-      name: "Products",
-      link: "/products",
-      icon: <BiPackage />,
-    },
-    {
-      name: "About",
-      link: "/about",
-      icon: <MdInfo />,
-    },
-    {
-      name: "Contact",
-      link: "/contact",
-      icon: <MdEmail />,
-    },
-    {
-      name: "Blogs",
-      link: "/blogs",
-      icon: <BiBook />,
-    },
-    {
-      name: "Profile",
-      link: "/profile",
-      icon: <BiUser />,
-      className:
-        "p-2.5 flex justify-center items-center rounded-full bg-primary text-white",
-    },
-    {
-      name: "Cart",
-      link: "/cart",
-      icon: <BiCart />,
-      className:
-        "p-2.5 flex justify-center items-center rounded-full bg-primary text-white",
-    },
-  ];
 
   return (
     <nav className="bg-black/90">
@@ -113,8 +114,15 @@ export default function Navbar() {
             <Link key={i} to={m.link}>
               {m.name === "Profile" || m.name === "Cart" ? (
                 <div className="flex items-center gap-1.5 group">
-                  <span className="text-xl p-2 bg-primary rounded-full">{m.icon}</span>
+                  <span className="text-xl p-2 bg-primary rounded-full">
+                    {m.icon}
+                  </span>
                   <span className="group-hover:text-primary">{m.name}</span>
+                  {m.name === "Cart" && carts?.length > 0 && (
+                    <span className="group-hover:text-primary">
+                      ({carts?.length})
+                    </span>
+                  )}
                 </div>
               ) : (
                 <>

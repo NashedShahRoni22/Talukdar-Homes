@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import LoaderPage from "../../../Adminpage/LoaderPage";
 import { Link } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
+import { CartContext } from "../../../Providers/CartProvider.jsx";
 
 export default function Material() {
+  const { carts, addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
   const [services, setServices] = useState([]);
 
@@ -28,22 +30,26 @@ export default function Material() {
         <>
           <div className="mt-5 grid min-h-screen grid-cols-2 gap-5 md:gap-10 lg:grid-cols-4">
             {services?.map((s, i) => (
-              <Link
-                to={`/service-details/${s?.slug}`}
+              <div
                 key={i}
                 className="group h-fit rounded border shadow-lg duration-300 ease-linear hover:shadow-primary"
               >
-                <div>
+                <Link to={`/service-details/${s?.slug}`}>
                   <img
                     src={s?.thumbnail}
                     alt=""
                     className="h-[200px] w-full rounded-t md:h-[250px]"
                     loading="lazy"
                   />
-                </div>
+                </Link>
                 <div className="flex items-end justify-between p-4">
                   <div>
-                    <p className="text-lg">{s?.title}</p>
+                    <Link
+                      to={`/service-details/${s?.slug}`}
+                      className="text-lg"
+                    >
+                      {s?.title}
+                    </Link>
                     <p className="text-xl text-primary">
                       $150 AUD{" "}
                       <span className="text-sm text-gray-600 line-through">
@@ -51,11 +57,14 @@ export default function Material() {
                       </span>
                     </p>
                   </div>
-                  <button className="flex items-center justify-center gap-2 rounded border border-primary p-4 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white">
+                  <button
+                    className="flex items-center justify-center gap-2 rounded border border-primary p-4 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
+                    onClick={() => addToCart(s)}
+                  >
                     <FaCartPlus className="text-xl" />
                   </button>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </>
