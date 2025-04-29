@@ -34,6 +34,7 @@ import ManageProducts from "./Adminpage/ManageProducts.jsx";
 import UpdateProduct from "./Adminpage/UpdateProduct.jsx";
 import CartProvider from "./Providers/CartProvider.jsx";
 import Cart from "./pages/Cart.jsx";
+import UpdateBlog from "./Adminpage/UpdateBlog.jsx";
 
 const router = createBrowserRouter([
   {
@@ -123,7 +124,7 @@ const router = createBrowserRouter([
         element: <ManageService />,
       },
       {
-        path: "/admin/update-service/:slug",
+        path: "/admin/update-service/:slug/:id",
         element: <UpdateService />,
       },
       {
@@ -133,6 +134,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/manage-blog",
         element: <ManageBlog />,
+      },
+      {
+        path: "/admin/update-blog/:slug/:id",
+        element: <UpdateBlog />,
       },
       {
         path: "/admin/add-category",
@@ -169,5 +174,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </CartProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

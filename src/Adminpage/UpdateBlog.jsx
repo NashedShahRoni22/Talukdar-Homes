@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ReactQuill from "react-quill";
 import { Button, Spinner } from "@material-tailwind/react";
-import "react-quill/dist/quill.snow.css";
+import { useEffect, useState } from "react";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
+import ReactQuill from "react-quill";
+import { useNavigate, useParams } from "react-router-dom";
 
 const modules = {
   toolbar: [
@@ -34,33 +33,55 @@ const formats = [
   "image",
 ];
 
-const AddBlog = () => {
+export default function UpdateBlog() {
+  const { slug, id } = useParams();
   const navigate = useNavigate();
-  const [loader, setLoader] = useState(false);
   const [content, setContent] = useState("");
+  const [uploadedPreviewImg, setUploadedPreviewImg] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
+  const [loader, setLoader] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    slogan: "",
+  });
 
-  // add a new blog submit
+  useEffect(() => {
+    fetch(`https://api.talukderhomes.com.au/api/blogs/${slug}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === true) {
+          setFormData({
+            title: data.data.title,
+            slogan: data.data.slogan,
+          });
+          setContent(data.data.content);
+          setUploadedPreviewImg(data.data.image);
+        }
+      });
+  }, [slug]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // update blog info
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoader(true);
 
-    const title = e.target.title.value;
-    const slogan = e.target.slogan.value;
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("slogan", slogan);
-    formData.append("image", thumbnail);
-    formData.append("content", content);
+    const payload = new FormData();
+    payload.append("title", formData.title);
+    payload.append("slogan", formData.slogan);
+    if (thumbnail) payload.append("image", thumbnail);
+    payload.append("content", content);
 
     try {
       const response = await fetch(
-        "https://api.talukderhomes.com.au/api/blogs/store",
+        `https://api.talukderhomes.com.au/api/blogs/update/${id}`,
         {
           method: "POST",
-          body: formData,
+          body: payload,
         },
       );
       const data = await response.json();
@@ -69,10 +90,8 @@ const AddBlog = () => {
         setLoader(false);
         navigate("/admin/manage-blog");
       }
-      // Handle response data as needed
     } catch (error) {
       console.error("Error:", error);
-      setLoader(false);
     } finally {
       setLoader(false);
     }
@@ -82,7 +101,7 @@ const AddBlog = () => {
     <form className="mt-5 md:mt-0 md:p-5 lg:p-10" onSubmit={handleSubmit}>
       <div className="flex justify-between">
         <h5 className="text-xl font-semibold text-orange-600 md:text-3xl">
-          Add Blog
+          Update Blog
         </h5>
         <Button type="submit" className="flex items-center gap-2 bg-orange-600">
           Submit
@@ -117,7 +136,7 @@ const AddBlog = () => {
       </div>
 
       {/* thumbnail image preview */}
-      {thumbnail && (
+      {thumbnail ? (
         <div className="aspect-w-1 aspect-h-1 relative mt-4 border">
           <IoCloseCircleSharp
             className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
@@ -129,6 +148,14 @@ const AddBlog = () => {
             className="h-[200px] w-full rounded object-contain md:h-[250px]"
           />
         </div>
+      ) : (
+        <div className="aspect-w-1 aspect-h-1 relative mt-4 border">
+          <img
+            src={`https://api.talukderhomes.com.au/public/${uploadedPreviewImg}`}
+            alt="thumbnail image"
+            className="h-[200px] w-full rounded object-contain md:h-[250px]"
+          />
+        </div>
       )}
 
       <div className="mt-4 flex flex-col gap-2.5">
@@ -136,21 +163,26 @@ const AddBlog = () => {
         <input
           type="text"
           name="title"
-          className="rounded border border-gray-400 px-4 py-2 outline-none"
+          value={formData.title}
+          onChange={handleInputChange}
           placeholder="Enter Title"
+          className="rounded border border-gray-400 px-4 py-2 outline-none"
         />
       </div>
 
       <div className="mt-5 flex flex-col gap-2.5">
         <label className="font-semibold">Slogan</label>
         <textarea
+          rows={5}
           type="text"
           name="slogan"
-          className="rounded border border-gray-400 px-4 py-2 outline-none"
+          value={formData.slogan}
+          onChange={handleInputChange}
           placeholder="Enter Slogan"
-          rows={5}
+          className="rounded border border-gray-400 px-4 py-2 outline-none"
         />
       </div>
+
       <div className="mt-5 flex flex-col gap-2.5">
         <label className="font-semibold">Content</label>
         <ReactQuill
@@ -164,6 +196,4 @@ const AddBlog = () => {
       </div>
     </form>
   );
-};
-
-export default AddBlog;
+}

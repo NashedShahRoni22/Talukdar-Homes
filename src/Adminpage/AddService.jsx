@@ -78,6 +78,7 @@ const AddService = () => {
     payload.append("icon", icon);
     payload.append("thumbnail", thumbnail);
     payload.append("title", formData.title);
+    payload.append("slogan", formData.slogan);
     payload.append("content", content);
 
     try {
@@ -86,7 +87,7 @@ const AddService = () => {
         {
           method: "POST",
           body: payload,
-        }
+        },
       );
 
       const data = await res.json();
