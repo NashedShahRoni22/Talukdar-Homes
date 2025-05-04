@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   BiHomeAlt,
   BiSolidCategoryAlt,
@@ -11,8 +11,10 @@ import { MdInfo, MdEmail } from "react-icons/md";
 
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CartContext } from "../Providers/CartProvider";
+import { AuthContext } from "../Providers/AuthProvider";
+
 const menus = [
   {
     name: "Home",
@@ -61,28 +63,29 @@ const menus = [
 ];
 
 export default function Navbar() {
+  const { user } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
 
   return (
     <nav className="bg-black/90">
-      <section className="mx-5 md:container md:mx-auto flex items-center justify-between">
+      <section className="mx-5 flex items-center justify-between md:container md:mx-auto">
         {/* mobile view  */}
-        <div className="lg:hidden relative z-50">
-          <button className=" py-2.5 md:py-5  " onClick={() => setShow(!show)}>
-            <HiMiniBars3BottomLeft className="text-white text-3xl" />
+        <div className="relative z-50 lg:hidden">
+          <button className="py-2.5 md:py-5" onClick={() => setShow(!show)}>
+            <HiMiniBars3BottomLeft className="text-3xl text-white" />
           </button>
           {show && (
-            <div className=" bg-white min-w-[300px] md:min-w-[500px] min-h-screen shadow rounded fixed top-0 left-0 p-5">
-              <div className="flex justify-between items-center">
-                <h5 className="font-extrabold uppercase text-2xl md:text-4xl text-primary">
+            <div className="fixed left-0 top-0 min-h-screen min-w-[300px] rounded bg-white p-5 shadow md:min-w-[500px]">
+              <div className="flex items-center justify-between">
+                <h5 className="text-2xl font-extrabold uppercase text-primary md:text-4xl">
                   TH
                 </h5>
                 <button onClick={() => setShow(!show)}>
                   <IoMdClose className="text-2xl md:text-4xl" />
                 </button>
               </div>
-              <div className="flex flex-col items-start gap-2.5 md:gap-5 mt-5 ml-5">
+              <div className="ml-5 mt-5 flex flex-col items-start gap-2.5 md:gap-5">
                 {menus.map((m, i) => (
                   <Link
                     key={i}
@@ -102,19 +105,19 @@ export default function Navbar() {
         <div className="py-2.5 md:py-5">
           <Link
             to={"/"}
-            className="font-extrabold text-primary uppercase text-2xl md:text-4xl"
+            className="text-2xl font-extrabold uppercase text-primary md:text-4xl"
           >
             TH
           </Link>
         </div>
 
         {/* desktop view  */}
-        <div className="hidden text-white lg:flex lg:items-center gap-10">
+        <div className="hidden gap-10 text-white lg:flex lg:items-center">
           {menus.map((m, i) => (
             <Link key={i} to={m.link}>
               {m.name === "Profile" || m.name === "Cart" ? (
-                <div className="flex items-center gap-1.5 group">
-                  <span className="text-xl p-2 bg-primary rounded-full">
+                <div className="group flex items-center gap-1.5">
+                  <span className="rounded-full bg-primary p-2 text-xl">
                     {m.icon}
                   </span>
                   <span className="group-hover:text-primary">{m.name}</span>
@@ -131,6 +134,7 @@ export default function Navbar() {
               )}
             </Link>
           ))}
+          {!user && <Link to="/login">Login</Link>}
         </div>
       </section>
     </nav>

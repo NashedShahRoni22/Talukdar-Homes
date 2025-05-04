@@ -35,6 +35,8 @@ import UpdateProduct from "./Adminpage/UpdateProduct.jsx";
 import CartProvider from "./Providers/CartProvider.jsx";
 import Cart from "./pages/Cart.jsx";
 import UpdateBlog from "./Adminpage/UpdateBlog.jsx";
+import AuthProvider from "./Providers/AuthProvider.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "/service-details/:slug",
         element: <MaterialDetails />,
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
       },
     ],
   },
@@ -169,10 +175,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <CartProvider>
-        <RouterProvider router={router} />
-      </CartProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </ThemeProvider>
+    </AuthProvider>
   </React.StrictMode>,
 );
