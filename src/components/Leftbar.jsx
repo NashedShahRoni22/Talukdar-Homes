@@ -17,12 +17,14 @@ import {
   FiBox, // Products
   FiBookOpen, // Blogs
 } from "react-icons/fi";
+import logo from "../assets/logo/logo-1.png";
 
 const Leftbar = ({ setShow }) => {
   const [showChild, setShowChild] = useState({
     id: null,
     state: false,
   });
+
   const menus = [
     {
       name: "Dashboard",
@@ -111,9 +113,13 @@ const Leftbar = ({ setShow }) => {
 
   return (
     <div className="flex flex-col p-5 shadow-xl min-h-screen sticky top-0 z-50">
-      <p className="text-xl font-semibold text-primary mb-5 text-center">
-        Talukdar Homes
-      </p>
+      <Link to="/">
+        <img
+          src={logo}
+          alt="talukdar homes logo"
+          className="h-10 object-cover"
+        />
+      </Link>
       {menus.map((m, i) => (
         <div key={i}>
           {m?.childs?.length === 0 ? (

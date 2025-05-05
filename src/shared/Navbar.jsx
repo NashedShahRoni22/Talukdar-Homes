@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../Providers/CartProvider";
 import { AuthContext } from "../Providers/AuthProvider";
 import logo from "../assets/logo/logo-1.png";
+import toast from "react-hot-toast";
 
 const menus = [
   {
@@ -56,12 +57,14 @@ const menus = [
 ];
 
 export default function Navbar() {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
 
   const handleLogout = () => {
+    toast.success("Logout successful!");
     localStorage.removeItem("accessToken");
+    setUser(null);
   };
 
   return (

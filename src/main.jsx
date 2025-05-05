@@ -39,6 +39,8 @@ import AuthProvider from "./Providers/AuthProvider.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
 import { Toaster } from "react-hot-toast";
 import Blogs from "./pages/Blogs/Blogs.jsx";
+import Signup from "./pages/Signup/Signup.jsx";
+import UserPrivateRoute from "./Routes/UserPrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -91,13 +93,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <Checkout />,
+        element: (
+          <UserPrivateRoute>
+            <Checkout />
+          </UserPrivateRoute>
+        ),
       },
     ],
   },
   {
     path: "/login",
     element: <AdminLogin />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
   },
   {
     path: "/admin",
@@ -189,5 +199,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

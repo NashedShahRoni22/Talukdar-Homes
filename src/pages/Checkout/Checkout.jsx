@@ -1,14 +1,10 @@
 import { useContext, useState } from "react";
+import { AuthContext } from "../../Providers/AuthProvider";
 import { CartContext } from "../../Providers/CartProvider";
 import stripeIcon from "../../assets/stipe.png";
-import { AuthContext } from "../../Providers/AuthProvider";
-import { useNavigate } from "react-router-dom";
 
 export default function Checkout() {
-  const navigate = useNavigate();
-  const { user, setUser } = useContext(AuthContext);
-  console.log(user);
-
+  const { user } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [formData, setFormData] = useState({
     name: "",
@@ -71,27 +67,6 @@ export default function Checkout() {
     } catch (error) {
       console.error("purchase error:", error);
     }
-
-    /***==> Register API <==***/
-    /* try {
-      const res = await fetch("https://api.talukderhomes.com.au/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data?.status === true) {
-        setUser(data?.data);
-        localStorage.setItem("accessToken", JSON.stringify(data?.data));
-        navigate("/");
-      } else {
-        window.alert("Email & Password should be valid!");
-      }
-    } catch (err) {
-      console.error("regitration error:", err);
-    } */
   };
 
   return (

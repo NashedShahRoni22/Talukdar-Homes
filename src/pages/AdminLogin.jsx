@@ -1,13 +1,18 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Input } from "@material-tailwind/react";
+import toast from "react-hot-toast";
 import { AuthContext } from "../Providers/AuthProvider";
 
+const loginEmail = "admin@talukdarhomes.com.au";
+const loginPassword = "@talukdarhomes2024";
+
 const AdminLogin = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const loginEmail = "admin@talukdarhomes.com.au";
-  const loginPassword = "@talukdarhomes2024";
+
+  const from = location.state?.from?.pathname || "/";
 
   // handle login
   const handleLogin = async (e) => {
@@ -28,6 +33,8 @@ const AdminLogin = () => {
     };
 
     if (email === loginEmail && password === loginPassword) {
+      setUser({ name: "Admin", email: loginEmail });
+      toast.success("Login successful!");
       localStorage.setItem("thAccessToken", "@talukdarhomes2024");
       navigate("/admin");
       return;
@@ -44,9 +51,10 @@ const AdminLogin = () => {
       const data = await res.json();
 
       if (data?.status === true) {
+        toast.success("Login successful!");
         setUser(data?.data);
         localStorage.setItem("accessToken", JSON.stringify(data?.data));
-        navigate("/");
+        navigate(from, { replace: true });
       } else {
         window.alert("Email & Password should be valid!");
       }
@@ -72,6 +80,13 @@ const AdminLogin = () => {
             Login
           </Button>
         </div>
+
+        <p className="mt-5 text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <Link to="/signup" className="underline text-primary">
+            Signup
+          </Link>
+        </p>
       </form>
     </section>
   );

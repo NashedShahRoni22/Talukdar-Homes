@@ -33,20 +33,35 @@ export default function Blogs() {
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {blogs.map((blog) => (
-            <div key={blog.id} className="rounded border border-gray-200 p-2">
-              <div className="aspect-[4/3] md:aspect-video">
-                <img
-                  src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*I46oiZDR8itT_6xUZAe0gw.jpeg"
-                  alt="Blog Post"
-                  className="h-full w-full rounded object-cover"
-                />
+            <div
+              key={blog.id}
+              className="rounded flex flex-col  border border-gray-200 p-2"
+            >
+              <div>
+                <Link
+                  to={`/blogs/${blog.slug}`}
+                  className="aspect-[4/3] md:aspect-video"
+                >
+                  <img
+                    src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*I46oiZDR8itT_6xUZAe0gw.jpeg"
+                    alt="Blog Post"
+                    className="h-full w-full rounded object-cover"
+                  />
+                </Link>
               </div>
+
               <Link
-                to={blog.slug}
-                className="text-lg font-medium transition-all duration-200 ease-in-out hover:text-primary"
+                to={`/blogs/${blog.slug}`}
+                className="text-lg my-3 w-fit inline-block font-medium transition-all duration-200 ease-in-out hover:text-primary"
               >
                 {blog.title}
               </Link>
+
+              <button className="bg-primary transition-all duration-200 py-1.5 rounded hover:bg-primary-hover text-white">
+                <Link to={`/blogs/${blog.slug}`} className="text-sm">
+                  Read More
+                </Link>
+              </button>
             </div>
           ))}
         </div>
