@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  console.log(user);
+
   const { carts } = useContext(CartContext);
   const [formData, setFormData] = useState({
     name: "",
@@ -46,7 +48,32 @@ export default function Checkout() {
 
   // handle confirm order
   const handleConfirmOrder = async () => {
+    const purchasePayload = new FormData();
+    purchasePayload.append("reference_type", "product");
+    purchasePayload.append("payment_gateway", "stripe");
+    carts.forEach((item, i) => {
+      purchasePayload.append(`reference_ids[${i}]`, item.id);
+    });
+
+    /***==> Purchase API <==***/
     try {
+      const res = await fetch("https://api.talukderhomes.com.au/api/checkout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: purchasePayload,
+      });
+      const data = await res.json();
+      if (data?.status === true) {
+        window.location.href = data?.data?.checkout_url;
+      }
+    } catch (error) {
+      console.error("purchase error:", error);
+    }
+
+    /***==> Register API <==***/
+    /* try {
       const res = await fetch("https://api.talukderhomes.com.au/api/register", {
         method: "POST",
         headers: {
@@ -64,7 +91,7 @@ export default function Checkout() {
       }
     } catch (err) {
       console.error("regitration error:", err);
-    }
+    } */
   };
 
   return (

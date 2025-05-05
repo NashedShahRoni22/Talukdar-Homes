@@ -51,9 +51,12 @@ export default function Material() {
                       {s?.title}
                     </Link>
                     <p className="text-xl text-primary">
-                      $150 AUD{" "}
+                      ${s.price} AUD{" "}
                       <span className="text-sm text-gray-600 line-through">
-                        $100
+                        $
+                        {(
+                          parseFloat(s?.price) + parseFloat(s?.discount)
+                        ).toFixed(2)}
                       </span>
                     </p>
                   </div>

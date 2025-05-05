@@ -8,12 +8,12 @@ import {
   BiPackage,
 } from "react-icons/bi";
 import { MdInfo, MdEmail } from "react-icons/md";
-
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { CartContext } from "../Providers/CartProvider";
 import { AuthContext } from "../Providers/AuthProvider";
+import logo from "../assets/logo/logo.jpeg";
 
 const menus = [
   {
@@ -78,9 +78,13 @@ export default function Navbar() {
           {show && (
             <div className="fixed left-0 top-0 min-h-screen min-w-[300px] rounded bg-white p-5 shadow md:min-w-[500px]">
               <div className="flex items-center justify-between">
-                <h5 className="text-2xl font-extrabold uppercase text-primary md:text-4xl">
-                  TH
-                </h5>
+                <Link to="/">
+                  <img
+                    src={logo}
+                    alt="talukdar homes logo"
+                    className="h-12 w-[140px] object-cover"
+                  />
+                </Link>
                 <button onClick={() => setShow(!show)}>
                   <IoMdClose className="text-2xl md:text-4xl" />
                 </button>
@@ -101,13 +105,15 @@ export default function Navbar() {
             </div>
           )}
         </div>
+
         {/* logo here  */}
         <div className="py-2.5 md:py-5">
-          <Link
-            to={"/"}
-            className="text-2xl font-extrabold uppercase text-primary md:text-4xl"
-          >
-            TH
+          <Link to="/">
+            <img
+              src={logo}
+              alt="talukdar homes logo"
+              className="h-16 w-[160px] object-cover"
+            />
           </Link>
         </div>
 
