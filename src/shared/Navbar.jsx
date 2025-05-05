@@ -13,7 +13,7 @@ import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { CartContext } from "../Providers/CartProvider";
 import { AuthContext } from "../Providers/AuthProvider";
-import logo from "../assets/logo/logo.jpeg";
+import logo from "../assets/logo/logo-1.png";
 
 const menus = [
   {
@@ -47,13 +47,6 @@ const menus = [
     icon: <BiBook />,
   },
   {
-    name: "Profile",
-    link: "/profile",
-    icon: <BiUser />,
-    className:
-      "p-2.5 flex justify-center items-center rounded-full bg-primary text-white",
-  },
-  {
     name: "Cart",
     link: "/cart",
     icon: <BiCart />,
@@ -66,6 +59,10 @@ export default function Navbar() {
   const { user } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+  };
 
   return (
     <nav className="bg-black/90">
@@ -112,7 +109,7 @@ export default function Navbar() {
             <img
               src={logo}
               alt="talukdar homes logo"
-              className="h-16 w-[160px] object-cover"
+              className="h-10 object-cover"
             />
           </Link>
         </div>
@@ -140,7 +137,33 @@ export default function Navbar() {
               )}
             </Link>
           ))}
-          {!user && <Link to="/login">Login</Link>}
+
+          {user ? (
+            <>
+              <Link to="/profile">
+                <div className="group flex items-center gap-1.5">
+                  <span className="rounded-full bg-primary p-2 text-xl">
+                    <BiUser />
+                  </span>
+                  <span className="group-hover:text-primary">Profile</span>
+                </div>
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="rounded-md border border-primary px-4 py-2 text-white transition-all duration-200 ease-in-out hover:bg-primary"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="rounded-md bg-primary px-4 py-2 text-white"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </section>
     </nav>

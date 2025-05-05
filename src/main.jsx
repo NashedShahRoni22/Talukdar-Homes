@@ -38,6 +38,7 @@ import UpdateBlog from "./Adminpage/UpdateBlog.jsx";
 import AuthProvider from "./Providers/AuthProvider.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
 import { Toaster } from "react-hot-toast";
+import Blogs from "./pages/Blogs/Blogs.jsx";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "/products",
         element: <Material />,
+      },
+      {
+        path: "/blogs",
+        element: <Blogs />,
       },
       {
         path: "/service-details/:slug",
