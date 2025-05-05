@@ -37,6 +37,7 @@ import Cart from "./pages/Cart.jsx";
 import UpdateBlog from "./Adminpage/UpdateBlog.jsx";
 import AuthProvider from "./Providers/AuthProvider.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -179,6 +180,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <CartProvider>
           <RouterProvider router={router} />
+          <Toaster />
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>

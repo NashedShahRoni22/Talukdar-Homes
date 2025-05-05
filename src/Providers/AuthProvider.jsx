@@ -7,7 +7,9 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
-    setUser(JSON.parse(accessToken));
+    if (accessToken) {
+      setUser(accessToken);
+    }
   }, []);
 
   const authInfo = { user, setUser };

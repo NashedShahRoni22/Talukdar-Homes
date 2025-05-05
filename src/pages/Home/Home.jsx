@@ -11,10 +11,10 @@ import Features from "./Features";
 
 export default function Home() {
   return (
-    <main>
+    <main className="overflow-hidden">
       {/* <LandingBanner /> */}
-      <EcomerceBanner/>
-      <Features/>
+      <EcomerceBanner />
+      <Features />
       <WhatWeBuild />
       <Services />
       <About />
