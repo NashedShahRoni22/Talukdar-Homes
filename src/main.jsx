@@ -42,6 +42,7 @@ import Blogs from "./pages/Blogs/Blogs.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import UserPrivateRoute from "./Routes/UserPrivateRoute.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import BlogDetails from "./pages/BlogDetails/BlogDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
       {
         path: "/blogs",
         element: <Blogs />,
+      },
+      {
+        path: "/blogs/:slug",
+        element: <BlogDetails />,
       },
       {
         path: "/service-details/:slug",

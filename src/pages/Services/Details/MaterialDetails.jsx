@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import LoaderPage from "../../../Adminpage/LoaderPage";
 import {
   Button,
@@ -9,11 +9,16 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { MdEmail, MdPhone } from "react-icons/md";
+import { AiOutlineThunderbolt } from "react-icons/ai";
+import { CartContext } from "../../../Providers/CartProvider";
+import { AuthContext } from "../../../Providers/AuthProvider";
 
 const MaterialDetails = () => {
+  const navigate = useNavigate();
   const { slug } = useParams();
+  const { user } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext);
   const [service, setService] = useState({});
-  console.log(service);
   const [loader, setLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const [focusImage, setFocusImage] = useState();
@@ -34,55 +39,111 @@ const MaterialDetails = () => {
       });
   }, [slug]);
 
+  const handleBuy = () => {
+    if (user) {
+      addToCart(service, true);
+      navigate("/checkout");
+      return;
+    }
+
+    addToCart(service);
+  };
+
+  if (loader) {
+    return <LoaderPage />;
+  }
+
   return (
     <section className="mx-5 py-10 md:container md:mx-auto md:py-20">
-      {loader ? (
-        <LoaderPage />
-      ) : (
-        <div className="flex flex-col gap-8 md:flex-row md:gap-16">
-          {/* left side images */}
-          <div className="w-full md:w-1/3">
-            <div className="flex justify-center rounded border border-gray-200 p-1">
-              <img
-                className="h-full object-cover"
-                src={focusImage}
-                alt=""
-                loading="lazy"
-              />
-            </div>
-            <div className="mt-4 flex flex-wrap justify-center gap-2.5">
-              {service?.gallery?.map((spi, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={spi?.image}
-                    className={`size-16 cursor-pointer ${
-                      focusImage === spi?.image && "border border-primary"
-                    }`}
-                    alt=""
-                    onClick={() => setFocusImage(spi?.image)}
-                    loading="lazy"
-                  />
-                  {focusImage === spi?.image && (
-                    <div className="absolute top-0 h-full w-full bg-primary/50"></div>
-                  )}
-                </div>
-              ))}
-            </div>
+      <div className="flex flex-col gap-8 md:flex-row md:gap-16">
+        {/* left side images */}
+        <div className="w-full md:w-1/3">
+          <div className="relative flex justify-center rounded border border-gray-200 p-1">
+            <img
+              className="h-full object-cover"
+              src={focusImage}
+              alt=""
+              loading="lazy"
+            />
+            {/* Top-right corner badge */}
+            {service?.is_featured && (
+              <span className="absolute left-2 top-2 rounded bg-primary/90 px-2 py-1 text-xs font-bold text-white">
+                Featured
+              </span>
+            )}
           </div>
 
-          {/* right side product info text */}
-          <div className="w-full md:w-2/3">
-            <p className="font-semibold md:text-xl">{service?.title}</p>
-            <Button size="sm" onClick={handleOpen} className="w-fit bg-primary">
-              Order Now
-            </Button>
-            <div
-              className="text-justify"
-              dangerouslySetInnerHTML={{ __html: service?.content }}
-            />
+          <div className="mt-4 flex flex-wrap justify-center gap-2.5">
+            {service?.gallery?.map((spi, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={spi?.image}
+                  className={`size-16 cursor-pointer ${
+                    focusImage === spi?.image && "border border-primary"
+                  }`}
+                  alt=""
+                  onClick={() => setFocusImage(spi?.image)}
+                  loading="lazy"
+                />
+                {focusImage === spi?.image && (
+                  <div className="absolute top-0 h-full w-full bg-primary/50"></div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      )}
+
+        {/* right side product info text */}
+        <div className="w-full md:w-2/3">
+          {service?.on_flash_sale && (
+            <div className="flex w-fit items-center gap-0.5 rounded bg-primary/90 px-2 py-1 text-xs font-bold text-white">
+              <AiOutlineThunderbolt className="min-w-fit text-base" /> FLASH
+              SALE: Limited Time!
+            </div>
+          )}
+          <h1 className="mt-2 text-xl font-semibold md:text-3xl">
+            {service?.title}
+          </h1>
+          <div className="mt-4 flex items-center gap-6">
+            <p className="w-fit rounded bg-gray-100 p-1.5 text-sm font-medium">
+              Category:{" "}
+              <span className="text-primary">{service?.category?.title}</span>
+            </p>
+            <p className="w-fit rounded bg-gray-100 p-1.5 text-sm font-medium">
+              Stock:{" "}
+              <span className="text-primary">
+                {parseInt(service?.quantity) > 0 ? "Available" : "Unavailable"}
+              </span>
+            </p>
+          </div>
+
+          <div className="my-12 flex items-center gap-4">
+            <Button
+              onClick={() => addToCart(service)}
+              className="border border-primary bg-primary text-sm capitalize hover:bg-primary-hover"
+            >
+              Add to cart
+            </Button>
+            <Button
+              onClick={handleBuy}
+              className="border border-primary bg-transparent text-sm text-primary hover:bg-primary-hover hover:text-white"
+            >
+              Buy Now
+            </Button>
+          </div>
+
+          <div>
+            <h2 className="border-l-4 border-primary bg-gray-100 py-2 pl-2 text-xl font-semibold">
+              Description
+            </h2>
+
+            <div
+              className="mt-4 text-gray-700"
+              dangerouslySetInnerHTML={{ __html: service?.description }}
+            ></div>
+          </div>
+        </div>
+      </div>
 
       <Dialog
         open={open}

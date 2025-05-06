@@ -12,10 +12,13 @@ export default function CartProvider({ children }) {
     localStorage.setItem("cartItems", JSON.stringify(carts));
   }, [carts]);
 
-  const addToCart = (item) => {
+  const addToCart = (item, silent) => {
     const exists = carts.find((cartItem) => cartItem.id === item.id);
     if (exists) {
-      return toast.error("Item already in cart!");
+      if (!silent) {
+        toast.error("Item already in cart!");
+      }
+      return;
     } else {
       setCarts((prevCart) => [...prevCart, { ...item, quantity: 1 }]);
       toast.success(`${item.title} added to cart`);

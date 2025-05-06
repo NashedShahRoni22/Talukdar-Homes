@@ -151,7 +151,7 @@ export default function UpdateBlog() {
       ) : (
         <div className="aspect-w-1 aspect-h-1 relative mt-4 border">
           <img
-            src={`https://api.talukderhomes.com.au/public/${uploadedPreviewImg}`}
+            src={uploadedPreviewImg}
             alt="thumbnail image"
             className="h-[200px] w-full rounded object-contain md:h-[250px]"
           />

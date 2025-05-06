@@ -38,7 +38,7 @@ export default function BlogRow({ blog, setBlogs }) {
           <Link>
             <img
               className="mx-auto size-11 rounded object-contain"
-              src={`https://api.talukderhomes.com.au/public/${image}`}
+              src={image}
               alt={`image of ${title}`}
               loading="lazy"
             />

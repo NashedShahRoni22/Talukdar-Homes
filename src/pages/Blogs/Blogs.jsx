@@ -35,15 +35,15 @@ export default function Blogs() {
           {blogs.map((blog) => (
             <div
               key={blog.id}
-              className="rounded flex flex-col  border border-gray-200 p-2"
+              className="flex flex-col rounded border border-gray-200 p-2"
             >
               <div>
                 <Link
                   to={`/blogs/${blog.slug}`}
-                  className="aspect-[4/3] md:aspect-video"
+                  className="block aspect-[4/3] md:aspect-video"
                 >
                   <img
-                    src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*I46oiZDR8itT_6xUZAe0gw.jpeg"
+                    src={blog.image}
                     alt="Blog Post"
                     className="h-full w-full rounded object-cover"
                   />
@@ -52,12 +52,12 @@ export default function Blogs() {
 
               <Link
                 to={`/blogs/${blog.slug}`}
-                className="text-lg my-3 w-fit inline-block font-medium transition-all duration-200 ease-in-out hover:text-primary"
+                className="my-3 inline-block w-fit text-lg font-medium transition-all duration-200 ease-in-out hover:text-primary"
               >
                 {blog.title}
               </Link>
 
-              <button className="bg-primary transition-all duration-200 py-1.5 rounded hover:bg-primary-hover text-white">
+              <button className="rounded bg-primary py-1.5 text-white transition-all duration-200 hover:bg-primary-hover">
                 <Link to={`/blogs/${blog.slug}`} className="text-sm">
                   Read More
                 </Link>
