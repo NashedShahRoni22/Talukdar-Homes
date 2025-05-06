@@ -1,24 +1,51 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import { CartContext } from "../../Providers/CartProvider";
 import stripeIcon from "../../assets/stipe.png";
 
 export default function Checkout() {
   const { user } = useContext(AuthContext);
-  const { carts } = useContext(CartContext);
+  const { carts, setCarts } = useContext(CartContext);
+  const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
+    name: user?.name,
+    email: user?.email,
+    phone: "",
+    country: "Australia",
+    city: "",
+    state: "",
+    zip_code: "",
+    address: "",
   });
 
   const isDisabled =
     !formData.name.trim("") ||
     !formData.email.trim("") ||
-    !formData.password.trim("") ||
-    !formData.password_confirmation.trim("") ||
-    formData.password !== formData.password_confirmation;
+    !formData.phone.trim("") ||
+    !formData.country.trim("") ||
+    !formData.city.trim("") ||
+    !formData.state.trim("") ||
+    !formData.zip_code.trim("") ||
+    !formData.address.trim("");
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await fetch(
+          "https://restcountries.com/v3.1/all?fields=name",
+        );
+        const data = await res.json();
+        const sortedCountries = data?.sort((a, b) =>
+          a.name.common.localeCompare(b.name.common),
+        );
+        setCountries(sortedCountries);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   //  handle input change
   const handleInputChange = (e) => {
@@ -50,6 +77,12 @@ export default function Checkout() {
     carts.forEach((item, i) => {
       purchasePayload.append(`reference_ids[${i}]`, item.id);
     });
+    purchasePayload.append("phone", formData.phone);
+    purchasePayload.append("country", formData.country);
+    purchasePayload.append("city", formData.city);
+    purchasePayload.append("state", formData.state);
+    purchasePayload.append("zip_code", formData.zip_code);
+    purchasePayload.append("address", formData.address);
 
     /***==> Purchase API <==***/
     try {
@@ -62,6 +95,8 @@ export default function Checkout() {
       });
       const data = await res.json();
       if (data?.status === true) {
+        localStorage.removeItem("cartItems");
+        setCarts([]);
         window.location.href = data?.data?.checkout_url;
       }
     } catch (error) {
@@ -98,9 +133,9 @@ export default function Checkout() {
                 id="name"
                 name="name"
                 value={formData.name}
-                onChange={handleInputChange}
                 required
-                className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
+                readOnly
+                className="border-neutral-200 mt-2 w-full cursor-not-allowed rounded border bg-gray-100 p-2 outline-none"
               />
             </div>
             {/* email */}
@@ -113,48 +148,107 @@ export default function Checkout() {
                 id="email"
                 name="email"
                 value={formData.email}
+                required
+                readOnly
+                className="border-neutral-200 mt-2 w-full cursor-not-allowed rounded border bg-gray-100 p-2 outline-none"
+              />
+            </div>
+
+            {/* phone */}
+            <div>
+              <label htmlFor="phone" className="text-neutral-600 font-medium">
+                Phone <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value={formData.phone}
                 onChange={handleInputChange}
                 required
                 className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
               />
             </div>
-            {/* password */}
+
+            {/* country select dropdown */}
             <div>
-              <label
-                htmlFor="password"
-                className="text-neutral-600 font-medium"
+              <label htmlFor="country" className="text-neutral-600 font-medium">
+                Country <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={formData.country}
+                name="country"
+                onChange={handleInputChange}
+                className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
               >
-                Password <span className="text-red-500">*</span>
+                {countries?.map((country, i) => (
+                  <option key={i} value={country.name.common}>
+                    {country.name.common}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* city */}
+            <div>
+              <label htmlFor="city" className="text-neutral-600 font-medium">
+                City <span className="text-red-500">*</span>
               </label>
               <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
+                type="text"
+                id="city"
+                name="city"
+                value={formData.city}
                 onChange={handleInputChange}
                 required
                 className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
               />
             </div>
-            {/* password_confirmation */}
+
+            {/* state */}
             <div>
-              <label
-                htmlFor="password_confirmation"
-                className="text-neutral-600 font-medium"
-              >
-                Confirm Password <span className="text-red-500">*</span>
-                <br />
-                {formData.password !== formData.password_confirmation && (
-                  <span className="text-xs text-red-500">
-                    Password didn&apos; match!
-                  </span>
-                )}
+              <label htmlFor="state" className="text-neutral-600 font-medium">
+                State <span className="text-red-500">*</span>
               </label>
               <input
-                type="password"
-                id="password_confirmation"
-                name="password_confirmation"
-                value={formData.password_confirmation}
+                type="text"
+                id="state"
+                name="state"
+                value={formData.state}
+                onChange={handleInputChange}
+                required
+                className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
+              />
+            </div>
+
+            {/* zip_code */}
+            <div>
+              <label
+                htmlFor="zip_code"
+                className="text-neutral-600 font-medium"
+              >
+                ZIP Code <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="zip_code"
+                name="zip_code"
+                value={formData.zip_code}
+                onChange={handleInputChange}
+                required
+                className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"
+              />
+            </div>
+
+            {/* address */}
+            <div>
+              <label htmlFor="address" className="text-neutral-600 font-medium">
+                Address <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                rows={3}
+                name="address"
+                value={formData.address}
                 onChange={handleInputChange}
                 required
                 className="border-neutral-200 mt-2 w-full rounded border p-2 outline-none"

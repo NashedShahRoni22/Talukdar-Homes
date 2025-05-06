@@ -41,6 +41,7 @@ import { Toaster } from "react-hot-toast";
 import Blogs from "./pages/Blogs/Blogs.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
 import UserPrivateRoute from "./Routes/UserPrivateRoute.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -96,6 +97,14 @@ const router = createBrowserRouter([
         element: (
           <UserPrivateRoute>
             <Checkout />
+          </UserPrivateRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <UserPrivateRoute>
+            <Profile />
           </UserPrivateRoute>
         ),
       },
@@ -199,5 +208,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

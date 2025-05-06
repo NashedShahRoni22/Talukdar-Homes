@@ -4,8 +4,10 @@ import { AuthContext } from "../Providers/AuthProvider";
 
 export default function UserPrivateRoute({ children }) {
   const location = useLocation();
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
   const adminAccessToken = localStorage.getItem("thAccessToken");
+
+  if (loading) return <div>Loading...</div>;
 
   if (user || adminAccessToken) {
     return children;

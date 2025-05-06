@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
 import {
   BiChevronDown,
@@ -8,7 +8,7 @@ import {
   BiChevronUpSquare,
 } from "react-icons/bi";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   FiCalendar, // Appointments
   FiMessageSquare, // Messages
@@ -18,117 +18,128 @@ import {
   FiBookOpen, // Blogs
 } from "react-icons/fi";
 import logo from "../assets/logo/logo-1.png";
+import toast from "react-hot-toast";
+import { AuthContext } from "../Providers/AuthProvider";
+const menus = [
+  {
+    name: "Dashboard",
+    link: "/admin",
+    icon: <FiCalendar />,
+    childs: [],
+  },
+  {
+    name: "Appointments",
+    link: "/admin/appointments",
+    icon: <FiCalendar />,
+    childs: [],
+  },
+  {
+    name: "Messages",
+    link: "/admin/contacts",
+    icon: <FiMessageSquare />,
+    childs: [],
+  },
+  {
+    name: "Customers",
+    link: "/admin/customers",
+    icon: <FiUsers />,
+    childs: [],
+  },
+  {
+    name: "Orders",
+    link: "/admin/orders",
+    icon: <FiShoppingCart />,
+    childs: [],
+  },
+  {
+    name: "Products",
+    id: "1",
+    icon: <FiBox />,
+    childs: [
+      {
+        name: "Category",
+        link: "/admin/add-category",
+      },
+      // {
+      //   name: "Subcategory",
+      //   link: "/admin/add-subcategory",
+      // },
+      {
+        name: "Add Product",
+        link: "/admin/add-product",
+      },
+      {
+        name: "Manage Products",
+        link: "/admin/manage-products",
+      },
+    ],
+  },
+  {
+    name: "Services",
+    id: "2",
+    icon: <FiBookOpen />,
+    childs: [
+      {
+        name: "Add Service",
+        link: "/admin/add-service",
+      },
+      {
+        name: "Manage Service",
+        link: "/admin/manage-service",
+      },
+    ],
+  },
+  {
+    name: "Blogs",
+    id: "3",
+    icon: <FiBookOpen />,
+    childs: [
+      {
+        name: "Add Blog",
+        link: "/admin/add-blog",
+      },
+      {
+        name: "Manage Blogs",
+        link: "/admin/manage-blog",
+      },
+    ],
+  },
+];
 
 const Leftbar = ({ setShow }) => {
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
   const [showChild, setShowChild] = useState({
     id: null,
     state: false,
   });
 
-  const menus = [
-    {
-      name: "Dashboard",
-      link: "/admin",
-      icon: <FiCalendar />,
-      childs: [],
-    },
-    {
-      name: "Appointments",
-      link: "/admin/appointments",
-      icon: <FiCalendar />,
-      childs: [],
-    },
-    {
-      name: "Messages",
-      link: "/admin/contacts",
-      icon: <FiMessageSquare />,
-      childs: [],
-    },
-    {
-      name: "Customers",
-      link: "/admin/customers",
-      icon: <FiUsers />,
-      childs: [],
-    },
-    {
-      name: "Orders",
-      link: "/admin/orders",
-      icon: <FiShoppingCart />,
-      childs: [],
-    },
-    {
-      name: "Products",
-      id: "1",
-      icon: <FiBox />,
-      childs: [
-        {
-          name: "Category",
-          link: "/admin/add-category",
-        },
-        // {
-        //   name: "Subcategory",
-        //   link: "/admin/add-subcategory",
-        // },
-        {
-          name: "Add Product",
-          link: "/admin/add-product",
-        },
-        {
-          name: "Manage Products",
-          link: "/admin/manage-products",
-        },
-      ],
-    },
-    {
-      name: "Services",
-      id: "2",
-      icon: <FiBookOpen />,
-      childs: [
-        {
-          name: "Add Service",
-          link: "/admin/add-service",
-        },
-        {
-          name: "Manage Service",
-          link: "/admin/manage-service",
-        },
-      ],
-    },
-    {
-      name: "Blogs",
-      id: "3",
-      icon: <FiBookOpen />,
-      childs: [
-        {
-          name: "Add Blog",
-          link: "/admin/add-blog",
-        },
-        {
-          name: "Manage Blogs",
-          link: "/admin/manage-blog",
-        },
-      ],
-    },
-  ];
+  const handleLogout = () => {
+    toast.success("Logout successful!");
+    localStorage.removeItem("thAccessToken");
+    localStorage.removeItem("accessToken");
+    setUser(null);
+    navigate("/");
+  };
 
   return (
-    <div className="flex flex-col p-5 shadow-xl min-h-screen sticky top-0 z-50">
-      <Link to="/">
+    <div className="sticky top-0 z-50 flex min-h-screen flex-col shadow-xl">
+      <Link to="/" className="bg-black py-2.5">
         <img
           src={logo}
           alt="talukdar homes logo"
-          className="h-10 object-cover"
+          className="mx-auto h-10 object-cover"
         />
       </Link>
       {menus.map((m, i) => (
-        <div key={i}>
+        <div key={i} className="px-5">
           {m?.childs?.length === 0 ? (
             <Link
               to={m.link}
               onClick={() => setShow(false)}
-              className="p-2.5 min-w-full text-sm font-semibold text-center md:text-left flex items-center gap-2.5"
+              className="flex min-w-full items-center gap-2.5 p-2.5 text-center text-sm font-semibold md:text-left"
             >
-              <span className="p-2 rounded-full shadow text-primary bg-orange-50">
+              <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
                 {m.icon}
               </span>
               {m.name}
@@ -139,10 +150,10 @@ const Leftbar = ({ setShow }) => {
                 onClick={() =>
                   setShowChild({ state: !showChild.state, id: m.id })
                 }
-                className="p-2.5 min-w-full text-sm font-semibold text-center md:text-left flex justify-between items-center"
+                className="flex min-w-full items-center justify-between p-2.5 text-center text-sm font-semibold md:text-left"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="p-2 rounded-full shadow text-primary bg-orange-50">
+                  <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
                     {m.icon}
                   </span>
                   {m.name}
@@ -168,15 +179,13 @@ const Leftbar = ({ setShow }) => {
           )}
         </div>
       ))}
-      <div className="flex justify-center absolute bottom-4 min-w-full">
-        <Link
-          className="px-4 py-2 text-sm bg-red-500 text-white w-fit rounded shadow flex gap-2 items-center"
-          to="/"
-          onClick={() => localStorage.removeItem("thAccessToken")}
+      <div className="absolute bottom-4 flex min-w-full justify-center">
+        <button
+          onClick={handleLogout}
+          className="flex w-fit items-center gap-2 rounded bg-red-500 px-4 py-2 text-sm text-white shadow"
         >
-          {" "}
           <GoSignOut className="text-xl" /> Log Out
-        </Link>
+        </button>
       </div>
     </div>
   );

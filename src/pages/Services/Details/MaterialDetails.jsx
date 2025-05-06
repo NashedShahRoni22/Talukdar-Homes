@@ -35,47 +35,55 @@ const MaterialDetails = () => {
   }, [slug]);
 
   return (
-    <section className="mx-5 py-5 md:mx-auto md:w-[50%] md:py-10">
+    <section className="mx-5 py-10 md:container md:mx-auto md:py-20">
       {loader ? (
         <LoaderPage />
       ) : (
-        <div className="flex flex-col gap-2.5 md:gap-5">
-          <div className="flex justify-center">
-            <img
-              className="h-[40vh] w-fit"
-              src={focusImage}
-              alt=""
-              loading="lazy"
+        <div className="flex flex-col gap-8 md:flex-row md:gap-16">
+          {/* left side images */}
+          <div className="w-full md:w-1/3">
+            <div className="flex justify-center rounded border border-gray-200 p-1">
+              <img
+                className="h-full object-cover"
+                src={focusImage}
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-2.5">
+              {service?.gallery?.map((spi, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={spi?.image}
+                    className={`size-16 cursor-pointer ${
+                      focusImage === spi?.image && "border border-primary"
+                    }`}
+                    alt=""
+                    onClick={() => setFocusImage(spi?.image)}
+                    loading="lazy"
+                  />
+                  {focusImage === spi?.image && (
+                    <div className="absolute top-0 h-full w-full bg-primary/50"></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* right side product info text */}
+          <div className="w-full md:w-2/3">
+            <p className="font-semibold md:text-xl">{service?.title}</p>
+            <Button size="sm" onClick={handleOpen} className="w-fit bg-primary">
+              Order Now
+            </Button>
+            <div
+              className="text-justify"
+              dangerouslySetInnerHTML={{ __html: service?.content }}
             />
           </div>
-          <div className="flex flex-wrap gap-2.5">
-            {service?.gallery?.map((spi, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={spi?.image}
-                  className={`size-16 cursor-pointer ${
-                    focusImage === spi?.image && "border border-primary"
-                  }`}
-                  alt=""
-                  onClick={() => setFocusImage(spi?.image)}
-                  loading="lazy"
-                />
-                {focusImage === spi?.image && (
-                  <div className="absolute top-0 h-full w-full bg-primary/50"></div>
-                )}
-              </div>
-            ))}
-          </div>
-          <p className="font-semibold md:text-xl">{service?.title}</p>
-          <Button size="sm" onClick={handleOpen} className="w-fit bg-primary">
-            Order Now
-          </Button>
-          <div
-            className="text-justify"
-            dangerouslySetInnerHTML={{ __html: service?.content }}
-          />
         </div>
       )}
+
       <Dialog
         open={open}
         handler={handleOpen}

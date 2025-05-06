@@ -1,13 +1,16 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Providers/AuthProvider";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 export default function Signup() {
   const location = useLocation();
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,6 +36,7 @@ export default function Signup() {
   // handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await fetch("https://api.talukderhomes.com.au/api/register", {
@@ -44,6 +48,7 @@ export default function Signup() {
       });
       const data = await res.json();
       if (data?.status === true) {
+        toast.success("Signup successful!");
         setUser(data?.data);
         localStorage.setItem("accessToken", JSON.stringify(data?.data));
         navigate(from, { replace: true });
@@ -51,7 +56,10 @@ export default function Signup() {
         toast.error("Email & Password should be valid!");
       }
     } catch (err) {
+      toast.error("Signup error!");
       console.error("regitration error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,33 +95,67 @@ export default function Signup() {
             placeholder="Enter email address"
             onChange={handleInputChange}
           />
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            required
-            value={formData.password}
-            placeholder="Enter password"
-            onChange={handleInputChange}
-          />
-          <Input
-            label="Confirm Password"
-            name="password_confirmation"
-            type="password"
-            required
-            value={formData.password_confirmation}
-            placeholder="Enter confirm password"
-            onChange={handleInputChange}
-          />
+          <div className="relative">
+            <Input
+              label="Password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              required
+              value={formData.password}
+              placeholder="Enter password"
+              onChange={handleInputChange}
+              className="pr-11"
+            />
+            <IconButton
+              variant="text"
+              size="sm"
+              className="!absolute right-2 top-2/4 -translate-y-2/4"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <BsEyeSlash className="h-5 w-5 text-gray-500" />
+              ) : (
+                <BsEye className="h-5 w-5 text-gray-500" />
+              )}
+            </IconButton>
+          </div>
+          <div className="relative">
+            <Input
+              label="Confirm Password"
+              name="password_confirmation"
+              type={showPassword ? "text" : "password"}
+              required
+              value={formData.password_confirmation}
+              placeholder="Enter confirm password"
+              onChange={handleInputChange}
+              className="pr-11"
+            />
+            <IconButton
+              variant="text"
+              size="sm"
+              className="!absolute right-2 top-2/4 -translate-y-2/4"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <BsEyeSlash className="h-5 w-5 text-gray-500" />
+              ) : (
+                <BsEye className="h-5 w-5 text-gray-500" />
+              )}
+            </IconButton>
+          </div>
 
-          <Button type="submit" disabled={isDisabled} className="bg-primary">
-            Signup
+          <Button
+            type="submit"
+            disabled={isDisabled || loading}
+            className="bg-primary"
+          >
+            {loading ? <Spinner className="mx-auto h-4 w-4" /> : "Signup"}
           </Button>
         </div>
 
         <p className="mt-5 text-center text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="underline text-primary">
+          <Link to="/login" className="text-primary underline">
             Login
           </Link>
         </p>

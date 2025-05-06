@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, IconButton, Input } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../Providers/AuthProvider";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const loginEmail = "admin@talukdarhomes.com.au";
 const loginPassword = "@talukdarhomes2024";
@@ -11,6 +12,7 @@ const AdminLogin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
   const from = location.state?.from?.pathname || "/";
 
@@ -75,7 +77,26 @@ const AdminLogin = () => {
         </h5>
         <div className="mt-5 flex flex-col gap-2.5">
           <Input type="email" name="email" label="Enter Email" />
-          <Input type="password" name="password" label="Enter Password" />
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              label="Enter Password"
+              className="pr-10"
+            />
+            <IconButton
+              variant="text"
+              size="sm"
+              className="!absolute right-2 top-2/4 -translate-y-2/4"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <BsEyeSlash className="h-5 w-5 text-gray-500" />
+              ) : (
+                <BsEye className="h-5 w-5 text-gray-500" />
+              )}
+            </IconButton>
+          </div>
           <Button type="submit" className="bg-primary">
             Login
           </Button>
@@ -83,7 +104,7 @@ const AdminLogin = () => {
 
         <p className="mt-5 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link to="/signup" className="underline text-primary">
+          <Link to="/signup" className="text-primary underline">
             Signup
           </Link>
         </p>

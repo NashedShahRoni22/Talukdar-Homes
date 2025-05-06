@@ -8,7 +8,7 @@ const Admin = () => {
   const [show, setShow] = useState(false);
   return (
     <section>
-      <div className="flex justify-between lg:hidden bg-primary text-white p-3">
+      <div className="flex justify-between bg-primary p-3 text-white lg:hidden">
         <Link to="/">Home</Link>
         <button onClick={() => setShow(!show)}>
           {show ? (
@@ -19,8 +19,8 @@ const Admin = () => {
         </button>
       </div>
       <div className="lg:hidden">{show && <Leftbar setShow={setShow} />}</div>
-      <div className="lg:flex mx-5 md:mx-0">
-        <div className="hidden lg:block lg:w-1/6 ">
+      <div className="mx-5 md:mx-0 lg:flex">
+        <div className="hidden lg:block lg:w-1/6">
           <Leftbar />
         </div>
         <div className="lg:w-5/6">
