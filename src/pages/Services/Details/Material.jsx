@@ -22,6 +22,21 @@ export default function Material() {
       });
   }, []);
 
+  const handleAddtoCart = (item) => {
+    const { id, title, thumbnail, discount, slug, attributes } = item;
+
+    const productCartInfo = {
+      id,
+      title,
+      thumbnail,
+      price: discount,
+      slug,
+      ...(attributes?.length > 0 && { attribute: attributes[0] }),
+    };
+
+    addToCart(productCartInfo);
+  };
+
   return (
     <section className="mx-5 py-5 md:container md:mx-auto md:py-10">
       {loading ? (
@@ -65,7 +80,7 @@ export default function Material() {
                   </div>
                   <button
                     className="flex items-center justify-center gap-2 rounded border border-primary p-2.5 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
-                    onClick={() => addToCart(s)}
+                    onClick={() => handleAddtoCart(s)}
                   >
                     <FaCartPlus className="text-lg" />
                   </button>

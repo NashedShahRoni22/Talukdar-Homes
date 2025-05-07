@@ -172,18 +172,19 @@ export default function Navbar() {
                 </div>
               </button>
 
+              {/* profile drop down menu */}
               {showDropdown && (
-                <div className="absolute left-1/2 top-full z-50 flex -translate-x-1/2 flex-col items-center gap-3 rounded bg-white p-4 text-black">
+                <div className="absolute left-1/2 top-full z-50 mt-1.5 min-w-28 -translate-x-1/2 rounded-lg bg-[#191919] p-2 text-center text-white shadow-lg">
                   <Link
                     to="/profile"
                     onClick={toggleDropdown}
-                    className="transition-all duration-200 ease-in-out hover:text-primary hover:underline"
+                    className="block w-full rounded-md px-4 py-2 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
                   >
                     Profile
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="transition-all duration-200 ease-in-out hover:text-primary hover:underline"
+                    className="block w-full rounded-md px-4 py-2 text-left text-center text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
                   >
                     Logout
                   </button>

@@ -179,11 +179,9 @@ const AddProduct = () => {
       payload.append("thumbnail", thumbnail);
     }
 
-    /* attributes.forEach((attribute) => {
-      payload.append(`attributes[size]`, attribute);
-    }); */
-
-    payload.append(`attributes[size]`, attributes);
+    attributes.forEach((attribute) => {
+      payload.append(`attributes[]`, attribute);
+    });
 
     if (images?.length) {
       images.forEach((img) => {

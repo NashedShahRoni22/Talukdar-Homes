@@ -197,7 +197,7 @@ const UpdateProduct = () => {
     }
 
     attributes.forEach((attribute) => {
-      payload.append(`attributes[size]`, attribute);
+      payload.append(`attributes[]`, attribute);
     });
 
     if (images?.length) {

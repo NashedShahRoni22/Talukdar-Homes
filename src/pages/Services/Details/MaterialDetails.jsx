@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoaderPage from "../../../Adminpage/LoaderPage";
+import toast from "react-hot-toast";
 import {
   Button,
   Dialog,
@@ -10,6 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { AiOutlineThunderbolt } from "react-icons/ai";
+import LoaderPage from "../../../Adminpage/LoaderPage";
 import { CartContext } from "../../../Providers/CartProvider";
 import { AuthContext } from "../../../Providers/AuthProvider";
 
@@ -22,6 +23,20 @@ const MaterialDetails = () => {
   const [loader, setLoader] = useState(false);
   const [open, setOpen] = useState(false);
   const [focusImage, setFocusImage] = useState();
+  const [selectedAttribute, setSelectedAttribute] = useState("");
+
+  // destructure product info
+  const { id, title, thumbnail, discount, attributes } = service;
+
+  // newly updated product info to save in cart
+  const productCartInfo = {
+    id,
+    title,
+    thumbnail,
+    price: discount,
+    slug,
+    ...(attributes?.length > 0 && { attribute: attributes[0] }),
+  };
 
   const handleOpen = () => setOpen(!open);
 
@@ -39,14 +54,28 @@ const MaterialDetails = () => {
       });
   }, [slug]);
 
+  // handle add to cart
+  const handleAddtoCart = () => {
+    if (attributes?.length > 0 && !selectedAttribute) {
+      return toast.error("Please choose a product variant!");
+    }
+
+    addToCart(productCartInfo);
+  };
+
+  // handle buy now
   const handleBuy = () => {
+    if (attributes?.length > 0 && !selectedAttribute) {
+      return toast.error("Please choose a product variant!");
+    }
+
     if (user) {
-      addToCart(service, true);
+      addToCart(productCartInfo, true);
       navigate("/checkout");
       return;
     }
 
-    addToCart(service);
+    addToCart(productCartInfo);
   };
 
   if (loader) {
@@ -104,6 +133,7 @@ const MaterialDetails = () => {
           <h1 className="mt-2 text-xl font-semibold md:text-3xl">
             {service?.title}
           </h1>
+
           <div className="mt-4 flex items-center gap-6">
             <p className="w-fit rounded bg-gray-100 p-1.5 text-sm font-medium">
               Category:{" "}
@@ -117,22 +147,38 @@ const MaterialDetails = () => {
             </p>
           </div>
 
-          <div className="my-12 flex items-center gap-4">
+          <div className="mt-4 flex flex-col gap-2 text-sm">
+            <p className="font-medium">Choose Variant:</p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {service?.attributes?.length > 0 &&
+                service?.attributes?.map((attribute, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedAttribute(attribute)}
+                    className={`rounded border border-gray-300 px-2 py-1 ${attribute === selectedAttribute && "bg-gray-100"}`}
+                  >
+                    {attribute}
+                  </button>
+                ))}
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center gap-4">
             <Button
-              onClick={() => addToCart(service)}
+              onClick={handleAddtoCart}
               className="border border-primary bg-primary text-sm capitalize hover:bg-primary-hover"
             >
               Add to cart
             </Button>
             <Button
               onClick={handleBuy}
-              className="border border-primary bg-transparent text-sm text-primary hover:bg-primary-hover hover:text-white"
+              className="border border-primary bg-transparent text-sm capitalize text-primary hover:bg-primary-hover hover:text-white"
             >
               Buy Now
             </Button>
           </div>
 
-          <div>
+          <div className="mt-16">
             <h2 className="border-l-4 border-primary bg-gray-100 py-2 pl-2 text-xl font-semibold">
               Description
             </h2>
