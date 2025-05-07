@@ -12,8 +12,8 @@ import Features from "./Features";
 export default function Home() {
   return (
     <main className="overflow-hidden">
-      {/* <LandingBanner /> */}
-      <EcomerceBanner />
+      <LandingBanner />
+      {/* <EcomerceBanner /> */}
       <Features />
       <WhatWeBuild />
       <Services />

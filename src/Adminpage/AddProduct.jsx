@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../components/admin/InputField";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
 import { MdOutlineClose } from "react-icons/md";
+import toast from "react-hot-toast";
 
 const modules = {
   toolbar: [
@@ -76,7 +77,7 @@ const AddProduct = () => {
     !formData.title.trim() ||
     !formData.category_id.trim() ||
     !formData.price.trim() ||
-    !formData.description.trim() ||
+    // !formData.description.trim() ||
     !formData.discount.trim() ||
     !formData.quantity.trim() ||
     !formData.shipping_charge.trim() ||
@@ -150,6 +151,16 @@ const AddProduct = () => {
 
     setLoader(true);
 
+    // check discount price is less than original price
+    const isDiscountPriceValid =
+      Number(formData.discount) < Number(formData.price);
+
+    if (!isDiscountPriceValid) {
+      setLoader(false);
+      toast.error("Discount price must be less than original price");
+      return;
+    }
+
     const payload = new FormData();
     payload.append("title", formData.title);
     payload.append(
@@ -157,14 +168,13 @@ const AddProduct = () => {
       subCategory ? subCategory : formData.category_id,
     );
     payload.append("price", formData.price);
-    payload.append("description", formData.description);
+    payload.append("description", value);
     payload.append("discount", formData.discount);
     payload.append("quantity", formData.quantity);
     payload.append("is_featured", formData.is_featured);
     payload.append("is_best_selling", formData.is_best_selling);
     payload.append("on_flash_sal", formData.on_flash_sale);
     payload.append("shipping_charge", formData.shipping_charge);
-    // payload.append("content", value); // TODO: not mentioned in the api
     if (thumbnail) {
       payload.append("thumbnail", thumbnail);
     }
@@ -192,7 +202,7 @@ const AddProduct = () => {
 
       const data = await res.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         setLoader(false);
         navigate("/admin/manage-products");
       }
@@ -258,7 +268,7 @@ const AddProduct = () => {
           <img
             src={URL.createObjectURL(thumbnail)}
             alt="thumbnail image"
-            className="h-[200px] w-full rounded object-cover md:h-[250px]"
+            className="h-[200px] w-full rounded object-contain md:h-[250px]"
           />
         </div>
       )}
@@ -299,7 +309,7 @@ const AddProduct = () => {
             <img
               src={URL.createObjectURL(image)}
               alt={`Uploaded Image ${index + 1}`}
-              className="h-[200px] w-full rounded object-cover md:h-[250px]"
+              className="h-[200px] w-full rounded object-contain md:h-[250px]"
             />
           </div>
         ))}
@@ -416,7 +426,7 @@ const AddProduct = () => {
 
         {/* discount price */}
         <InputField
-          label="Discount Amount"
+          label="Discount Price"
           id="discount_price"
           name="discount"
           value={formData.discount}
@@ -479,7 +489,7 @@ const AddProduct = () => {
       </div>
 
       {/* meta description field */}
-      <div className="flex flex-col gap-2.5">
+      {/* <div className="flex flex-col gap-2.5">
         <label className="font-semibold">Meta Description</label>
         <textarea
           className="rounded border border-gray-400 px-4 py-2 outline-none"
@@ -488,7 +498,7 @@ const AddProduct = () => {
           onChange={handleInputChange}
           required
         />
-      </div>
+      </div> */}
 
       {/* product content description */}
       <div className="mt-5 flex flex-col gap-2.5">

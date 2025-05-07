@@ -57,13 +57,10 @@ export default function Material() {
                 <div className="flex w-full items-center justify-between p-4">
                   <div>
                     <p className="text-lg font-medium text-primary">
-                      ${s.price} <span className="text-sm">AUD</span>
+                      ${s?.discount} <span className="text-sm">AUD</span>
                     </p>
                     <p className="mt-0.5 text-sm text-gray-500 line-through">
-                      $
-                      {(parseFloat(s?.price) + parseFloat(s?.discount)).toFixed(
-                        2,
-                      )}
+                      ${s?.price} AUD
                     </p>
                   </div>
                   <button

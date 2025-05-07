@@ -60,11 +60,19 @@ export default function Navbar() {
   const { user, setUser } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
+  // toggle dropdown
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  // handle logout
   const handleLogout = () => {
     toast.success("Logout successful!");
     localStorage.removeItem("accessToken");
     setUser(null);
+    toggleDropdown();
   };
 
   return (
@@ -101,6 +109,18 @@ export default function Navbar() {
                     {m.name && <span>{m.name}</span>}
                   </Link>
                 ))}
+                {user && (
+                  <Link
+                    to="/profile"
+                    onClick={() => setShow(!show)}
+                    className={"flex items-center gap-2 p-2"}
+                  >
+                    <span className="text-xl">
+                      <BiUser />
+                    </span>
+                    <span>Profile</span>
+                  </Link>
+                )}
               </div>
             </div>
           )}
@@ -142,23 +162,34 @@ export default function Navbar() {
           ))}
 
           {user ? (
-            <>
-              <Link to="/profile">
+            <div className="relative">
+              <button onClick={toggleDropdown}>
                 <div className="group flex items-center gap-1.5">
                   <span className="rounded-full bg-primary p-2 text-xl">
                     <BiUser />
                   </span>
                   <span className="group-hover:text-primary">Profile</span>
                 </div>
-              </Link>
-
-              <button
-                onClick={handleLogout}
-                className="rounded-md border border-primary px-4 py-2 text-white transition-all duration-200 ease-in-out hover:bg-primary"
-              >
-                Logout
               </button>
-            </>
+
+              {showDropdown && (
+                <div className="absolute left-1/2 top-full z-50 flex -translate-x-1/2 flex-col items-center gap-3 rounded bg-white p-4 text-black">
+                  <Link
+                    to="/profile"
+                    onClick={toggleDropdown}
+                    className="transition-all duration-200 ease-in-out hover:text-primary hover:underline"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="transition-all duration-200 ease-in-out hover:text-primary hover:underline"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link
               to="/login"

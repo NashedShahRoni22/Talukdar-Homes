@@ -527,7 +527,7 @@ const UpdateProduct = () => {
       </div>
 
       {/* meta description field */}
-      <div className="flex flex-col gap-2.5">
+      {/* <div className="flex flex-col gap-2.5">
         <label className="font-semibold">Meta Description</label>
         <textarea
           className="rounded border border-gray-400 px-4 py-2 outline-none"
@@ -537,7 +537,7 @@ const UpdateProduct = () => {
           onChange={handleInputChange}
           required
         />
-      </div>
+      </div> */}
 
       {/* product content description */}
       <div className="mt-5 flex flex-col gap-2.5">

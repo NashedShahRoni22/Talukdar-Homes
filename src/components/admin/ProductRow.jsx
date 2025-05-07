@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -25,7 +26,8 @@ export default function ProductRow({ product, setProducts }) {
         `https://api.talukderhomes.com.au/api/products/delete/${id}`,
       );
       const data = await res.json();
-      if (data.status) {
+      if (data.status === true) {
+        toast.success("Product deleted successfully");
         setProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== id),
         );
@@ -52,9 +54,9 @@ export default function ProductRow({ product, setProducts }) {
           <p>{title}</p>
         </div>
       </td>
-      <td className="px-2.5 py-2 text-center">{price}</td>
-      <td className="px-2.5 py-2 text-center">{discount}</td>
-      <td className="px-2.5 py-2 text-center">{shipping_charge}</td>
+      <td className="px-2.5 py-2 text-center">${price}</td>
+      <td className="px-2.5 py-2 text-center">${discount}</td>
+      <td className="px-2.5 py-2 text-center">${shipping_charge}</td>
       <td className="px-2.5 py-2 text-center">{quantity}</td>
       <td className="px-2.5 py-2 text-center">{category?.title}</td>
       <td className="px-2.5 py-2 text-center">
