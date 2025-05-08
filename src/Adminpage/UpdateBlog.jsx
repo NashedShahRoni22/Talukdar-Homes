@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const modules = {
   toolbar: [
@@ -86,7 +87,7 @@ export default function UpdateBlog() {
       );
       const data = await response.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         setLoader(false);
         navigate("/admin/manage-blog");
       }

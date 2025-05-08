@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/admin/InputField";
 import { MdOutlineClose } from "react-icons/md";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
+import toast from "react-hot-toast";
 
 const modules = {
   toolbar: [
@@ -87,6 +88,7 @@ const UpdateProduct = () => {
         setSubCategory(data?.category?.id);
         setThumbnailPreview(data?.thumbnail);
         setImagesPreview(data?.gallery);
+        setAttributes(data?.attributes);
       });
   }, [slug]);
 
@@ -217,7 +219,7 @@ const UpdateProduct = () => {
 
       const data = await res.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         setLoader(false);
         navigate("/admin/manage-products");
       }

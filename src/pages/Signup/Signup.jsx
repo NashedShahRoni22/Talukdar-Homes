@@ -4,6 +4,7 @@ import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Providers/AuthProvider";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import login from "../../assets/login.jpg";
 
 export default function Signup() {
   const location = useLocation();
@@ -64,7 +65,12 @@ export default function Signup() {
   };
 
   return (
-    <section className="flex min-h-screen items-center justify-center bg-gray-200">
+    <section
+      style={{
+        background: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), url(${login}) center/cover`,
+      }}
+      className="flex min-h-screen items-center justify-center bg-gray-200"
+    >
       <form
         onSubmit={handleSubmit}
         className="w-3/4 rounded bg-white p-5 shadow md:w-1/2 lg:w-1/3"

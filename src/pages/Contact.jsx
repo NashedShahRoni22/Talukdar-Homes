@@ -1,6 +1,7 @@
 import { Input, Textarea } from "@material-tailwind/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdOutlineArrowOutward } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function Contact() {
   const [loader, setLoader] = useState(false);
@@ -41,7 +42,7 @@ export default function Contact() {
       );
       const data = await response.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         form.reset();
         setLoader(false);
       }

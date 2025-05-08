@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import InputField from "../components/admin/InputField";
 import "react-quill/dist/quill.snow.css";
+import toast from "react-hot-toast";
 
 const modules = {
   toolbar: [
@@ -102,7 +103,7 @@ const UpdateService = () => {
 
       const data = await res.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         setLoader(false);
         navigate("/admin/manage-service");
       }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function ServiceRow({ service, setServices }) {
   const { id, thumbnail, title, slug } = service;
@@ -23,7 +24,7 @@ export default function ServiceRow({ service, setServices }) {
 
       if (data.status === true) {
         setServices((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
-        window.alert("Service deleted successfully!");
+        toast.success("Service deleted successfully!");
       }
     } catch (error) {
       console.error("Error:", error);

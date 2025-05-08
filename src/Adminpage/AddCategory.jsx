@@ -3,6 +3,7 @@ import { BiCheck, BiEdit, BiPlus } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { ImSpinner } from "react-icons/im";
 import { MdDelete } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function AddCategory() {
   const [loader, setLoader] = useState(false);
@@ -55,7 +56,7 @@ export default function AddCategory() {
 
       const result = await response.json();
       if (result.status === true) {
-        window.alert(result.msg);
+        toast.success(result.msg);
         fetchCategories();
         setShowEditBox(false);
         setLoader(false);
@@ -92,7 +93,7 @@ export default function AddCategory() {
       const result = await res.json();
 
       if (result.status === true) {
-        window.alert(result.msg);
+        toast.success(result.msg);
         fetchCategories();
         setShowEditBox(false);
         setLoader(false);
@@ -126,7 +127,7 @@ export default function AddCategory() {
       }
 
       const data = await response.json();
-      window.alert(data.msg);
+      toast.success(data.msg);
       setLoader(false);
       fetchCategories();
     } catch (error) {

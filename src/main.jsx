@@ -19,7 +19,7 @@ import Renovation from "./pages/Services/Details/Renovation.jsx";
 import Development from "./pages/Services/Details/Development.jsx";
 import AddBlog from "./Adminpage/AddBlog.jsx";
 import ManageBlog from "./Adminpage/ManageBlog.jsx";
-import Material from "./pages/Services/Details/Material.jsx";
+import Products from "./pages/Products/Products.jsx";
 import MaterialDetails from "./pages/Services/Details/MaterialDetails.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <Material />,
+        element: <Products />,
       },
       {
         path: "/blogs",

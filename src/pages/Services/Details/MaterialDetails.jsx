@@ -35,7 +35,7 @@ const MaterialDetails = () => {
     thumbnail,
     price: discount,
     slug,
-    ...(attributes?.length > 0 && { attribute: attributes[0] }),
+    ...(attributes?.length > 0 && { attribute: selectedAttribute }),
   };
 
   const handleOpen = () => setOpen(!open);

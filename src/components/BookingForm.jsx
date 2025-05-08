@@ -7,6 +7,7 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function BookingForm({ handleOpen }) {
   const [loader, setLoader] = useState(false);
@@ -52,11 +53,11 @@ export default function BookingForm({ handleOpen }) {
           headers: {
             // Add any necessary headers, such as authorization
           },
-        }
+        },
       );
       const data = await response.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         handleOpen();
         setLoader(false);
       }
@@ -68,7 +69,7 @@ export default function BookingForm({ handleOpen }) {
 
   return (
     <form className="p-5">
-      <h5 className="text-xl lg:text-3xl text-primary font-semibold">
+      <h5 className="text-xl font-semibold text-primary lg:text-3xl">
         Book Appointment
       </h5>
       <div className="mt-5 md:mt-10">
@@ -80,7 +81,7 @@ export default function BookingForm({ handleOpen }) {
           ))}
         </Select>
       </div>
-      <div className="grid md:grid-cols-2 gap-2.5 md:gap-5 mt-2.5 md:mt-5">
+      <div className="mt-2.5 grid gap-2.5 md:mt-5 md:grid-cols-2 md:gap-5">
         <Input
           label="First Name"
           required
@@ -118,16 +119,16 @@ export default function BookingForm({ handleOpen }) {
           onChange={(e) => setMessage(e.target.value)}
         />
       </div>
-      <div className="mt-5 md:mt-10 flex gap-2">
+      <div className="mt-5 flex gap-2 md:mt-10">
         <button
           onClick={handleOpen}
-          className="px-4 py-2 bg-red-500 text-white rounded-full shadow"
+          className="rounded-full bg-red-500 px-4 py-2 text-white shadow"
         >
           <span>Cancel</span>
         </button>
         <button
           onClick={addAppointment}
-          className="ml-2.5 px-4 py-2 bg-primary text-white rounded-full shadow flex gap-2 justify-center items-center"
+          className="ml-2.5 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-white shadow"
           disabled={
             (firstName === "") |
             (lastName === "") |
@@ -137,9 +138,7 @@ export default function BookingForm({ handleOpen }) {
             (message === "")
           }
         >
-          Book Now {
-            loader && <Spinner className="h-4 w-4" />
-          }
+          Book Now {loader && <Spinner className="h-4 w-4" />}
         </button>
       </div>
     </form>

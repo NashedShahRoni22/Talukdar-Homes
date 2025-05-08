@@ -65,7 +65,7 @@ const AddBlog = () => {
       );
       const data = await response.json();
       if (data.status === true) {
-        window.alert(data.msg);
+        toast.success(data.msg);
         setLoader(false);
         navigate("/admin/manage-blog");
       }

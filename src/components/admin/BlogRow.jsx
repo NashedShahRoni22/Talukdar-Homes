@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function BlogRow({ blog, setBlogs }) {
   const { id, image, title, slug } = blog;
@@ -23,7 +24,7 @@ export default function BlogRow({ blog, setBlogs }) {
 
       if (data.status === true) {
         setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
-        window.alert("Blog deleted successfully!");
+        toast.success("Blog deleted successfully!");
       }
     } catch (error) {
       console.error("Error:", error);
