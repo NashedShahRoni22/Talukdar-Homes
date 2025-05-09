@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LoaderPage from "../../Adminpage/LoaderPage.jsx";
 import ProductCards from "./ProductCards/ProductCards.jsx";
 import ProductFilter from "./ProductFilter/ProductFilter.jsx";
 import { useSearchParams } from "react-router-dom";
+import { debounce } from "../../utils/debounce.js";
+import { getMaxPrice } from "../../utils/maxPrice.js";
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,31 +12,52 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [rangeValues, setRangeValues] = useState({ min: 0, max: 0 });
+  const maxPrice = getMaxPrice(products); // Get max price from products
+
+  // Debounced handleRangeChange function
+  const handleRangeChange = useCallback(
+    debounce((values) => {
+      setRangeValues(values);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("price", `${values.min},${values.max}`);
+      setSearchParams(params);
+    }, 300),
+    [searchParams],
+  );
 
   // add filtering search params in url
   const handleSerachParams = (e) => {
-    const { name, value, id } = e.target;
+    const { name, value, id, checked } = e.target;
 
     const params = new URLSearchParams(searchParams.toString());
 
     if (name === "category") {
-      params.set("category", value);
-      params.delete("subcategory");
+      if (checked) {
+        params.set(name, value);
+        params.delete("subcategory");
 
-      setSearchParams(params);
-
-      const selectedCategory = categories.find((cat) => cat.id == id);
-      setSubCategories(
-        selectedCategory?.children?.length > 0
-          ? selectedCategory?.children
-          : [],
-      );
+        const selectedCategory = categories.find((cat) => cat.id == id);
+        setSubCategories(
+          selectedCategory?.children?.length > 0
+            ? selectedCategory?.children
+            : [],
+        );
+      } else {
+        params.delete("category");
+        params.delete("subcategory");
+        setSubCategories([]);
+      }
     }
 
-    if (name === "subcategory") {
-      params.set("subcategory", value);
-      setSearchParams(params);
+    if (checked) {
+      params.set(name, value);
+    } else {
+      params.delete(name);
     }
+
+    setSearchParams(params);
   };
 
   // get categories data
@@ -53,7 +76,19 @@ export default function Products() {
   //get products data
   useEffect(() => {
     setLoading(true);
-    fetch("https://api.talukderhomes.com.au/api/products")
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (params.has("subcategory")) {
+      const sub = params.get("subcategory");
+      params.set("category", sub);
+    }
+
+    params.delete("subcategory");
+
+    fetch(
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
@@ -61,21 +96,27 @@ export default function Products() {
           setLoading(false);
         }
       });
-  }, []);
+  }, [searchParams]);
 
   return (
     <section className="mx-5 py-5 md:container md:mx-auto md:py-10">
       {loading ? (
         <LoaderPage />
       ) : (
-        <div className="mt-5 grid grid-cols-12 gap-4">
+        <div className="relative mt-5 flex items-start gap-5">
           <ProductFilter
+            min={0}
+            max={maxPrice}
+            onChange={handleRangeChange}
             categories={categories}
             subCategories={subCategories}
             searchParams={searchParams}
             handleSerachParams={handleSerachParams}
           />
-          <ProductCards products={products} />
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+            <ProductCards products={products} />
+          </div>
         </div>
       )}
     </section>

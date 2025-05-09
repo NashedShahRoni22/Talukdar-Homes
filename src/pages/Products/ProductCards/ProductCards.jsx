@@ -22,7 +22,7 @@ export default function ProductCards({ products }) {
   };
 
   return (
-    <div className="col-span-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+    <>
       {products?.map((product) => (
         <div
           key={product?.id}
@@ -33,7 +33,7 @@ export default function ProductCards({ products }) {
               <img
                 src={product?.thumbnail}
                 alt=""
-                className="h-full w-full object-cover transition-all duration-300 ease-linear group-hover:scale-105"
+                className="h-full w-full object-contain transition-all duration-300 ease-linear group-hover:scale-105"
                 loading="lazy"
               />
             </div>
@@ -66,6 +66,6 @@ export default function ProductCards({ products }) {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }
