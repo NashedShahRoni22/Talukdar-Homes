@@ -13,8 +13,8 @@ export default function Cart() {
     if (value === "") {
       setCarts((prevCarts) =>
         prevCarts.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem,
-        ),
+          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem
+        )
       );
       return;
     }
@@ -38,8 +38,8 @@ export default function Cart() {
       prevCarts.map((cartItem) =>
         cartItem.id === item.id
           ? { ...cartItem, quantity: newQuantity }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
@@ -51,8 +51,8 @@ export default function Cart() {
               ...cartItem,
               quantity: cartItem.quantity === "" ? 1 : cartItem.quantity,
             }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
@@ -67,8 +67,11 @@ export default function Cart() {
     return (
       <div className="flex h-96 flex-col items-center justify-center">
         <h2 className="mb-4 text-2xl font-semibold">Your cart is empty</h2>
-        <Link to={`/`} className="text-lg text-orange-500">
-          Continue Shopping
+        <Link
+          to="/products"
+          className="px-4 py-2 text-center text-lg rounded font-medium text-white bg-primary hover:bg-primary-hover transition-all duration-200 ease-in-out"
+        >
+          Browse Products
         </Link>
       </div>
     );

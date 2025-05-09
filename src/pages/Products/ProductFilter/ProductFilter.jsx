@@ -5,11 +5,16 @@ export default function ProductFilter({
   handleSerachParams,
 }) {
   return (
-    <div className="col-span-2 flex flex-col gap-4 rounded bg-gray-50 p-3">
+    <div className="col-span-2 border border-gray-200 flex flex-col gap-4 rounded bg-gray-50 p-3">
+      {/* pricing */}
+      <div className="rounded border border-gray-200 bg-white px-1 py-3">
+        <h4 className="px-1 font-medium text-gray-800">Price Range</h4>
+        <div className="mt-2">price range slider will be here</div>
+      </div>
+
+      {/* category */}
       <div className="rounded border border-gray-200 bg-white px-1 py-3">
         <h4 className="px-1 font-medium text-gray-800">Category</h4>
-
-        {/* category */}
         <div className="mt-2">
           {categories &&
             categories?.length > 0 &&
@@ -41,7 +46,6 @@ export default function ProductFilter({
       {/* sub-category */}
       <div className="rounded border border-gray-200 bg-white px-1 py-3">
         <h4 className="px-1 font-medium text-gray-800">Sub Category</h4>
-
         <div className="mt-2">
           {subCategories && subCategories?.length > 0 ? (
             subCategories.map((subCategory) => (
