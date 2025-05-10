@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root:has(.no-doc-scroll) {
+  overflow: hidden;
+}
+
 * {
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;

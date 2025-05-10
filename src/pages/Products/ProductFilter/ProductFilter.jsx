@@ -1,20 +1,25 @@
 import { useCallback, useEffect, useState, useRef } from "react";
+import { IoClose } from "react-icons/io5";
 
 export default function ProductFilter({
   categories,
   subCategories,
   searchParams,
-  handleSerachParams,
+  handleSearchParams,
   min,
+  currentMin,
   max,
+  currentMax,
   trackColor = "#cecece",
   onChange,
   rangeColor = "#99a1af",
   width = "165px",
   currencyText = "$",
+  showFilter,
+  setShowFilter,
 }) {
-  const [minVal, setMinVal] = useState(min);
-  const [maxVal, setMaxVal] = useState(max);
+  const [minVal, setMinVal] = useState(currentMin ?? min);
+  const [maxVal, setMaxVal] = useState(currentMax ?? max);
   const minValRef = useRef(min);
   const maxValRef = useRef(max);
   const range = useRef(null);
@@ -55,8 +60,25 @@ export default function ProductFilter({
     }
   }, [minVal, maxVal, onChange]);
 
+  useEffect(() => {
+    setMinVal(currentMin >= min ? currentMin : min);
+    setMaxVal(currentMax <= max ? currentMax : max);
+  }, [min, max, currentMin, currentMax]);
+
   return (
-    <div className="fixed right-0 top-[60px] flex h-[calc(100vh-60px)] w-full min-w-[207px] max-w-[207px] flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 md:relative md:top-0 md:h-fit">
+    <div
+      className={`fixed right-0 top-0 z-50 flex h-[calc(100vh-0px)] w-full min-w-[207px] max-w-[207px] flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 transition-transform duration-200 ease-linear md:relative md:top-0 md:h-fit ${showFilter ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"}`}
+    >
+      {/* mobile filter menu close button */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setShowFilter(!showFilter)}
+          className="cursor-pointer rounded border border-gray-200 bg-white p-1 transition-all duration-200 ease-in-out hover:text-primary"
+        >
+          <IoClose className="text-xl" />
+        </button>
+      </div>
+
       {/* pricing */}
       <div className="rounded border border-gray-200 bg-white px-1 py-3">
         <h4 className="px-1 font-medium text-gray-800">Price Range</h4>
@@ -143,7 +165,7 @@ export default function ProductFilter({
                   name="category"
                   value={category?.slug}
                   checked={searchParams.get("category") === category?.slug}
-                  onChange={handleSerachParams}
+                  onChange={handleSearchParams}
                   className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <label
@@ -175,7 +197,7 @@ export default function ProductFilter({
                   checked={
                     searchParams.get("subcategory") === subCategory?.slug
                   }
-                  onChange={handleSerachParams}
+                  onChange={handleSearchParams}
                   className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <label
@@ -207,7 +229,7 @@ export default function ProductFilter({
               name="availability"
               value="flash-sale"
               checked={searchParams.get("availability") === "flash-sale"}
-              onChange={handleSerachParams}
+              onChange={handleSearchParams}
               className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
             />
             <label
@@ -225,7 +247,7 @@ export default function ProductFilter({
               name="availability"
               value="best-selling"
               checked={searchParams.get("availability") === "best-selling"}
-              onChange={handleSerachParams}
+              onChange={handleSearchParams}
               className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
             />
             <label
@@ -243,7 +265,7 @@ export default function ProductFilter({
               name="availability"
               value="featured"
               checked={searchParams.get("availability") === "featured"}
-              onChange={handleSerachParams}
+              onChange={handleSearchParams}
               className="h-4 w-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
             />
             <label

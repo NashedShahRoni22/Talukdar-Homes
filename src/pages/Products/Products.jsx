@@ -5,15 +5,22 @@ import ProductFilter from "./ProductFilter/ProductFilter.jsx";
 import { useSearchParams } from "react-router-dom";
 import { debounce } from "../../utils/debounce.js";
 import { getMaxPrice } from "../../utils/maxPrice.js";
+import { FaBarsStaggered } from "react-icons/fa6";
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [absolutePriceRange, setAbsolutePriceRange] = useState({
+    min: 0,
+    max: 0,
+  });
   const [rangeValues, setRangeValues] = useState({ min: 0, max: 0 });
-  const maxPrice = getMaxPrice(products); // Get max price from products
+  const maxPrice = getMaxPrice(allProducts); // Get max price from all products
 
   // Debounced handleRangeChange function
   const handleRangeChange = useCallback(
@@ -21,15 +28,23 @@ export default function Products() {
       setRangeValues(values);
 
       const params = new URLSearchParams(searchParams.toString());
-      params.set("price", `${values.min},${values.max}`);
+
+      const { min, max } = absolutePriceRange;
+      const isDefaultRange = values.min === min && values.max === max;
+
+      if (isDefaultRange) {
+        params.delete("price");
+      } else {
+        params.set("price", `${values.min},${values.max}`);
+      }
       setSearchParams(params);
     }, 300),
     [searchParams],
   );
 
   // add filtering search params in url
-  const handleSerachParams = (e) => {
-    const { name, value, id, checked } = e.target;
+  const handleSearchParams = (e) => {
+    const { name, value, type, id, checked } = e.target;
 
     const params = new URLSearchParams(searchParams.toString());
 
@@ -51,26 +66,53 @@ export default function Products() {
       }
     }
 
-    if (checked) {
-      params.set(name, value);
+    if (type === "checkbox") {
+      if (checked) {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
     } else {
+      params.set(name, value);
+    }
+
+    if (value === "") {
       params.delete(name);
     }
 
     setSearchParams(params);
   };
 
-  // get categories data
+  // get categories and all products data
   useEffect(() => {
-    setLoading(true);
-    fetch("https://api.talukderhomes.com.au/api/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === true) {
-          setCategories(data.data);
-          setLoading(false);
+    const fetchCategoriesAndProducts = async () => {
+      setLoading(true);
+      try {
+        const [prodRes, catRes] = await Promise.all([
+          fetch("https://api.talukderhomes.com.au/api/products"),
+          fetch("https://api.talukderhomes.com.au/api/categories"),
+        ]);
+
+        const [prodData, catData] = await Promise.all([
+          prodRes.json(),
+          catRes.json(),
+        ]);
+
+        if (prodData.status === true) {
+          setAllProducts(prodData.data); // for max price
         }
-      });
+
+        if (catData.status === true) {
+          setCategories(catData.data);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategoriesAndProducts();
   }, []);
 
   //get products data
@@ -93,9 +135,24 @@ export default function Products() {
       .then((data) => {
         if (data.status === true) {
           setProducts(data.data);
+          setAbsolutePriceRange({ min: 0, max: maxPrice });
+
+          const priceParam = searchParams.get("price");
+          if (!priceParam) {
+            setRangeValues({ min: 0, max: maxPrice });
+          }
           setLoading(false);
         }
       });
+  }, [searchParams, maxPrice]);
+
+  // set price range values from URL params
+  useEffect(() => {
+    const priceParam = searchParams.get("price");
+    if (priceParam) {
+      const [min, max] = priceParam.split(",").map(Number);
+      setRangeValues({ min, max });
+    }
   }, [searchParams]);
 
   return (
@@ -105,17 +162,59 @@ export default function Products() {
       ) : (
         <div className="relative mt-5 flex items-start gap-5">
           <ProductFilter
-            min={0}
-            max={maxPrice}
-            onChange={handleRangeChange}
+            min={absolutePriceRange.min}
+            max={absolutePriceRange.max}
+            currentMin={rangeValues.min}
+            currentMax={rangeValues.max}
             categories={categories}
             subCategories={subCategories}
             searchParams={searchParams}
-            handleSerachParams={handleSerachParams}
+            showFilter={showFilter}
+            onChange={handleRangeChange}
+            handleSearchParams={handleSearchParams}
+            setShowFilter={setShowFilter}
           />
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
-            <ProductCards products={products} />
+          {/* products grid container */}
+          <div className="w-full">
+            {/* price filtering and mobile device filter button */}
+            <div
+              className={`flex items-center justify-between rounded border border-gray-200 bg-gray-50 p-2.5 ${showFilter && "no-doc-scroll"}`}
+            >
+              <button
+                onClick={() => setShowFilter(!showFilter)}
+                className="flex items-center gap-1 rounded border border-gray-300 bg-white p-1 text-gray-700 md:hidden"
+              >
+                <FaBarsStaggered className="min-w-fit" />
+                <span className="text-sm font-medium">Filter</span>
+              </button>
+
+              <p className="hidden font-semibold text-gray-900 md:block">
+                Products
+              </p>
+
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-medium text-gray-600">Sort By:</p>
+                {/* The API might not be handling the 'order=asc/desc' format correctly.
+                'asc' = Low to High, 'desc' = High to Low. Ensure the backend expects these values. 
+                */}
+                <select
+                  className="rounded border border-gray-300 bg-white p-1 text-sm text-gray-700 outline-none"
+                  name="order"
+                  value={searchParams.get("order") || ""}
+                  onChange={handleSearchParams}
+                >
+                  <option value="">Default</option>
+                  <option value="desc">Price: Low to High</option>
+                  <option value="asc">Price: High to Low</option>
+                </select>
+              </div>
+            </div>
+
+            {/* products */}
+            <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+              <ProductCards products={products} />
+            </div>
           </div>
         </div>
       )}
