@@ -2,10 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import { CartContext } from "../../Providers/CartProvider";
 import stripeIcon from "../../assets/stipe.png";
+import { Spinner } from "@material-tailwind/react";
 
 export default function Checkout() {
   const { user } = useContext(AuthContext);
   const { carts, setCarts } = useContext(CartContext);
+  const [isLoading, setIsLoading] = useState({
+    checkout: false,
+  });
   const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
     name: user?.name,
@@ -32,11 +36,11 @@ export default function Checkout() {
     const fetchCountries = async () => {
       try {
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name",
+          "https://restcountries.com/v3.1/all?fields=name"
         );
         const data = await res.json();
         const sortedCountries = data?.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common),
+          a.name.common.localeCompare(b.name.common)
         );
         setCountries(sortedCountries);
       } catch (error) {
@@ -71,18 +75,25 @@ export default function Checkout() {
 
   // handle confirm order
   const handleConfirmOrder = async () => {
+    setIsLoading((prev) => ({ ...prev, checkout: true }));
+
     const purchasePayload = new FormData();
-    purchasePayload.append("reference_type", "product");
-    purchasePayload.append("payment_gateway", "stripe");
+
     carts.forEach((item, i) => {
-      purchasePayload.append(`reference_ids[${i}]`, item.id);
+      purchasePayload.append(`references[${i}][id]`, item.id);
+      purchasePayload.append(`references[${i}][quantity]`, item.quantity);
+      if (item.attribute) {
+        purchasePayload.append(`references[${i}][attribute]`, item.attribute);
+      }
     });
+
     purchasePayload.append("phone", formData.phone);
-    purchasePayload.append("country", formData.country);
+    purchasePayload.append("payment_gateway", "stripe");
+    purchasePayload.append("address", formData.address);
     purchasePayload.append("city", formData.city);
     purchasePayload.append("state", formData.state);
     purchasePayload.append("zip_code", formData.zip_code);
-    purchasePayload.append("address", formData.address);
+    purchasePayload.append("country", formData.country);
 
     /***==> Purchase API <==***/
     try {
@@ -101,6 +112,8 @@ export default function Checkout() {
       }
     } catch (error) {
       console.error("purchase error:", error);
+    } finally {
+      setIsLoading((prev) => ({ ...prev, checkout: false }));
     }
   };
 
@@ -298,11 +311,15 @@ export default function Checkout() {
 
         <div className="mt-6 flex justify-center">
           <button
-            disabled={isDisabled}
+            disabled={isDisabled || isLoading.checkout}
             onClick={handleConfirmOrder}
-            className={`rounded px-4 py-2 font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
+            className={`rounded px-4 py-2 text-center min-w-[134px] font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
           >
-            Confirm Order
+            {isLoading.checkout ? (
+              <Spinner className="h-4 w-4 mx-auto" />
+            ) : (
+              "Confirm Order"
+            )}
           </button>
         </div>
       </div>

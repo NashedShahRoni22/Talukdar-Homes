@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import LoaderPage from "../../Adminpage/LoaderPage";
 import { CartContext } from "../../Providers/CartProvider";
 import { BiCart } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../utils/formatDate";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
@@ -18,8 +19,8 @@ export default function Profile() {
   });
 
   // fetch purchase history
-  useEffect(() => {
-    const fetchPurchaseHistory = async (page = 1) => {
+  const fetchPurchaseHistory = useCallback(
+    async (page = 1) => {
       setLoading(true);
       try {
         const res = await fetch(
@@ -28,7 +29,7 @@ export default function Profile() {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
-          },
+          }
         );
         const data = await res.json();
         if (data?.status === true) {
@@ -39,12 +40,16 @@ export default function Profile() {
       } finally {
         setLoading(false);
       }
-    };
+    },
+    [user?.token]
+  );
 
+  // fetch purchase history
+  useEffect(() => {
     if (user) {
       fetchPurchaseHistory();
     }
-  }, [user]);
+  }, [user, fetchPurchaseHistory]);
 
   if (loading) {
     return <LoaderPage />;
@@ -106,43 +111,64 @@ export default function Profile() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200 text-left">
+                  <tr className="border-b border-gray-200 text-gray-900 text-left">
                     <th className="p-3">Order #</th>
                     <th className="p-3">Date</th>
                     <th className="p-3">Items</th>
+                    <th className="p-3">Variant</th>
+                    <th className="p-3">Quantity</th>
                     <th className="p-3">Total</th>
                     <th className="p-3">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {purchaseHistory.data.map((order) => (
-                    <tr
-                      key={order.id}
-                      className="border-b border-gray-200 hover:bg-gray-50"
-                    >
-                      <td className="p-3">
-                        <span className="text-primary">{order.invoice}</span>
-                      </td>
-                      <td className="p-3">
-                        {new Date(order.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="p-3">
-                        {order.reference_items
-                          .map((item) => item.title)
-                          .join(", ")}
-                      </td>
-                      <td className="p-3">
-                        $
-                        {(
-                          parseFloat(order.reference_items[0].price) -
-                          parseFloat(order.reference_items[0].discount)
-                        ).toFixed(2)}
-                      </td>
-                      <td className="p-3">
-                        <span className="text-primary">Completed</span>
-                      </td>
-                    </tr>
-                  ))}
+                  {purchaseHistory?.data?.map((order, i) =>
+                    order.reference_items.map((item, index) => (
+                      <tr
+                        key={item.id}
+                        className={`${i % 2 === 0 && "bg-gray-50"} ${index === 0 && "border-t border-gray-200"}`}
+                      >
+                        {/* Show invoice and date only on the first product row of each order */}
+                        {index === 0 ? (
+                          <>
+                            <td
+                              className="p-3 text-sm text-gray-700"
+                              rowSpan={order.reference_items.length}
+                            >
+                              {order.invoice}
+                            </td>
+                            <td
+                              className="p-3 text-sm text-gray-700"
+                              rowSpan={order.reference_items.length}
+                            >
+                              {formatDate(order.created_at)}
+                            </td>
+                          </>
+                        ) : null}
+                        {/* reference items data */}
+                        <td className="p-3 text-gray-700 text-sm ">
+                          {item.title}
+                        </td>
+                        <td className="p-3 text-gray-700 text-sm">
+                          {item.attribute}
+                        </td>
+                        <td className="p-3 text-center text-sm text-gray-700">
+                          {item.quantity}
+                        </td>
+                        <td className="p-3 text-gray-700 text-sm">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </td>
+                        {index === 0 ? (
+                          <td
+                            className={`p-3 text-gray-700 text-sm ${order.status === "1" ? "text-green-600" : "text-primary"}`}
+                            rowSpan={order.reference_items.length}
+                          >
+                            {order.status === "1" ? "Completed" : "Pending"}
+                          </td>
+                        ) : null}
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

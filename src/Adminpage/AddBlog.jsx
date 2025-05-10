@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { Button, Spinner } from "@material-tailwind/react";
-import "react-quill/dist/quill.snow.css";
+import toast from "react-hot-toast";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
+import "react-quill/dist/quill.snow.css";
 
 const modules = {
   toolbar: [
@@ -61,7 +62,7 @@ const AddBlog = () => {
         {
           method: "POST",
           body: formData,
-        },
+        }
       );
       const data = await response.json();
       if (data.status === true) {

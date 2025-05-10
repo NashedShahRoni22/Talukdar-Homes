@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import LoaderPage from "../../Adminpage/LoaderPage.jsx";
 import ProductCards from "./ProductCards/ProductCards.jsx";
 import ProductFilter from "./ProductFilter/ProductFilter.jsx";
@@ -6,11 +6,14 @@ import { useSearchParams } from "react-router-dom";
 import { debounce } from "../../utils/debounce.js";
 import { getMaxPrice } from "../../utils/maxPrice.js";
 import { FaBarsStaggered } from "react-icons/fa6";
+import { MdOutlineInventory2 } from "react-icons/md";
+import { Spinner } from "@material-tailwind/react";
 
 export default function Products() {
+  const hasMounted = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilter, setShowFilter] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({ initial: false, filter: false });
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -25,6 +28,11 @@ export default function Products() {
   // Debounced handleRangeChange function
   const handleRangeChange = useCallback(
     debounce((values) => {
+      if (!hasMounted.current) {
+        hasMounted.current = true;
+        return;
+      }
+
       setRangeValues(values);
 
       const params = new URLSearchParams(searchParams.toString());
@@ -39,7 +47,7 @@ export default function Products() {
       }
       setSearchParams(params);
     }, 300),
-    [searchParams],
+    [searchParams]
   );
 
   // add filtering search params in url
@@ -57,7 +65,7 @@ export default function Products() {
         setSubCategories(
           selectedCategory?.children?.length > 0
             ? selectedCategory?.children
-            : [],
+            : []
         );
       } else {
         params.delete("category");
@@ -86,7 +94,7 @@ export default function Products() {
   // get categories and all products data
   useEffect(() => {
     const fetchCategoriesAndProducts = async () => {
-      setLoading(true);
+      setLoading((prev) => ({ ...prev, initial: true }));
       try {
         const [prodRes, catRes] = await Promise.all([
           fetch("https://api.talukderhomes.com.au/api/products"),
@@ -108,7 +116,7 @@ export default function Products() {
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
-        setLoading(false);
+        setLoading((prev) => ({ ...prev, initial: false }));
       }
     };
 
@@ -117,7 +125,7 @@ export default function Products() {
 
   //get products data
   useEffect(() => {
-    setLoading(true);
+    setLoading((prev) => ({ ...prev, filter: true }));
 
     const params = new URLSearchParams(searchParams.toString());
 
@@ -129,7 +137,7 @@ export default function Products() {
     params.delete("subcategory");
 
     fetch(
-      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -141,7 +149,7 @@ export default function Products() {
           if (!priceParam) {
             setRangeValues({ min: 0, max: maxPrice });
           }
-          setLoading(false);
+          setLoading((prev) => ({ ...prev, filter: false }));
         }
       });
   }, [searchParams, maxPrice]);
@@ -155,69 +163,102 @@ export default function Products() {
     }
   }, [searchParams]);
 
+  if (loading.initial) {
+    return <LoaderPage />;
+  }
+
+  if (!allProducts?.length > 0) {
+    return (
+      <div className="mx-5 py-5 md:container flex flex-col justify-center min-h-[calc(100vh-80px)] md:mx-auto md:py-10 text-center text-gray-600">
+        <MdOutlineInventory2 className="mx-auto text-[40px] text-[#ff5722]" />
+        <p className="text-xl font-semibold mt-4">No products found</p>
+        <p className="text-sm mt-2">
+          Looks like there&apos;s nothing here right now.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <section className="mx-5 py-5 md:container md:mx-auto md:py-10">
-      {loading ? (
-        <LoaderPage />
-      ) : (
-        <div className="relative mt-5 flex items-start gap-5">
-          <ProductFilter
-            min={absolutePriceRange.min}
-            max={absolutePriceRange.max}
-            currentMin={rangeValues.min}
-            currentMax={rangeValues.max}
-            categories={categories}
-            subCategories={subCategories}
-            searchParams={searchParams}
-            showFilter={showFilter}
-            onChange={handleRangeChange}
-            handleSearchParams={handleSearchParams}
-            setShowFilter={setShowFilter}
-          />
+    <section className="mx-5 py-5 md:container min-h-[calc(100vh-80px)] md:mx-auto md:py-10">
+      <div className="relative mt-5 flex items-start gap-5">
+        <ProductFilter
+          min={absolutePriceRange.min}
+          max={absolutePriceRange.max}
+          currentMin={rangeValues.min}
+          currentMax={rangeValues.max}
+          categories={categories}
+          subCategories={subCategories}
+          searchParams={searchParams}
+          showFilter={showFilter}
+          onChange={handleRangeChange}
+          handleSearchParams={handleSearchParams}
+          setShowFilter={setShowFilter}
+        />
 
-          {/* products grid container */}
-          <div className="w-full">
-            {/* price filtering and mobile device filter button */}
-            <div
-              className={`flex items-center justify-between rounded border border-gray-200 bg-gray-50 p-2.5 ${showFilter && "no-doc-scroll"}`}
+        {/* products grid container */}
+        <div className="w-full">
+          {/* price filtering and mobile device filter button */}
+          <div
+            className={`flex items-center justify-between rounded border border-gray-200 bg-gray-50 p-2.5 ${showFilter && "no-doc-scroll"}`}
+          >
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className="flex items-center gap-1 rounded border border-gray-300 bg-white p-1 text-gray-700 md:hidden"
             >
-              <button
-                onClick={() => setShowFilter(!showFilter)}
-                className="flex items-center gap-1 rounded border border-gray-300 bg-white p-1 text-gray-700 md:hidden"
-              >
-                <FaBarsStaggered className="min-w-fit" />
-                <span className="text-sm font-medium">Filter</span>
-              </button>
+              <FaBarsStaggered className="min-w-fit" />
+              <span className="text-sm font-medium">Filter</span>
+            </button>
 
-              <p className="hidden font-semibold text-gray-900 md:block">
-                Products
-              </p>
+            <p className="hidden font-semibold text-gray-900 md:block">
+              Products
+            </p>
 
-              <div className="flex items-center gap-1">
-                <p className="text-sm font-medium text-gray-600">Sort By:</p>
-                {/* The API might not be handling the 'order=asc/desc' format correctly.
+            <div className="flex items-center gap-1">
+              <p className="text-sm font-medium text-gray-600">Sort By:</p>
+              {/* The API might not be handling the 'order=asc/desc' format correctly.
                 'asc' = Low to High, 'desc' = High to Low. Ensure the backend expects these values. 
                 */}
-                <select
-                  className="rounded border border-gray-300 bg-white p-1 text-sm text-gray-700 outline-none"
-                  name="order"
-                  value={searchParams.get("order") || ""}
-                  onChange={handleSearchParams}
-                >
-                  <option value="">Default</option>
-                  <option value="desc">Price: Low to High</option>
-                  <option value="asc">Price: High to Low</option>
-                </select>
-              </div>
-            </div>
-
-            {/* products */}
-            <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
-              <ProductCards products={products} />
+              <select
+                className="rounded border border-gray-300 bg-white p-1 text-sm text-gray-700 outline-none"
+                name="order"
+                value={searchParams.get("order") || ""}
+                onChange={handleSearchParams}
+              >
+                <option value="">Default</option>
+                <option value="desc">Price: Low to High</option>
+                <option value="asc">Price: High to Low</option>
+              </select>
             </div>
           </div>
+
+          {/* filtered product loading indicator */}
+          <div className="mt-4">
+            {loading.filter && (
+              <div className="flex items-center justify-center">
+                <Spinner className="h-7 w-7" />
+              </div>
+            )}
+
+            {!loading.filter && products?.length > 0 && (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+                <ProductCards products={products} />
+              </div>
+            )}
+
+            {!loading.filter && products?.length === 0 && (
+              <div>
+                <p className="text-center text-lg font-semibold text-gray-700">
+                  No products found
+                </p>
+                <p className="mt-2 text-center text-sm text-gray-500">
+                  Please try a different filter or search term.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }
