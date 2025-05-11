@@ -97,14 +97,14 @@ const UpdateProduct = () => {
     if (!categories.length || !formData.category_id) return;
 
     const foundCategory = categories.find(
-      (cat) => cat.id == formData.category_id,
+      (cat) => cat.id == formData.category_id
     );
 
     if (foundCategory) {
       setSubCategories(foundCategory.children);
     } else {
       const parentCategory = categories.find((cat) =>
-        cat.children.some((child) => child.id == formData.category_id),
+        cat.children.some((child) => child.id == formData.category_id)
       );
       if (parentCategory) {
         setFormData((prev) => ({ ...prev, category_id: parentCategory.id }));
@@ -130,7 +130,7 @@ const UpdateProduct = () => {
   // remove attribute from local attributes array
   const removeAttribute = (indexToRemove) => {
     const filteredAttributes = attributes.filter(
-      (_, index) => index !== indexToRemove,
+      (_, index) => index !== indexToRemove
     );
     setAttributes(filteredAttributes);
   };
@@ -183,17 +183,16 @@ const UpdateProduct = () => {
     payload.append("title", formData.title);
     payload.append(
       "category_id",
-      subCategory ? subCategory : formData.category_id,
+      subCategory ? subCategory : formData.category_id
     );
     payload.append("price", formData.price);
-    payload.append("description", formData.description);
+    payload.append("description", value);
     payload.append("discount", formData.discount);
     payload.append("quantity", formData.quantity);
     payload.append("is_featured", formData.is_featured);
     payload.append("is_best_selling", formData.is_best_selling);
     payload.append("on_flash_sal", formData.on_flash_sale);
     payload.append("shipping_charge", formData.shipping_charge);
-    // payload.append("content", value); // TODO: not mentioned in the api
     if (thumbnail) {
       payload.append("thumbnail", thumbnail);
     }
@@ -214,7 +213,7 @@ const UpdateProduct = () => {
         {
           method: "POST",
           body: payload,
-        },
+        }
       );
 
       const data = await res.json();
@@ -373,7 +372,7 @@ const UpdateProduct = () => {
               const selectedId = e.target.value;
               setFormData((prev) => ({ ...prev, category_id: selectedId }));
               const selectedCategory = categories.find(
-                (cat) => cat.id == selectedId,
+                (cat) => cat.id == selectedId
               );
               setSubCategories(selectedCategory?.children || []);
               setSubCategory("");

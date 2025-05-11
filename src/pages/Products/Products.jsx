@@ -216,9 +216,6 @@ export default function Products() {
 
             <div className="flex items-center gap-1">
               <p className="text-sm font-medium text-gray-600">Sort By:</p>
-              {/* The API might not be handling the 'order=asc/desc' format correctly.
-                'asc' = Low to High, 'desc' = High to Low. Ensure the backend expects these values. 
-                */}
               <select
                 className="rounded border border-gray-300 bg-white p-1 text-sm text-gray-700 outline-none"
                 name="order"
@@ -226,8 +223,8 @@ export default function Products() {
                 onChange={handleSearchParams}
               >
                 <option value="">Default</option>
-                <option value="desc">Price: Low to High</option>
-                <option value="asc">Price: High to Low</option>
+                <option value="asc">Price: Low to High</option>
+                <option value="desc">Price: High to Low</option>
               </select>
             </div>
           </div>

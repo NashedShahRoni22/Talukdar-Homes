@@ -26,7 +26,7 @@ const MaterialDetails = () => {
   const [selectedAttribute, setSelectedAttribute] = useState("");
 
   // destructure product info
-  const { id, title, thumbnail, discount, attributes } = service;
+  const { id, title, thumbnail, discount, price, attributes } = service;
 
   // newly updated product info to save in cart
   const productCartInfo = {
@@ -89,7 +89,7 @@ const MaterialDetails = () => {
         <div className="w-full md:w-1/3">
           <div className="relative flex justify-center rounded border border-gray-200 p-1">
             <img
-              className="h-full object-cover"
+              className="h-72 max-h-72 object-cover"
               src={focusImage}
               alt=""
               loading="lazy"
@@ -134,6 +134,16 @@ const MaterialDetails = () => {
             {service?.title}
           </h1>
 
+          {/* price and discount price */}
+          <div className="flex gap-2 items-center">
+            <p className="text-lg mt-2 font-medium md:text-2xl text-primary">
+              ${discount}
+            </p>
+            <p className="line-through text-sm text-gray-500 font-medium">
+              ${price}
+            </p>
+          </div>
+
           <div className="mt-4 flex items-center gap-6">
             <p className="w-fit rounded bg-gray-100 p-1.5 text-sm font-medium">
               Category:{" "}
@@ -147,8 +157,8 @@ const MaterialDetails = () => {
             </p>
           </div>
 
-          <div className="mt-4 flex flex-col gap-2 text-sm">
-            <p className="font-medium">Choose Variant:</p>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+            <p className="font-medium min-w-fit">Choose Variant:</p>
             <div className="flex flex-wrap items-center gap-1.5">
               {service?.attributes?.length > 0 &&
                 service?.attributes?.map((attribute, i) => (

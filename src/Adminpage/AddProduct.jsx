@@ -64,7 +64,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     const foundCategory = categories.find(
-      (category) => category.id == formData.category_id,
+      (category) => category.id == formData.category_id
     );
 
     if (foundCategory) {
@@ -103,7 +103,7 @@ const AddProduct = () => {
   // remove attribute from local attributes array
   const removeAttribute = (indexToRemove) => {
     const filteredAttributes = attributes.filter(
-      (_, index) => index !== indexToRemove,
+      (_, index) => index !== indexToRemove
     );
     setAttributes(filteredAttributes);
   };
@@ -164,7 +164,7 @@ const AddProduct = () => {
     payload.append("title", formData.title);
     payload.append(
       "category_id",
-      subCategory ? subCategory : formData.category_id,
+      subCategory ? subCategory : formData.category_id
     );
     payload.append("price", formData.price);
     payload.append("description", value);
@@ -194,7 +194,7 @@ const AddProduct = () => {
         {
           method: "POST",
           body: payload,
-        },
+        }
       );
 
       const data = await res.json();
