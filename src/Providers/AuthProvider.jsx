@@ -9,7 +9,13 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      setUser(JSON.parse(accessToken));
+      try {
+        const parsedUser = JSON.parse(accessToken);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Failed to parse accessToken from localStorage:", error);
+        localStorage.removeItem("accessToken");
+      }
     }
     setLoading(false);
   }, []);

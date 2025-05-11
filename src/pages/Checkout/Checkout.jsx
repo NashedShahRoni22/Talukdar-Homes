@@ -12,8 +12,8 @@ export default function Checkout() {
   });
   const [countries, setCountries] = useState([]);
   const [formData, setFormData] = useState({
-    name: user?.name,
-    email: user?.email,
+    name: user?.name || "",
+    email: user?.email || "",
     phone: "",
     country: "Australia",
     city: "",
@@ -36,11 +36,11 @@ export default function Checkout() {
     const fetchCountries = async () => {
       try {
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name"
+          "https://restcountries.com/v3.1/all?fields=name",
         );
         const data = await res.json();
         const sortedCountries = data?.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common)
+          a.name.common.localeCompare(b.name.common),
         );
         setCountries(sortedCountries);
       } catch (error) {
@@ -118,7 +118,7 @@ export default function Checkout() {
   };
 
   return (
-    <section className="flex flex-col justify-between gap-8 px-5 py-10 md:container md:mx-auto md:flex-row md:gap-16 md:px-0 md:py-20">
+    <section className="flex flex-col-reverse justify-between gap-8 px-5 py-10 md:container md:mx-auto md:flex-row md:gap-16 md:px-0 md:py-20">
       <div className="w-full md:w-1/2">
         <h2 className="text-xl font-medium">Payment Method</h2>
 
@@ -268,6 +268,21 @@ export default function Checkout() {
               />
             </div>
           </form>
+
+          {/* mobile */}
+          <div className="mt-6 flex justify-center md:hidden">
+            <button
+              disabled={isDisabled || isLoading.checkout}
+              onClick={handleConfirmOrder}
+              className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
+            >
+              {isLoading.checkout ? (
+                <Spinner className="mx-auto h-4 w-4" />
+              ) : (
+                "Confirm Order"
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -309,14 +324,15 @@ export default function Checkout() {
           <p className="text-lg font-medium">AUD ${totalPrice}</p>
         </div>
 
-        <div className="mt-6 flex justify-center">
+        {/* desktop submit button */}
+        <div className="mt-6 hidden justify-center md:flex">
           <button
             disabled={isDisabled || isLoading.checkout}
             onClick={handleConfirmOrder}
-            className={`rounded px-4 py-2 text-center min-w-[134px] font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
+            className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
           >
             {isLoading.checkout ? (
-              <Spinner className="h-4 w-4 mx-auto" />
+              <Spinner className="mx-auto h-4 w-4" />
             ) : (
               "Confirm Order"
             )}

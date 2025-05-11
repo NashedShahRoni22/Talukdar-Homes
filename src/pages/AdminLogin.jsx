@@ -38,7 +38,7 @@ const AdminLogin = () => {
 
     if (email === loginEmail && password === loginPassword) {
       setLoading(false);
-      setUser({ name: "Admin", email: loginEmail });
+      setUser({ name: "Admin", email: loginEmail }); // TODO: Mock admin name and email data saved in user context
       toast.success("Login successful!");
       localStorage.setItem("thAccessToken", "@talukdarhomes2024");
       navigate("/admin");
