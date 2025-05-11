@@ -57,12 +57,22 @@ export default function ProductCards({ products }) {
                 ${product?.price} AUD
               </p>
             </div>
-            <button
-              className="flex items-center justify-center gap-2 rounded border border-primary p-2.5 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
-              onClick={() => handleAddtoCart(product)}
-            >
-              <FaCartPlus className="text-lg" />
-            </button>
+
+            {product?.attributes?.length > 0 ? (
+              <Link
+                to={`/service-details/${product?.slug}`}
+                className="flex items-center justify-center gap-2 rounded border border-primary p-2.5 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
+              >
+                <FaCartPlus className="text-lg" />
+              </Link>
+            ) : (
+              <button
+                className="flex items-center justify-center gap-2 rounded border border-primary p-2.5 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
+                onClick={() => handleAddtoCart(product)}
+              >
+                <FaCartPlus className="text-lg" />
+              </button>
+            )}
           </div>
         </div>
       ))}
