@@ -193,12 +193,12 @@ export default function Dashboard() {
           <h2 className="border-b bg-gray-50 px-4 py-2 text-lg font-semibold text-gray-900">
             Quick Links
           </h2>
-          <div className="flex items-center gap-4 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-4 px-4 py-3">
             {quickLinks.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
-                className="flex items-center gap-2 rounded-md border p-3 text-[#ff792d] transition hover:bg-[#ff792d]/10"
+                className="flex min-w-fit items-center gap-2 rounded-md border p-3 text-[#ff792d] transition hover:bg-[#ff792d]/10"
               >
                 <FaLink className="min-w-fit text-lg" />
                 <span className="font-medium">{label}</span>

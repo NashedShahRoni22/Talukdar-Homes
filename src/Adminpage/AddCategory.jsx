@@ -288,7 +288,7 @@ export default function AddCategory() {
                     <>
                       {/* General Child Category Name, Edit & Delete Button */}
                       <span>{cc?.title}</span>
-                      <div>
+                      <div className="min-w-fit">
                         <button
                           className="rounded-full p-1.5 hover:bg-orange-50"
                           onClick={() => {

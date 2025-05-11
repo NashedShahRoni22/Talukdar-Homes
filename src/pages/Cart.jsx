@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../Providers/CartProvider";
 import { IoMdCloseCircle } from "react-icons/io";
+import { BsCartX } from "react-icons/bs";
 
 export default function Cart() {
   const { carts, setCarts, removeFromCart } = useContext(CartContext);
@@ -13,8 +14,8 @@ export default function Cart() {
     if (value === "") {
       setCarts((prevCarts) =>
         prevCarts.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem
-        )
+          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem,
+        ),
       );
       return;
     }
@@ -38,8 +39,8 @@ export default function Cart() {
       prevCarts.map((cartItem) =>
         cartItem.id === item.id
           ? { ...cartItem, quantity: newQuantity }
-          : cartItem
-      )
+          : cartItem,
+      ),
     );
   };
 
@@ -51,8 +52,8 @@ export default function Cart() {
               ...cartItem,
               quantity: cartItem.quantity === "" ? 1 : cartItem.quantity,
             }
-          : cartItem
-      )
+          : cartItem,
+      ),
     );
   };
 
@@ -63,15 +64,16 @@ export default function Cart() {
     }, 0)
     .toFixed(2);
 
-  if (carts.length === 0) {
+  if (!carts?.length > 0) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center">
-        <h2 className="mb-4 text-2xl font-semibold">Your cart is empty</h2>
+      <div className="mx-5 flex min-h-[calc(100vh-80px)] flex-col items-center justify-center py-5 text-center text-gray-600 md:container md:mx-auto md:py-10">
+        <BsCartX className="mx-auto text-[40px] text-[#ff5722]" />
+        <p className="mt-4 text-xl font-semibold">No items added yet!</p>
         <Link
           to="/products"
-          className="px-4 py-2 text-center text-lg rounded font-medium text-white bg-primary hover:bg-primary-hover transition-all duration-200 ease-in-out"
+          className="mt-2 w-fit rounded bg-primary px-4 py-2 text-center text-sm font-medium text-white transition-all duration-200 ease-in-out hover:bg-primary-hover"
         >
-          Browse Products
+          Add Your First Item
         </Link>
       </div>
     );

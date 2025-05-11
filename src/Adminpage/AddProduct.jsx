@@ -44,7 +44,7 @@ const AddProduct = () => {
   const [categories, setCategories] = useState([]);
   const [value, setValue] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
   const [attributeInput, setAttributeInput] = useState("");
   const [attributes, setAttributes] = useState([]);
   const [formData, setFormData] = useState({
@@ -135,9 +135,8 @@ const AddProduct = () => {
       return setThumbnail(e.target.files[0]);
     }
 
-    const fileList = e.target.files;
-    const imageList = Array.from(fileList);
-    setImages(imageList);
+    const files = Array.from(e.target.files);
+    setImages((prevImages) => [...prevImages, ...files]);
   };
 
   // Function to remove an image from the state

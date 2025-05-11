@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import LoaderPage from "../../Adminpage/LoaderPage";
 import { Link } from "react-router-dom";
+import { IoBookOutline } from "react-icons/io5";
 
 export default function Blogs() {
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,18 @@ export default function Blogs() {
 
     getBlogs();
   }, []);
+
+  if (!blogs?.length > 0) {
+    return (
+      <div className="mx-5 flex min-h-[calc(100vh-80px)] flex-col justify-center py-5 text-center text-gray-600 md:container md:mx-auto md:py-10">
+        <IoBookOutline className="mx-auto text-[40px] text-[#ff5722]" />
+        <p className="mt-4 text-xl font-semibold">No blogs found</p>
+        <p className="mt-2 text-sm">
+          Looks like there&apos;s nothing here right now.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="px-5 py-10 md:container md:mx-auto md:px-0 md:py-20">
