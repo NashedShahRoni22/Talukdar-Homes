@@ -6,6 +6,7 @@ import {
   BiUser,
   BiCart,
   BiPackage,
+  BiLogOut,
 } from "react-icons/bi";
 import { MdInfo, MdEmail } from "react-icons/md";
 import { HiMiniBars3BottomLeft } from "react-icons/hi2";
@@ -178,15 +179,15 @@ export default function Navbar() {
                   <Link
                     to="/profile"
                     onClick={toggleDropdown}
-                    className="block w-full rounded-md px-4 py-2 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
+                    className="w-full rounded-md px-4 py-2 flex items-center gap-1 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
                   >
-                    Profile
+                    <BiUser /> Profile
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full rounded-md px-4 py-2 text-left text-center text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
+                    className="w-full rounded-md px-4 py-2 flex items-center gap-1 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
                   >
-                    Logout
+                    <BiLogOut/> Logout
                   </button>
                 </div>
               )}
