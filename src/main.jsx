@@ -43,6 +43,8 @@ import Signup from "./pages/Signup/Signup.jsx";
 import UserPrivateRoute from "./Routes/UserPrivateRoute.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import BlogDetails from "./pages/BlogDetails/BlogDetails.jsx";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -122,6 +124,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
     path: "/admin",

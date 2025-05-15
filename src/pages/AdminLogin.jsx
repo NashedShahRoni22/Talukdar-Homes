@@ -76,7 +76,7 @@ const AdminLogin = () => {
       <div className="flex items-center justify-center p-4">
         <form
           onSubmit={handleLogin}
-          className="w-[70%] rounded-md border p-6 lg:py-14"
+          className="w-full rounded-md border p-6 sm:w-[70%] lg:py-14"
         >
           <h5 className="text-center text-xl font-semibold md:text-3xl">
             Login
@@ -84,9 +84,19 @@ const AdminLogin = () => {
           <h5 className="mt-2 text-center text-sm font-semibold text-gray-600">
             Please use given email and password
           </h5>
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-4 flex flex-col">
             <Input type="email" name="email" label="Enter Email" />
-            <div className="relative">
+
+            <div className="mt-2 text-right">
+              <Link
+                to="/forgot-password"
+                className="text-xs text-primary hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            <div className="relative mt-0.5">
               <Input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -106,6 +116,7 @@ const AdminLogin = () => {
                 )}
               </IconButton>
             </div>
+
             <Button
               type="submit"
               disabled={loading}
