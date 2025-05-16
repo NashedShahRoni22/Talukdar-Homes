@@ -1,13 +1,13 @@
-import { Button, Spinner } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import ReactQuill from "react-quill";
+import { Button, Spinner } from "@material-tailwind/react";
+import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
 import InputField from "../components/admin/InputField";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
-import { MdOutlineClose } from "react-icons/md";
-import toast from "react-hot-toast";
+import "react-quill/dist/quill.snow.css";
 
 const modules = {
   toolbar: [
@@ -45,7 +45,7 @@ const AddProduct = () => {
   const [value, setValue] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [images, setImages] = useState([]);
-  const [attributeInput, setAttributeInput] = useState("");
+  const [attributeInput, setAttributeInput] = useState({ name: "", price: "" });
   const [attributes, setAttributes] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -87,25 +87,17 @@ const AddProduct = () => {
     !value ||
     value.replace(/<[^>]*>/g, "").trim() === "";
 
-  // handle add sub-categories array in local state
-  const handleAttributes = (e) => {
-    if (!attributeInput) {
-      return;
-    }
+  // add new attribute
+  const addAttribute = () => {
+    if (!attributeInput.name || !attributeInput.price) return;
 
-    if (e.key === "Enter" || e.type === "click") {
-      e.preventDefault();
-      setAttributes([...attributes, attributeInput]);
-      setAttributeInput("");
-    }
+    setAttributes((prev) => [...prev, attributeInput]);
+    setAttributeInput({ name: "", price: "" });
   };
 
   // remove attribute from local attributes array
-  const removeAttribute = (indexToRemove) => {
-    const filteredAttributes = attributes.filter(
-      (_, index) => index !== indexToRemove
-    );
-    setAttributes(filteredAttributes);
+  const removeAttribute = (index) => {
+    setAttributes((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Fetch all categories
@@ -148,7 +140,23 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoader(true);
+    const postmanData = {
+      title: formData.title,
+      category_id: subCategory ? subCategory : formData.category_id,
+      price: formData.price,
+      description: value,
+      discount: formData.description,
+      quantity: formData.quantity,
+      is_featured: formData.is_featured,
+      is_best_selling: formData.is_best_selling,
+      on_flash_sal: formData.on_flash_sale,
+      shipping_charge: formData.shipping_charge,
+      attributes,
+    };
+
+    console.log(postmanData);
+
+    /* setLoader(true);
 
     // check discount price is less than original price
     const isDiscountPriceValid =
@@ -208,285 +216,330 @@ const AddProduct = () => {
       setLoader(false);
     } finally {
       setLoader(false);
-    }
+    } */
   };
 
   return (
-    <form
-      className="mt-5 flex flex-col gap-2.5 md:mt-0 md:p-5 lg:p-10"
-      onSubmit={handleSubmit}
-    >
-      <div className="flex justify-between">
-        <h5 className="text-xl font-semibold text-orange-600 md:text-3xl">
-          Add Product
-        </h5>
+    <>
+      <form
+        className="mt-5 flex flex-col gap-2.5 md:mt-0 md:p-5 lg:p-10"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex justify-between">
+          <h5 className="text-xl font-semibold text-orange-600 md:text-3xl">
+            Add Product
+          </h5>
 
-        <Button
-          className="flex items-center gap-2 bg-orange-600"
-          type="submit"
-          disabled={isDisabled || loader}
-        >
-          Submit
-          {loader && <Spinner className="h-4 w-4" />}
-        </Button>
-      </div>
-
-      {/* thumbnail image field */}
-      <div>
-        <label className="font-semibold">
-          Select Thumbnail{" "}
-          <span className="text-xs font-semibold text-red-500">
-            (Maximum Image Size is 2MB)
-          </span>
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageChange(e, true)}
-          style={{ display: "none" }}
-          id="thumbnail-img"
-        />
-        <label
-          htmlFor="thumbnail-img"
-          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
-        >
-          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
-          <p className="text-xs font-semibold">Choose Thumbnail</p>
-        </label>
-      </div>
-
-      {/* thumbnail image preview */}
-      {thumbnail && (
-        <div className="aspect-w-1 aspect-h-1 relative">
-          <IoCloseCircleSharp
-            className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
-            onClick={() => setThumbnail(null)}
-          />
-          <img
-            src={URL.createObjectURL(thumbnail)}
-            alt="thumbnail image"
-            className="h-[200px] w-full rounded object-contain md:h-[250px]"
-          />
+          <Button
+            className="flex items-center gap-2 bg-orange-600"
+            type="submit"
+            disabled={isDisabled || loader}
+          >
+            Submit
+            {loader && <Spinner className="h-4 w-4" />}
+          </Button>
         </div>
-      )}
 
-      {/* images gallery field */}
-      <div className="flex flex-col gap-2.5">
-        <label className="font-semibold">
-          Select Image{" "}
-          <span className="text-xs font-semibold text-red-500">
-            (Maximum Image Size is 2MB)
-          </span>{" "}
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImageChange}
-          style={{ display: "none" }}
-          id="image-upload-input"
-        />
-        <label
-          htmlFor="image-upload-input"
-          className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
-        >
-          <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
-          <p className="text-xs font-semibold">Choose Images</p>
-        </label>
-      </div>
+        {/* thumbnail image field */}
+        <div>
+          <label className="font-semibold">
+            Select Thumbnail{" "}
+            <span className="text-xs font-semibold text-red-500">
+              (Maximum Image Size is 2MB)
+            </span>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, true)}
+            style={{ display: "none" }}
+            id="thumbnail-img"
+          />
+          <label
+            htmlFor="thumbnail-img"
+            className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
+          >
+            <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
+            <p className="text-xs font-semibold">Choose Thumbnail</p>
+          </label>
+        </div>
 
-      {/* Render preview of uploaded images */}
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
-        {images?.map((image, index) => (
-          <div key={index} className="aspect-w-1 aspect-h-1 relative">
+        {/* thumbnail image preview */}
+        {thumbnail && (
+          <div className="aspect-w-1 aspect-h-1 relative">
             <IoCloseCircleSharp
               className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
-              onClick={() => removeImage(index)}
+              onClick={() => setThumbnail(null)}
             />
             <img
-              src={URL.createObjectURL(image)}
-              alt={`Uploaded Image ${index + 1}`}
+              src={URL.createObjectURL(thumbnail)}
+              alt="thumbnail image"
               className="h-[200px] w-full rounded object-contain md:h-[250px]"
             />
           </div>
-        ))}
-      </div>
+        )}
 
-      {/* name field */}
-      <InputField
-        label="Name"
-        id="name"
-        name="title"
-        value={formData.title}
-        required={true}
-        handleInputChange={handleInputChange}
-      />
-
-      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
-        {/* category select dropdown */}
+        {/* images gallery field */}
         <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Category</label>
-          <select
-            className="rounded border border-gray-400 px-4 py-2 outline-none"
-            value={formData.category_id}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, category_id: e.target.value }))
-            }
-          >
-            <option value="" disabled>
-              --- Please select a category ---
-            </option>
-            {categories?.map((category) => (
-              <option key={category?.id} value={category?.id}>
-                {category?.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* sub-category select dropdown */}
-        <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Sub-Category</label>
-          <select
-            className="rounded border border-gray-400 px-4 py-2 outline-none"
-            value={subCategory}
-            onChange={(e) => setSubCategory(e.target.value)}
-            required={subCategory ? true : false}
-          >
-            <option value="" disabled>
-              --- Please select a sub-category ---
-            </option>
-            {subCategories?.map((subCategory) => (
-              <option key={subCategory?.id} value={subCategory?.id}>
-                {subCategory?.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* attribute input field */}
-        <div className="col-span-full flex flex-col gap-2.5">
-          <label htmlFor="attributeName" className="font-semibold">
-            Attribute Name
+          <label className="font-semibold">
+            Select Image{" "}
+            <span className="text-xs font-semibold text-red-500">
+              (Maximum Image Size is 2MB)
+            </span>{" "}
           </label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            style={{ display: "none" }}
+            id="image-upload-input"
+          />
+          <label
+            htmlFor="image-upload-input"
+            className="flex w-fit cursor-pointer items-center gap-2 rounded border px-4 py-2 shadow hover:shadow-orange-600"
+          >
+            <IoImagesSharp className="text-lightColor text-xl text-orange-600" />
+            <p className="text-xs font-semibold">Choose Images</p>
+          </label>
+        </div>
 
-          <div className="flex items-center justify-between rounded border border-gray-400 px-4 pr-1">
-            <input
-              type="text"
-              id="attributeName"
-              name="attributeName"
-              value={attributeInput}
-              onChange={(e) => setAttributeInput(e.target.value)}
-              onKeyDown={handleAttributes}
-              className="w-full py-2 outline-none"
-            />
-            {attributeInput && (
+        {/* Render preview of uploaded images */}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+          {images?.map((image, index) => (
+            <div key={index} className="aspect-w-1 aspect-h-1 relative">
+              <IoCloseCircleSharp
+                className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
+                onClick={() => removeImage(index)}
+              />
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`Uploaded Image ${index + 1}`}
+                className="h-[200px] w-full rounded object-contain md:h-[250px]"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* name field */}
+        <InputField
+          label="Name"
+          id="name"
+          name="title"
+          value={formData.title}
+          required={true}
+          handleInputChange={handleInputChange}
+        />
+
+        <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
+          {/* category select dropdown */}
+          <div className="flex flex-col gap-2.5">
+            <label className="font-semibold">Category</label>
+            <select
+              className="rounded border border-gray-400 px-4 py-2 outline-none"
+              value={formData.category_id}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  category_id: e.target.value,
+                }))
+              }
+            >
+              <option value="" disabled>
+                --- Please select a category ---
+              </option>
+              {categories?.map((category) => (
+                <option key={category?.id} value={category?.id}>
+                  {category?.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* sub-category select dropdown */}
+          <div className="flex flex-col gap-2.5">
+            <label className="font-semibold">Sub-Category</label>
+            <select
+              className="rounded border border-gray-400 px-4 py-2 outline-none"
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
+              required={subCategory ? true : false}
+            >
+              <option value="" disabled>
+                --- Please select a sub-category ---
+              </option>
+              {subCategories?.map((subCategory) => (
+                <option key={subCategory?.id} value={subCategory?.id}>
+                  {subCategory?.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
+          {/* price */}
+          <InputField
+            label="Price"
+            id="price"
+            name="price"
+            value={formData.price}
+            required={true}
+            handleInputChange={handleInputChange}
+          />
+
+          {/* discount price */}
+          <InputField
+            label="Discount Price"
+            id="discount_price"
+            name="discount"
+            value={formData.discount}
+            required={true}
+            handleInputChange={handleInputChange}
+          />
+
+          {/* shipping charge */}
+          <InputField
+            label="Shipping Charge"
+            id="shipping_charge"
+            name="shipping_charge"
+            value={formData.shipping_charge}
+            required={true}
+            handleInputChange={handleInputChange}
+          />
+
+          {/* quantity */}
+          <InputField
+            label="Quantity"
+            id="quantity"
+            name="quantity"
+            value={formData.quantity}
+            required={true}
+            handleInputChange={handleInputChange}
+          />
+        </div>
+
+        {/* attributes container */}
+        <div className="grid grid-cols-12 gap-x-5 gap-y-2.5">
+          {/* attribute name input field */}
+          <div className="flex col-span-6 flex-col gap-2.5">
+            <label htmlFor="attributeName" className="font-semibold">
+              Attribute Name
+            </label>
+
+            <div className="rounded border border-gray-400 overflow-hidden">
+              <input
+                type="text"
+                id="attributeName"
+                name="attributeName"
+                value={attributeInput.name}
+                onChange={(e) =>
+                  setAttributeInput({ ...attributeInput, name: e.target.value })
+                }
+                className="w-full px-4 py-2 outline-none"
+              />
+            </div>
+          </div>
+
+          {/* attribute price input field */}
+          <div className="flex col-span-6 flex-col gap-2.5">
+            <label htmlFor="attributePrice" className="font-semibold">
+              Attribute Price
+            </label>
+
+            <div className="flex items-center justify-between rounded border border-gray-400 overflow-hidden">
+              <input
+                type="text"
+                id="attributePrice"
+                name="attributePrice"
+                value={attributeInput.price}
+                onChange={(e) =>
+                  setAttributeInput({
+                    ...attributeInput,
+                    price: e.target.value,
+                  })
+                }
+                className="w-full py-2 px-4 outline-none"
+              />
               <button
-                className="min-w-fit cursor-pointer rounded bg-orange-500 px-4 py-1 text-white"
-                onClick={handleAttributes}
+                onClick={addAttribute}
+                disabled={!attributeInput.name || !attributeInput.price}
+                className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "bg-primary cursor-pointer hover:bg-primary-hover" : "bg-primary/50"}`}
               >
-                Add
+                <FiPlus /> Add
               </button>
-            )}
+            </div>
           </div>
 
           {/* attributes */}
-          <div className="flex flex-wrap gap-1.5">
-            {attributes.map((attribute, i) => (
-              <div
-                key={i}
-                className="inline-flex items-center gap-1 rounded-lg bg-orange-50 px-2 py-0.5 text-sm text-orange-500"
-              >
-                <p>{attribute}</p>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => removeAttribute(i)}
-                >
-                  <MdOutlineClose className="text-lg" />
-                </button>
+          {attributes && attributes?.length > 0 && (
+            <div className="flex col-span-12 items-center gap-2 py-2 text-sm">
+              <p className="font-semibold">Attributes:</p>
+
+              <div className="flex flex-wrap gap-2">
+                {attributes.map((attribute, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 transition-all hover:bg-gray-100"
+                  >
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-sm font-medium text-gray-800">
+                        {attribute.name} -
+                      </span>
+                      <span className="text-xs text-emerald-600">
+                        ${attribute.price}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => removeAttribute(i)}
+                      className="text-gray-400 transition-colors hover:text-red-500 focus:outline-none"
+                    >
+                      <FiTrash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
-        {/* price */}
-        <InputField
-          label="Price"
-          id="price"
-          name="price"
-          value={formData.price}
-          required={true}
-          handleInputChange={handleInputChange}
-        />
+        {/* checkboxes container */}
+        <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-3">
+          {/* featured */}
+          <CheckBoxFeat
+            label="Featured"
+            name="is_featured"
+            id1="featuredYes"
+            id2="featuredNo"
+            value={formData.is_featured}
+            handleInputChange={handleInputChange}
+          />
 
-        {/* discount price */}
-        <InputField
-          label="Discount Price"
-          id="discount_price"
-          name="discount"
-          value={formData.discount}
-          required={true}
-          handleInputChange={handleInputChange}
-        />
+          {/* best selling */}
+          <CheckBoxFeat
+            label="Best Selling"
+            name="is_best_selling"
+            id1="bestSellingYes"
+            id2="bestSellingNo"
+            value={formData.is_best_selling}
+            handleInputChange={handleInputChange}
+          />
 
-        {/* shipping charge */}
-        <InputField
-          label="Shipping Charge"
-          id="shipping_charge"
-          name="shipping_charge"
-          value={formData.shipping_charge}
-          required={true}
-          handleInputChange={handleInputChange}
-        />
+          {/* flash sell */}
+          <CheckBoxFeat
+            label="Flash Sell"
+            name="on_flash_sale"
+            id1="flashSaleYes"
+            id2="flashSaleNo"
+            value={formData.on_flash_sale}
+            handleInputChange={handleInputChange}
+          />
+        </div>
 
-        {/* quantity */}
-        <InputField
-          label="Quantity"
-          id="quantity"
-          name="quantity"
-          value={formData.quantity}
-          required={true}
-          handleInputChange={handleInputChange}
-        />
-      </div>
-
-      {/* checkboxes container */}
-      <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-3">
-        {/* featured */}
-        <CheckBoxFeat
-          label="Featured"
-          name="is_featured"
-          id1="featuredYes"
-          id2="featuredNo"
-          value={formData.is_featured}
-          handleInputChange={handleInputChange}
-        />
-
-        {/* best selling */}
-        <CheckBoxFeat
-          label="Best Selling"
-          name="is_best_selling"
-          id1="bestSellingYes"
-          id2="bestSellingNo"
-          value={formData.is_best_selling}
-          handleInputChange={handleInputChange}
-        />
-
-        {/* flash sell */}
-        <CheckBoxFeat
-          label="Flash Sell"
-          name="on_flash_sale"
-          id1="flashSaleYes"
-          id2="flashSaleNo"
-          value={formData.on_flash_sale}
-          handleInputChange={handleInputChange}
-        />
-      </div>
-
-      {/* meta description field */}
-      {/* <div className="flex flex-col gap-2.5">
+        {/* meta description field */}
+        {/* <div className="flex flex-col gap-2.5">
         <label className="font-semibold">Meta Description</label>
         <textarea
           className="rounded border border-gray-400 px-4 py-2 outline-none"
@@ -497,19 +550,20 @@ const AddProduct = () => {
         />
       </div> */}
 
-      {/* product content description */}
-      <div className="mt-5 flex flex-col gap-2.5">
-        <label className="font-semibold">Enter Content</label>
-        <ReactQuill
-          theme="snow"
-          value={value}
-          onChange={setValue}
-          modules={modules}
-          formats={formats}
-          className="h-[300px] w-full py-2"
-        />
-      </div>
-    </form>
+        {/* product content description */}
+        <div className="mt-5 flex flex-col gap-2.5">
+          <label className="font-semibold">Enter Content</label>
+          <ReactQuill
+            theme="snow"
+            value={value}
+            onChange={setValue}
+            modules={modules}
+            formats={formats}
+            className="h-[300px] w-full py-2"
+          />
+        </div>
+      </form>
+    </>
   );
 };
 

@@ -14,8 +14,8 @@ export default function Cart() {
     if (value === "") {
       setCarts((prevCarts) =>
         prevCarts.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem,
-        ),
+          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem
+        )
       );
       return;
     }
@@ -39,8 +39,8 @@ export default function Cart() {
       prevCarts.map((cartItem) =>
         cartItem.id === item.id
           ? { ...cartItem, quantity: newQuantity }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
@@ -52,8 +52,8 @@ export default function Cart() {
               ...cartItem,
               quantity: cartItem.quantity === "" ? 1 : cartItem.quantity,
             }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
@@ -101,12 +101,32 @@ export default function Cart() {
             {carts.map((item) => (
               <tr key={item.id} className="border-b">
                 <td className="flex items-center gap-4 px-2 py-4">
-                  <img
-                    src={item.thumbnail}
-                    alt={item.title}
-                    className="h-16 w-16 object-cover"
-                  />
-                  <span>{item.title}</span>
+                  <Link
+                    to={`/service-details/${item?.slug}`}
+                    className="group overflow-hidden"
+                  >
+                    <img
+                      src={item.thumbnail}
+                      alt={item.title}
+                      className="h-16 w-16 object-cover group-hover:scale-105 transition-all duration-200 ease-linear"
+                    />
+                  </Link>
+                  <div>
+                    <Link
+                      to={`/service-details/${item?.slug}`}
+                      className="hover:text-primary transition-all duration-200 ease-in-out"
+                    >
+                      {item.title}
+                    </Link>
+                    <div className="flex items-center gap-0.5">
+                      <p className="text-xs font-semibold text-primary">
+                        Variant:
+                      </p>
+                      <p className="italic text-xs text-gray-600">
+                        {item.attribute}
+                      </p>
+                    </div>
+                  </div>
                 </td>
 
                 <td className="px-2 py-4">${item.price}</td>
