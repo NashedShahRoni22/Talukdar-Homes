@@ -16,6 +16,7 @@ import { CartContext } from "../Providers/CartProvider";
 import { AuthContext } from "../Providers/AuthProvider";
 import logo from "../assets/logo/logo-1.png";
 import toast from "react-hot-toast";
+import { FiGrid } from "react-icons/fi";
 
 const menus = [
   {
@@ -166,8 +167,8 @@ export default function Navbar() {
             <div className="relative">
               <button onClick={toggleDropdown}>
                 <div className="group flex items-center gap-1.5">
-                  <span className="rounded-full bg-primary p-2 text-xl">
-                    <BiUser />
+                  <span className="rounded-full bg-primary p-2.5">
+                    <BiUser className="text-base" />
                   </span>
                   <span className="group-hover:text-primary">Profile</span>
                 </div>
@@ -175,19 +176,28 @@ export default function Navbar() {
 
               {/* profile drop down menu */}
               {showDropdown && (
-                <div className="absolute left-1/2 top-full z-50 mt-1.5 min-w-28 -translate-x-1/2 rounded-lg bg-[#191919] p-2 text-center text-white shadow-lg">
+                <div className="absolute left-1/2 top-full z-50 mt-1.5 min-w-28 -translate-x-1/2 rounded-lg border border-white/5 bg-[#252525] text-center text-white shadow-lg">
+                  {user?.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      onClick={toggleDropdown}
+                      className="flex w-full items-center gap-1 rounded-md px-4 py-2 text-sm transition duration-200 hover:bg-[#191919] hover:text-primary"
+                    >
+                      <FiGrid className="min-w-fit" /> Admin
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     onClick={toggleDropdown}
-                    className="w-full rounded-md px-4 py-2 flex items-center gap-1 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
+                    className="flex w-full items-center gap-1 rounded-md px-4 py-2 text-sm transition duration-200 hover:bg-[#191919] hover:text-primary"
                   >
-                    <BiUser /> Profile
+                    <BiUser className="min-w-fit" /> Profile
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full rounded-md px-4 py-2 flex items-center gap-1 text-sm transition duration-200 hover:bg-gray-100 hover:text-primary"
+                    className="flex w-full items-center gap-1 rounded-md px-4 py-2 text-sm transition duration-200 hover:bg-[#191919] hover:text-primary"
                   >
-                    <BiLogOut/> Logout
+                    <BiLogOut className="min-w-fit" /> Logout
                   </button>
                 </div>
               )}

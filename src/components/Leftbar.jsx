@@ -116,7 +116,6 @@ const Leftbar = ({ setShow }) => {
 
   const handleLogout = () => {
     toast.success("Logout successful!");
-    localStorage.removeItem("thAccessToken");
     localStorage.removeItem("accessToken");
     setUser(null);
     navigate("/");

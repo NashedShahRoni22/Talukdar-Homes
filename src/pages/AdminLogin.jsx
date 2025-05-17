@@ -1,13 +1,10 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
-import { AuthContext } from "../Providers/AuthProvider";
+import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { AuthContext } from "../Providers/AuthProvider";
 import loginImg from "../assets/login.jpg";
-
-const loginEmail = "admin@talukdarhomes.com.au";
-const loginPassword = "@talukdarhomes2024";
 
 const AdminLogin = () => {
   const location = useLocation();
@@ -36,15 +33,6 @@ const AdminLogin = () => {
       password,
     };
 
-    if (email === loginEmail && password === loginPassword) {
-      setLoading(false);
-      setUser({ name: "Admin", email: loginEmail }); // TODO: Mock admin name and email data saved in user context
-      toast.success("Login successful!");
-      localStorage.setItem("thAccessToken", "@talukdarhomes2024");
-      navigate("/admin");
-      return;
-    }
-
     try {
       const res = await fetch("https://api.talukderhomes.com.au/api/login", {
         method: "POST",
@@ -59,7 +47,12 @@ const AdminLogin = () => {
         toast.success("Login successful!");
         setUser(data?.data);
         localStorage.setItem("accessToken", JSON.stringify(data?.data));
-        navigate(from, { replace: true });
+        // navigate based on role
+        if (data?.data?.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate(from, { replace: true });
+        }
       } else {
         toast.error("Email & Password should be valid!");
       }

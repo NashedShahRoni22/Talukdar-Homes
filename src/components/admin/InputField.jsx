@@ -9,10 +9,10 @@ export default function InputField({
   return (
     <div className="flex flex-col gap-2.5">
       <label className="font-semibold" htmlFor={id}>
-        {label}
+        {label} {required && <span className="text-red-600">*</span>}
       </label>
       <input
-        className="px-4 py-2 outline-none border border-gray-400 rounded"
+        className="rounded border border-gray-400 px-4 py-2 outline-none"
         type="text"
         id={id}
         name={name}

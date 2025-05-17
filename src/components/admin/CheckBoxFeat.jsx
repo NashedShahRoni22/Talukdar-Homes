@@ -10,7 +10,9 @@ export default function CheckBoxFeat({
 }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <label className="font-semibold">{label}</label>
+      <label className="font-semibold">
+        {label} <span className="text-red-600">*</span>
+      </label>
 
       <div className="flex w-full items-center gap-4">
         <div>

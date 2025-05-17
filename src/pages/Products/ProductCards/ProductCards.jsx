@@ -51,11 +51,15 @@ export default function ProductCards({ products }) {
           <div className="flex w-full items-center justify-between p-4">
             <div>
               <p className="text-lg font-medium text-primary">
-                ${product?.discount} <span className="text-sm">AUD</span>
+                ${product?.discount ? product?.discount : product?.price}{" "}
+                <span className="text-sm">AUD</span>
               </p>
-              <p className="mt-0.5 text-sm text-gray-500 line-through">
-                ${product?.price} AUD
-              </p>
+
+              {product?.discount && (
+                <p className="mt-0.5 text-sm text-gray-500 line-through">
+                  ${product?.price} AUD
+                </p>
+              )}
             </div>
 
             {product?.attributes?.length > 0 ? (

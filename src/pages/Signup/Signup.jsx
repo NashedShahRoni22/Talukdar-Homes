@@ -1,15 +1,12 @@
-import { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
-import { AuthContext } from "../../Providers/AuthProvider";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import login from "../../assets/login.jpg";
 
 export default function Signup() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,8 +15,6 @@ export default function Signup() {
     password: "",
     password_confirmation: "",
   });
-
-  const from = location.state?.from?.pathname || "/";
 
   const isDisabled =
     !formData.name.trim("") ||
@@ -50,9 +45,7 @@ export default function Signup() {
       const data = await res.json();
       if (data?.status === true) {
         toast.success("Signup successful!");
-        setUser(data?.data);
-        localStorage.setItem("accessToken", JSON.stringify(data?.data));
-        navigate(from, { replace: true });
+        navigate("/login");
       } else {
         toast.error("Email & Password should be valid!");
       }

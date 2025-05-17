@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
@@ -8,6 +8,7 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 import InputField from "../components/admin/InputField";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
 import "react-quill/dist/quill.snow.css";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const modules = {
   toolbar: [
@@ -40,9 +41,11 @@ const formats = [
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  console.log(user);
   const [loader, setLoader] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [images, setImages] = useState([]);
   const [attributeInput, setAttributeInput] = useState({ name: "", price: "" });
@@ -64,7 +67,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     const foundCategory = categories.find(
-      (category) => category.id == formData.category_id
+      (category) => category.id == formData.category_id,
     );
 
     if (foundCategory) {
@@ -73,19 +76,7 @@ const AddProduct = () => {
   }, [categories, formData.category_id]);
 
   // Check whether all the form fields are filled or not
-  const isDisabled =
-    !formData.title.trim() ||
-    !formData.category_id.trim() ||
-    !formData.price.trim() ||
-    // !formData.description.trim() ||
-    !formData.discount.trim() ||
-    !formData.quantity.trim() ||
-    !formData.shipping_charge.trim() ||
-    !thumbnail ||
-    !images?.length ||
-    !attributes.length ||
-    !value ||
-    value.replace(/<[^>]*>/g, "").trim() === "";
+  const isDisabled = false;
 
   // add new attribute
   const addAttribute = () => {
@@ -140,59 +131,58 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const postmanData = {
-      title: formData.title,
-      category_id: subCategory ? subCategory : formData.category_id,
-      price: formData.price,
-      description: value,
-      discount: formData.description,
-      quantity: formData.quantity,
-      is_featured: formData.is_featured,
-      is_best_selling: formData.is_best_selling,
-      on_flash_sal: formData.on_flash_sale,
-      shipping_charge: formData.shipping_charge,
-      attributes,
-    };
+    setLoader(true);
 
-    console.log(postmanData);
+    if (!thumbnail) {
+      return toast.error("Please upload a thumbnail image");
+    }
 
-    /* setLoader(true);
+    if (!images || images.length === 0) {
+      return toast.error("Please upload one or more product images");
+    }
 
-    // check discount price is less than original price
-    const isDiscountPriceValid =
-      Number(formData.discount) < Number(formData.price);
+    if (formData.discount) {
+      const originalPrice = Number(formData.price);
+      const discountPrice = Number(formData.discount);
 
-    if (!isDiscountPriceValid) {
-      setLoader(false);
-      toast.error("Discount price must be less than original price");
-      return;
+      // Check if discount is valid (positive and less than original price)
+      if (discountPrice <= 0) {
+        toast.error("Discount must be greater than 0");
+        setLoader(false);
+        return;
+      }
+
+      if (discountPrice >= originalPrice) {
+        toast.error("Discount price must be less than the original price");
+        setLoader(false);
+        return;
+      }
     }
 
     const payload = new FormData();
     payload.append("title", formData.title);
     payload.append(
       "category_id",
-      subCategory ? subCategory : formData.category_id
+      subCategory ? subCategory : formData.category_id,
     );
     payload.append("price", formData.price);
     payload.append("description", value);
     payload.append("discount", formData.discount);
     payload.append("quantity", formData.quantity);
-    payload.append("is_featured", formData.is_featured);
-    payload.append("is_best_selling", formData.is_best_selling);
-    payload.append("on_flash_sal", formData.on_flash_sale);
+    payload.append("is_featured", formData.is_featured ? "1" : "0");
+    payload.append("is_best_selling", formData.is_best_selling ? "1" : "0");
+    payload.append("on_flash_sale", formData.on_flash_sale ? "1" : "0");
     payload.append("shipping_charge", formData.shipping_charge);
-    if (thumbnail) {
-      payload.append("thumbnail", thumbnail);
-    }
+    payload.append("thumbnail", thumbnail);
 
-    attributes.forEach((attribute) => {
-      payload.append(`attributes[]`, attribute);
+    images.forEach((img) => {
+      payload.append("gallery[]", img);
     });
 
-    if (images?.length) {
-      images.forEach((img) => {
-        payload.append("gallery[]", img);
+    if (attributes && attributes.length > 0) {
+      attributes.forEach((attribute, i) => {
+        payload.append(`attributes[${i}][name]`, attribute.name);
+        payload.append(`attributes[${i}][price]`, attribute.price);
       });
     }
 
@@ -201,22 +191,29 @@ const AddProduct = () => {
         "https://api.talukderhomes.com.au/api/products/store",
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
           body: payload,
-        }
+        },
       );
 
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.msg || "Failed to create product");
+      }
+
       if (data.status === true) {
         toast.success(data.msg);
-        setLoader(false);
         navigate("/admin/manage-products");
       }
     } catch (error) {
       console.error("Error:", error);
-      setLoader(false);
+      toast.error(error.message);
     } finally {
       setLoader(false);
-    } */
+    }
   };
 
   return (
@@ -245,7 +242,7 @@ const AddProduct = () => {
           <label className="font-semibold">
             Select Thumbnail{" "}
             <span className="text-xs font-semibold text-red-500">
-              (Maximum Image Size is 2MB)
+              (Maximum Image Size is 2MB) *
             </span>
           </label>
           <input
@@ -284,7 +281,7 @@ const AddProduct = () => {
           <label className="font-semibold">
             Select Image{" "}
             <span className="text-xs font-semibold text-red-500">
-              (Maximum Image Size is 2MB)
+              (Maximum Image Size is 2MB) *
             </span>{" "}
           </label>
           <input
@@ -334,10 +331,13 @@ const AddProduct = () => {
         <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
           {/* category select dropdown */}
           <div className="flex flex-col gap-2.5">
-            <label className="font-semibold">Category</label>
+            <label className="font-semibold">
+              Category <span className="text-red-600">*</span>
+            </label>
             <select
               className="rounded border border-gray-400 px-4 py-2 outline-none"
               value={formData.category_id}
+              required
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -363,7 +363,6 @@ const AddProduct = () => {
               className="rounded border border-gray-400 px-4 py-2 outline-none"
               value={subCategory}
               onChange={(e) => setSubCategory(e.target.value)}
-              required={subCategory ? true : false}
             >
               <option value="" disabled>
                 --- Please select a sub-category ---
@@ -394,7 +393,6 @@ const AddProduct = () => {
             id="discount_price"
             name="discount"
             value={formData.discount}
-            required={true}
             handleInputChange={handleInputChange}
           />
 
@@ -404,7 +402,6 @@ const AddProduct = () => {
             id="shipping_charge"
             name="shipping_charge"
             value={formData.shipping_charge}
-            required={true}
             handleInputChange={handleInputChange}
           />
 
@@ -422,12 +419,12 @@ const AddProduct = () => {
         {/* attributes container */}
         <div className="grid grid-cols-12 gap-x-5 gap-y-2.5">
           {/* attribute name input field */}
-          <div className="flex col-span-6 flex-col gap-2.5">
+          <div className="col-span-6 flex flex-col gap-2.5">
             <label htmlFor="attributeName" className="font-semibold">
               Attribute Name
             </label>
 
-            <div className="rounded border border-gray-400 overflow-hidden">
+            <div className="overflow-hidden rounded border border-gray-400">
               <input
                 type="text"
                 id="attributeName"
@@ -442,12 +439,12 @@ const AddProduct = () => {
           </div>
 
           {/* attribute price input field */}
-          <div className="flex col-span-6 flex-col gap-2.5">
+          <div className="col-span-6 flex flex-col gap-2.5">
             <label htmlFor="attributePrice" className="font-semibold">
               Attribute Price
             </label>
 
-            <div className="flex items-center justify-between rounded border border-gray-400 overflow-hidden">
+            <div className="flex items-center justify-between overflow-hidden rounded border border-gray-400">
               <input
                 type="text"
                 id="attributePrice"
@@ -459,12 +456,12 @@ const AddProduct = () => {
                     price: e.target.value,
                   })
                 }
-                className="w-full py-2 px-4 outline-none"
+                className="w-full px-4 py-2 outline-none"
               />
               <button
                 onClick={addAttribute}
                 disabled={!attributeInput.name || !attributeInput.price}
-                className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "bg-primary cursor-pointer hover:bg-primary-hover" : "bg-primary/50"}`}
+                className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "cursor-pointer bg-primary hover:bg-primary-hover" : "bg-primary/50"}`}
               >
                 <FiPlus /> Add
               </button>
@@ -473,7 +470,7 @@ const AddProduct = () => {
 
           {/* attributes */}
           {attributes && attributes?.length > 0 && (
-            <div className="flex col-span-12 items-center gap-2 py-2 text-sm">
+            <div className="col-span-12 flex items-center gap-2 py-2 text-sm">
               <p className="font-semibold">Attributes:</p>
 
               <div className="flex flex-wrap gap-2">
@@ -486,7 +483,7 @@ const AddProduct = () => {
                       <span className="text-sm font-medium text-gray-800">
                         {attribute.name} -
                       </span>
-                      <span className="text-xs text-emerald-600">
+                      <span className="text-emerald-600 text-xs">
                         ${attribute.price}
                       </span>
                     </div>
