@@ -10,50 +10,50 @@ export default function Cart() {
   const handleQuantityChange = (e, item) => {
     let value = e.target.value;
 
-    // If input is empty, allow it temporarily
     if (value === "") {
       setCarts((prevCarts) =>
         prevCarts.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem,
-        ),
+          cartItem.id === item.id &&
+          (cartItem.attribute?.name || null) === (item.attribute?.name || null)
+            ? { ...cartItem, quantity: "" }
+            : cartItem
+        )
       );
       return;
     }
 
-    // Remove leading zeros
     value = value.replace(/^0+/, "");
 
-    // Block decimal values
     if (value.includes(".")) {
-      value = value.split(".")[0]; // Take only the integer part
+      value = value.split(".")[0];
     }
 
     let newQuantity = Number(value);
-
-    // If value is 0, negative, or NaN, set to 1
     if (isNaN(newQuantity) || newQuantity <= 0) {
       newQuantity = 1;
     }
 
     setCarts((prevCarts) =>
       prevCarts.map((cartItem) =>
-        cartItem.id === item.id
+        cartItem.id === item.id &&
+        (cartItem.attribute?.name || null) === (item.attribute?.name || null)
           ? { ...cartItem, quantity: newQuantity }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
   const handleInputBlur = (item) => {
     setCarts((prevCarts) =>
       prevCarts.map((cartItem) =>
-        cartItem.id === item.id
+        cartItem.id === item.id &&
+        (cartItem.attribute?.name || null) === (item.attribute?.name || null)
           ? {
               ...cartItem,
               quantity: cartItem.quantity === "" ? 1 : cartItem.quantity,
             }
-          : cartItem,
-      ),
+          : cartItem
+      )
     );
   };
 
@@ -99,7 +99,10 @@ export default function Cart() {
 
           <tbody>
             {carts.map((item) => (
-              <tr key={item.id} className="border-b">
+              <tr
+                key={item.attribute ? item.attribute.name + item.id : item.id}
+                className="border-b"
+              >
                 <td className="flex items-center gap-4 px-2 py-4">
                   <Link
                     to={`/service-details/${item?.slug}`}
@@ -108,7 +111,7 @@ export default function Cart() {
                     <img
                       src={item.thumbnail}
                       alt={item.title}
-                      className="h-16 w-16 object-cover transition-all duration-200 ease-linear group-hover:scale-105"
+                      className="h-16 w-16 object-contain transition-all duration-200 ease-linear group-hover:scale-105"
                     />
                   </Link>
                   <div>
@@ -118,13 +121,13 @@ export default function Cart() {
                     >
                       {item.title}
                     </Link>
-                    {item.attribute && item.attribute.length > 0 && (
-                      <div className="flex items-center gap-0.5">
+                    {item.attribute && (
+                      <div className="flex items-center gap-0.5 mt-1">
                         <p className="text-xs font-semibold text-primary">
                           Variant:
                         </p>
-                        <p className="text-xs italic text-gray-600">
-                          {item.attribute}
+                        <p className="text-xs text-gray-600">
+                          {item.attribute.name}
                         </p>
                       </div>
                     )}
@@ -148,9 +151,9 @@ export default function Cart() {
                   ${(item.price * item.quantity).toFixed(2)}
                 </td>
 
-                <td className="cursor-pointer px-2 py-4 text-orange-500">
+                <td className="cursor-pointer px-2 py-4 text-primary/75 hover:text-primary-hover transition-all duration-200 ease-in-out">
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item)}
                     className="flex items-center gap-2"
                   >
                     Remove <IoMdCloseCircle />
@@ -177,13 +180,13 @@ export default function Cart() {
       <div className="flex items-center justify-center gap-8">
         <Link
           to={`/`}
-          className="px-4 py-2 text-center text-lg font-medium text-orange-500"
+          className="px-4 py-2 text-center text-lg font-medium text-primary hover:text-primary-hover transition-all duration-200 ease-in-out"
         >
           Continue Shopping
         </Link>
         <Link
           to="/checkout"
-          className="rounded bg-orange-500 px-4 py-2 text-center text-lg font-medium text-white"
+          className="rounded bg-primary hover:bg-primary-hover transition-all duration-200 ease-in-out px-4 py-2 text-center text-lg font-medium text-white"
         >
           Go to Checkout
         </Link>

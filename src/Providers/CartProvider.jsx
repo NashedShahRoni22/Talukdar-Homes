@@ -8,6 +8,8 @@ export default function CartProvider({ children }) {
 
   const [carts, setCarts] = useState(savedCarts ? JSON.parse(savedCarts) : []);
 
+  console.log(carts);
+
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(carts));
   }, [carts]);
@@ -17,14 +19,12 @@ export default function CartProvider({ children }) {
 
     const exists = carts.find((cartItem) => {
       if (hasAttribute) {
-        // Item has attribute, check for both id and attribute
         return (
           cartItem.id === item.id &&
           "attribute" in cartItem &&
-          cartItem.attribute === item.attribute
+          cartItem.attribute?.name === item.attribute?.name
         );
       } else {
-        // Item has no attribute, check by id only
         return cartItem.id === item.id && !("attribute" in cartItem);
       }
     });
@@ -36,35 +36,34 @@ export default function CartProvider({ children }) {
       return;
     }
 
-    if (hasAttribute) {
-      // Check if same id but different attribute exists — then update
-      const indexToUpdate = carts.findIndex(
-        (cartItem) =>
-          cartItem.id === item.id &&
-          "attribute" in cartItem &&
-          cartItem.attribute !== item.attribute,
-      );
-
-      if (indexToUpdate !== -1) {
-        setCarts((prevCart) =>
-          prevCart.map((cartItem, index) =>
-            index === indexToUpdate
-              ? { ...cartItem, attribute: item.attribute }
-              : cartItem,
-          ),
-        );
-        toast.success(`${item.title} updated in cart`);
-        return;
-      }
-    }
-
-    // Otherwise, add the item to cart
+    // Add as a new item (even if same id but different attribute)
     setCarts((prevCart) => [...prevCart, { ...item, quantity: 1 }]);
     toast.success(`${item.title} added to cart`);
   };
 
-  const removeFromCart = (itemId) => {
-    setCarts((prevCart) => prevCart.filter((item) => item.id !== itemId));
+  const removeFromCart = (itemToRemove) => {
+    setCarts((prevCart) =>
+      prevCart.filter((item) => {
+        const isSameId = item.id === itemToRemove.id;
+
+        const itemAttrName = item?.attribute?.name;
+        const removeAttrName = itemToRemove?.attribute?.name;
+
+        // Case 1: both have attribute.name, remove only matching attribute
+        if (itemAttrName && removeAttrName) {
+          return !(isSameId && itemAttrName === removeAttrName);
+        }
+
+        // Case 2: neither has attribute, remove by id
+        if (!itemAttrName && !removeAttrName) {
+          return !isSameId;
+        }
+
+        // Case 3: mismatch in attribute existence, keep it
+        return true;
+      })
+    );
+
     toast.success("Item removed from cart");
   };
 

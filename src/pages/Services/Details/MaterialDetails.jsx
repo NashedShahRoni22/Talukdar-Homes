@@ -26,14 +26,14 @@ const MaterialDetails = () => {
   const [selectedAttribute, setSelectedAttribute] = useState("");
 
   // destructure product info
-  const { id, title, thumbnail, discount, price, attributes } = service;
+  const { id, title, thumbnail, price, attributes } = service;
 
   // newly updated product info to save in cart
   const productCartInfo = {
     id,
     title,
     thumbnail,
-    price: discount,
+    price: selectedAttribute ? selectedAttribute.price : price,
     slug,
     ...(attributes?.length > 0 && { attribute: selectedAttribute }),
   };
@@ -49,6 +49,15 @@ const MaterialDetails = () => {
         if (data.status === true) {
           setService(data?.data);
           setFocusImage(data?.data?.thumbnail);
+
+          // Automatically select the lowest priced attribute (if any)
+          if (data?.data?.attributes?.length > 0) {
+            const lowestPriceAttr = [...data.data.attributes].sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            )[0];
+            setSelectedAttribute(lowestPriceAttr);
+          }
+
           setLoader(false);
         }
       });
@@ -143,7 +152,7 @@ const MaterialDetails = () => {
               ${price}
             </p> */}
             <p className="mt-2 text-lg font-medium text-primary md:text-2xl">
-              ${price}
+              ${selectedAttribute ? selectedAttribute.price : price}
             </p>
           </div>
 

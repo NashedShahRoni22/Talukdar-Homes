@@ -44,11 +44,11 @@ export default function Checkout() {
     const fetchCountries = async () => {
       try {
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name",
+          "https://restcountries.com/v3.1/all?fields=name"
         );
         const data = await res.json();
         const sortedCountries = data?.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common),
+          a.name.common.localeCompare(b.name.common)
         );
         setCountries(sortedCountries);
       } catch (error) {
@@ -128,7 +128,7 @@ export default function Checkout() {
   return (
     <>
       {carts && carts.length > 0 && (
-        <section className="flex flex-col-reverse justify-between gap-8 px-5 py-10 md:container md:mx-auto md:flex-row md:gap-16 md:px-0 md:py-20">
+        <section className="flex flex-col-reverse justify-between gap-8 px-5 py-10 md:container md:mx-auto md:flex-row md:px-0 md:py-20">
           <div className="w-full md:w-1/2">
             <h2 className="text-xl font-medium">Payment Method</h2>
 
@@ -317,16 +317,16 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 bg-gray-50">
             <h2 className="text-xl font-medium">Your Order</h2>
 
             <ul className="mt-4 space-y-4">
               {carts?.map((cart) => (
                 <li
                   key={cart.id}
-                  className="flex flex-wrap items-center justify-between gap-8"
+                  className="flex border items-center bg-white rounded p-2 justify-between gap-8"
                 >
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex flex-1 items-center gap-1.5">
                     <img
                       src={`${cart.thumbnail}`}
                       alt={`image of ${cart.title}`}
@@ -335,12 +335,33 @@ export default function Checkout() {
                     />
                     <div>
                       <p>{cart.title}</p>
-                      <p className="text-sm text-orange-500">
-                        X {cart.quantity}
-                      </p>
+
+                      {/* product variant */}
+                      {cart.attribute && (
+                        <div className="flex items-center gap-0.5">
+                          <p className="text-xs font-semibold text-primary">
+                            Variant:
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {cart.attribute.name}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* quantity */}
+                      <div className="flex mt-0.5 items-center gap-0.5">
+                        <p className="text-xs font-semibold text-primary">
+                          Quantity:
+                        </p>
+                        <p className="text-xs text-gray-600">{cart.quantity}</p>
+                      </div>
                     </div>
                   </div>
-                  <p>${calculatePrice(cart.price, cart.quantity)}</p>
+
+                  {/* total price based on quantity */}
+                  <p className="min-w-fit">
+                    ${calculatePrice(cart.price, cart.quantity)}
+                  </p>
                 </li>
               ))}
             </ul>
