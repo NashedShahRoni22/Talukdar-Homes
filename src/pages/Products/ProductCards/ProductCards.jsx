@@ -2,20 +2,20 @@ import { useContext } from "react";
 import { FaCartPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../../Providers/CartProvider";
+import getPriceRange from "../../../utils/getPriceRange";
 
 export default function ProductCards({ products }) {
   const { addToCart } = useContext(CartContext);
 
   const handleAddtoCart = (item) => {
-    const { id, title, thumbnail, discount, slug, attributes } = item;
+    const { id, title, thumbnail, price, slug } = item;
 
     const productCartInfo = {
       id,
       title,
       thumbnail,
-      price: discount,
+      price,
       slug,
-      ...(attributes?.length > 0 && { attribute: attributes[0] }),
     };
 
     addToCart(productCartInfo);
@@ -50,16 +50,36 @@ export default function ProductCards({ products }) {
 
           <div className="flex w-full items-center justify-between p-4">
             <div>
-              <p className="text-lg font-medium text-primary">
+              {/* <p className="text-lg font-medium text-primary">
                 ${product?.discount ? product?.discount : product?.price}{" "}
                 <span className="text-sm">AUD</span>
-              </p>
+              </p> */}
 
-              {product?.discount && (
+              {product?.attributes?.length > 0 ? (
+                (() => {
+                  const { minPrice, maxPrice } = getPriceRange(
+                    product.attributes,
+                  );
+                  return (
+                    <p className="text-lg font-medium text-primary">
+                      {minPrice === maxPrice
+                        ? minPrice
+                        : `$${minPrice} - $${maxPrice}`}{" "}
+                      <span className="text-sm">AUD</span>
+                    </p>
+                  );
+                })()
+              ) : (
+                <p className="text-lg font-medium text-primary">
+                  ${product?.price} <span className="text-sm">AUD</span>
+                </p>
+              )}
+
+              {/* {product?.discount && (
                 <p className="mt-0.5 text-sm text-gray-500 line-through">
                   ${product?.price} AUD
                 </p>
-              )}
+              )} */}
             </div>
 
             {product?.attributes?.length > 0 ? (

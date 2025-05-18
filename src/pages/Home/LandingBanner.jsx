@@ -1,4 +1,3 @@
-import React from "react";
 import { Typewriter } from "react-simple-typewriter";
 
 import image1 from "../../assets/Banners/1.png";
@@ -33,12 +32,17 @@ export default function LandingBanner() {
       >
         {slides.map((s, i) => (
           <SwiperSlide key={i}>
-            <img src={s} alt="" className="w-full z-0 h-[50vh] lg:h-[100vh]" loading="lazy" />
+            <img
+              src={s}
+              alt=""
+              className="z-0 h-[50vh] w-full lg:h-[100vh]"
+              loading="lazy"
+            />
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="absolute bottom-12 md:bottom-24 lg:bottom-32 left-5 md:left-10 lg:left-20 z-40">
-        <h2 className=" text-3xl md:text-6xl lg:text-8xl font-extrabold text-white uppercase">
+      <div className="absolute bottom-12 left-5 z-40 md:bottom-24 md:left-10 lg:bottom-32 lg:left-20">
+        <h2 className="text-3xl font-extrabold uppercase text-white md:text-6xl lg:text-8xl">
           Built on{" "}
           <span className="text-primary">
             <Typewriter
@@ -52,7 +56,7 @@ export default function LandingBanner() {
             />
           </span>
         </h2>
-        <h2 className=" text-3xl md:text-6xl lg:text-8xl font-extrabold text-white uppercase">
+        <h2 className="text-3xl font-extrabold uppercase text-white md:text-6xl lg:text-8xl">
           Since 2024
         </h2>
       </div>

@@ -135,11 +135,14 @@ const MaterialDetails = () => {
           </h1>
 
           {/* price and discount price */}
-          <div className="flex gap-2 items-center">
-            <p className="text-lg mt-2 font-medium md:text-2xl text-primary">
+          <div className="flex items-center gap-2">
+            {/* <p className="mt-2 text-lg font-medium text-primary md:text-2xl">
               ${discount}
             </p>
-            <p className="line-through text-sm text-gray-500 font-medium">
+            <p className="text-sm font-medium text-gray-500 line-through">
+              ${price}
+            </p> */}
+            <p className="mt-2 text-lg font-medium text-primary md:text-2xl">
               ${price}
             </p>
           </div>
@@ -157,21 +160,23 @@ const MaterialDetails = () => {
             </p>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-            <p className="font-medium min-w-fit">Choose Variant:</p>
-            <div className="flex flex-wrap items-center gap-1.5">
-              {service?.attributes?.length > 0 &&
-                service?.attributes?.map((attribute, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedAttribute(attribute)}
-                    className={`rounded border border-gray-300 px-2 py-1 ${attribute === selectedAttribute && "bg-gray-100"}`}
-                  >
-                    {attribute}
-                  </button>
-                ))}
+          {service.attributes && service.attributes.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+              <p className="min-w-fit font-medium">Choose Variant:</p>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {service?.attributes?.length > 0 &&
+                  service?.attributes?.map((attribute, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedAttribute(attribute)}
+                      className={`rounded border border-gray-300 px-2 py-1 ${attribute === selectedAttribute && "bg-gray-100"}`}
+                    >
+                      {attribute.name}
+                    </button>
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="mt-8 flex items-center gap-4">
             <Button

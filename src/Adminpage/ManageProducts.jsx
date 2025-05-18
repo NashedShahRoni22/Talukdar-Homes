@@ -34,8 +34,10 @@ const ManageProducts = () => {
                 <tr>
                   <th className="px-2.5 py-2">Product</th>
                   <th className="px-2.5 py-2">Price</th>
-                  <th className="px-2.5 py-2">Discount Amount</th>
-                  <th className="px-2.5 py-2">Shipping</th>
+                  {/* <th className="whitespace-nowrap px-2.5 py-2">
+                    Discounted Price
+                  </th> */}
+                  {/* <th className="px-2.5 py-2">Shipping</th> */}
                   <th className="px-2.5 py-2">Quantity</th>
                   <th className="px-2.5 py-2">Category</th>
                   <th className="px-2.5 py-2">Actions</th>

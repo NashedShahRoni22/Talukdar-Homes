@@ -7,8 +7,8 @@ import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import InputField from "../components/admin/InputField";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
-import "react-quill/dist/quill.snow.css";
 import { AuthContext } from "../Providers/AuthProvider";
+import "react-quill/dist/quill.snow.css";
 
 const modules = {
   toolbar: [
@@ -42,7 +42,6 @@ const formats = [
 const AddProduct = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  console.log(user);
   const [loader, setLoader] = useState(false);
   const [categories, setCategories] = useState([]);
   const [value, setValue] = useState("");
@@ -167,12 +166,12 @@ const AddProduct = () => {
     );
     payload.append("price", formData.price);
     payload.append("description", value);
-    payload.append("discount", formData.discount);
+    // payload.append("discount", formData.discount);
     payload.append("quantity", formData.quantity);
-    payload.append("is_featured", formData.is_featured ? "1" : "0");
-    payload.append("is_best_selling", formData.is_best_selling ? "1" : "0");
-    payload.append("on_flash_sale", formData.on_flash_sale ? "1" : "0");
-    payload.append("shipping_charge", formData.shipping_charge);
+    payload.append("is_featured", formData.is_featured);
+    payload.append("is_best_selling", formData.is_best_selling);
+    payload.append("on_flash_sale", formData.on_flash_sale);
+    // payload.append("shipping_charge", formData.shipping_charge);
     payload.append("thumbnail", thumbnail);
 
     images.forEach((img) => {
@@ -271,7 +270,7 @@ const AddProduct = () => {
             <img
               src={URL.createObjectURL(thumbnail)}
               alt="thumbnail image"
-              className="h-[200px] w-full rounded object-contain md:h-[250px]"
+              className="h-[200px] w-full rounded border object-contain md:h-[250px]"
             />
           </div>
         )}
@@ -312,7 +311,7 @@ const AddProduct = () => {
               <img
                 src={URL.createObjectURL(image)}
                 alt={`Uploaded Image ${index + 1}`}
-                className="h-[200px] w-full rounded object-contain md:h-[250px]"
+                className="h-[200px] w-full rounded border object-contain md:h-[250px]"
               />
             </div>
           ))}
@@ -388,22 +387,22 @@ const AddProduct = () => {
           />
 
           {/* discount price */}
-          <InputField
+          {/*  <InputField
             label="Discount Price"
             id="discount_price"
             name="discount"
             value={formData.discount}
             handleInputChange={handleInputChange}
-          />
+          /> */}
 
           {/* shipping charge */}
-          <InputField
+          {/* <InputField
             label="Shipping Charge"
             id="shipping_charge"
             name="shipping_charge"
             value={formData.shipping_charge}
             handleInputChange={handleInputChange}
-          />
+          /> */}
 
           {/* quantity */}
           <InputField
@@ -417,89 +416,103 @@ const AddProduct = () => {
         </div>
 
         {/* attributes container */}
-        <div className="grid grid-cols-12 gap-x-5 gap-y-2.5">
-          {/* attribute name input field */}
-          <div className="col-span-6 flex flex-col gap-2.5">
-            <label htmlFor="attributeName" className="font-semibold">
-              Attribute Name
-            </label>
+        <div className="col-span-full">
+          <p className="mb-2 font-semibold">
+            Attributes{" "}
+            <span className="text-xs font-normal text-gray-500">
+              (e.g. 8ft x 4ft - $30)
+            </span>
+          </p>
 
-            <div className="overflow-hidden rounded border border-gray-400">
-              <input
-                type="text"
-                id="attributeName"
-                name="attributeName"
-                value={attributeInput.name}
-                onChange={(e) =>
-                  setAttributeInput({ ...attributeInput, name: e.target.value })
-                }
-                className="w-full px-4 py-2 outline-none"
-              />
-            </div>
-          </div>
+          <div className="grid grid-cols-12 gap-x-5 gap-y-2.5 rounded border border-gray-400 bg-gray-50 px-2 py-3">
+            {/* attribute name input field */}
+            <div className="col-span-12 flex flex-col gap-2.5 md:col-span-6">
+              <label htmlFor="attributeName" className="text-sm font-semibold">
+                Attribute Name
+              </label>
 
-          {/* attribute price input field */}
-          <div className="col-span-6 flex flex-col gap-2.5">
-            <label htmlFor="attributePrice" className="font-semibold">
-              Attribute Price
-            </label>
-
-            <div className="flex items-center justify-between overflow-hidden rounded border border-gray-400">
-              <input
-                type="text"
-                id="attributePrice"
-                name="attributePrice"
-                value={attributeInput.price}
-                onChange={(e) =>
-                  setAttributeInput({
-                    ...attributeInput,
-                    price: e.target.value,
-                  })
-                }
-                className="w-full px-4 py-2 outline-none"
-              />
-              <button
-                onClick={addAttribute}
-                disabled={!attributeInput.name || !attributeInput.price}
-                className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "cursor-pointer bg-primary hover:bg-primary-hover" : "bg-primary/50"}`}
-              >
-                <FiPlus /> Add
-              </button>
-            </div>
-          </div>
-
-          {/* attributes */}
-          {attributes && attributes?.length > 0 && (
-            <div className="col-span-12 flex items-center gap-2 py-2 text-sm">
-              <p className="font-semibold">Attributes:</p>
-
-              <div className="flex flex-wrap gap-2">
-                {attributes.map((attribute, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 transition-all hover:bg-gray-100"
-                  >
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-sm font-medium text-gray-800">
-                        {attribute.name} -
-                      </span>
-                      <span className="text-emerald-600 text-xs">
-                        ${attribute.price}
-                      </span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => removeAttribute(i)}
-                      className="text-gray-400 transition-colors hover:text-red-500 focus:outline-none"
-                    >
-                      <FiTrash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                ))}
+              <div className="overflow-hidden rounded border border-gray-400">
+                <input
+                  type="text"
+                  id="attributeName"
+                  name="attributeName"
+                  value={attributeInput.name}
+                  placeholder="e.g. 6ft x 4ft"
+                  onChange={(e) =>
+                    setAttributeInput({
+                      ...attributeInput,
+                      name: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 outline-none"
+                />
               </div>
             </div>
-          )}
+
+            {/* attribute price input field */}
+            <div className="col-span-12 flex flex-col gap-2.5 md:col-span-6">
+              <label htmlFor="attributePrice" className="text-sm font-semibold">
+                Attribute Price
+              </label>
+
+              <div className="flex items-center justify-between overflow-hidden rounded border border-gray-400">
+                <input
+                  type="text"
+                  id="attributePrice"
+                  name="attributePrice"
+                  value={attributeInput.price}
+                  placeholder="e.g. 45"
+                  onChange={(e) =>
+                    setAttributeInput({
+                      ...attributeInput,
+                      price: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 outline-none"
+                />
+                <button
+                  onClick={addAttribute}
+                  disabled={!attributeInput.name || !attributeInput.price}
+                  className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "cursor-pointer bg-primary hover:bg-primary-hover" : "bg-primary/50"}`}
+                >
+                  <FiPlus /> Add
+                </button>
+              </div>
+            </div>
+
+            {/* attributes */}
+            {attributes && attributes?.length > 0 && (
+              <div className="col-span-12 flex items-center gap-2 py-2 text-sm">
+                <p className="font-semibold">Added Attributes:</p>
+
+                <div className="flex flex-wrap gap-2">
+                  {attributes.map((attribute, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 transition-all hover:bg-gray-100"
+                    >
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-sm font-medium text-gray-800">
+                          {attribute.name} -
+                        </span>
+                        <span className="text-emerald-600 text-sm">
+                          ${attribute.price}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => removeAttribute(i)}
+                        className="text-gray-400 transition-colors hover:text-red-500 focus:outline-none"
+                      >
+                        <FiTrash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* checkboxes container */}

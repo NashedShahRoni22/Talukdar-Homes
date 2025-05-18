@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 export default function ProductRow({ product, setProducts }) {
   const {
@@ -16,6 +17,7 @@ export default function ProductRow({ product, setProducts }) {
     quantity,
     category,
   } = product;
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -24,6 +26,12 @@ export default function ProductRow({ product, setProducts }) {
     try {
       const res = await fetch(
         `https://api.talukderhomes.com.au/api/products/delete/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        },
       );
       const data = await res.json();
       if (data.status === true) {
@@ -55,8 +63,8 @@ export default function ProductRow({ product, setProducts }) {
         </div>
       </td>
       <td className="px-2.5 py-2 text-center">${price}</td>
-      <td className="px-2.5 py-2 text-center">${discount}</td>
-      <td className="px-2.5 py-2 text-center">${shipping_charge}</td>
+      {/* <td className="px-2.5 py-2 text-center">${discount}</td> */}
+      {/* <td className="px-2.5 py-2 text-center">${shipping_charge}</td> */}
       <td className="px-2.5 py-2 text-center">{quantity}</td>
       <td className="px-2.5 py-2 text-center">{category?.title}</td>
       <td className="px-2.5 py-2 text-center">

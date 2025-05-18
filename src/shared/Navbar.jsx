@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   BiHomeAlt,
   BiSolidCategoryAlt,
@@ -63,6 +63,7 @@ export default function Navbar() {
   const { carts } = useContext(CartContext);
   const [show, setShow] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   // toggle dropdown
   const toggleDropdown = () => {
@@ -76,6 +77,21 @@ export default function Navbar() {
     setUser(null);
     toggleDropdown();
   };
+
+  // Hide profile dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    // clean up event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-black/90">
@@ -164,7 +180,7 @@ export default function Navbar() {
           ))}
 
           {user ? (
-            <div className="relative">
+            <div ref={dropdownRef} className="relative">
               <button onClick={toggleDropdown}>
                 <div className="group flex items-center gap-1.5">
                   <span className="rounded-full bg-primary p-2.5">

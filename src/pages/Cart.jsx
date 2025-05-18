@@ -14,8 +14,8 @@ export default function Cart() {
     if (value === "") {
       setCarts((prevCarts) =>
         prevCarts.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem
-        )
+          cartItem.id === item.id ? { ...cartItem, quantity: "" } : cartItem,
+        ),
       );
       return;
     }
@@ -39,8 +39,8 @@ export default function Cart() {
       prevCarts.map((cartItem) =>
         cartItem.id === item.id
           ? { ...cartItem, quantity: newQuantity }
-          : cartItem
-      )
+          : cartItem,
+      ),
     );
   };
 
@@ -52,8 +52,8 @@ export default function Cart() {
               ...cartItem,
               quantity: cartItem.quantity === "" ? 1 : cartItem.quantity,
             }
-          : cartItem
-      )
+          : cartItem,
+      ),
     );
   };
 
@@ -108,24 +108,26 @@ export default function Cart() {
                     <img
                       src={item.thumbnail}
                       alt={item.title}
-                      className="h-16 w-16 object-cover group-hover:scale-105 transition-all duration-200 ease-linear"
+                      className="h-16 w-16 object-cover transition-all duration-200 ease-linear group-hover:scale-105"
                     />
                   </Link>
                   <div>
                     <Link
                       to={`/service-details/${item?.slug}`}
-                      className="hover:text-primary transition-all duration-200 ease-in-out"
+                      className="transition-all duration-200 ease-in-out hover:text-primary"
                     >
                       {item.title}
                     </Link>
-                    <div className="flex items-center gap-0.5">
-                      <p className="text-xs font-semibold text-primary">
-                        Variant:
-                      </p>
-                      <p className="italic text-xs text-gray-600">
-                        {item.attribute}
-                      </p>
-                    </div>
+                    {item.attribute && item.attribute.length > 0 && (
+                      <div className="flex items-center gap-0.5">
+                        <p className="text-xs font-semibold text-primary">
+                          Variant:
+                        </p>
+                        <p className="text-xs italic text-gray-600">
+                          {item.attribute}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </td>
 

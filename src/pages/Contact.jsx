@@ -52,7 +52,7 @@ export default function Contact() {
     }
   };
   return (
-    <section className="mx-5 my-5 flex flex-col gap-5 md:container md:mx-auto md:my-10 md:gap-10">
+    <section className="mx-5 my-5 flex flex-col gap-5 overflow-x-hidden md:container md:mx-auto md:my-10 md:gap-10">
       <h5 className="text-end text-3xl font-extrabold uppercase md:text-6xl lg:text-8xl">
         Contact
       </h5>

@@ -1,12 +1,14 @@
 import { Button, Spinner } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/admin/InputField";
-import { MdOutlineClose } from "react-icons/md";
 import CheckBoxFeat from "../components/admin/CheckBoxFeat";
 import toast from "react-hot-toast";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
+import "react-quill/dist/quill.snow.css";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const modules = {
   toolbar: [
@@ -40,6 +42,7 @@ const formats = [
 const UpdateProduct = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [loader, setLoader] = useState(false);
   const [productId, setProductId] = useState("");
   const [categories, setCategories] = useState([]);
@@ -48,7 +51,7 @@ const UpdateProduct = () => {
   const [thumbnail, setThumbnail] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
   const [images, setImages] = useState(null);
-  const [attributeInput, setAttributeInput] = useState("");
+  const [attributeInput, setAttributeInput] = useState({ name: "", price: "" });
   const [attributes, setAttributes] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -97,14 +100,14 @@ const UpdateProduct = () => {
     if (!categories.length || !formData.category_id) return;
 
     const foundCategory = categories.find(
-      (cat) => cat.id == formData.category_id
+      (cat) => cat.id == formData.category_id,
     );
 
     if (foundCategory) {
       setSubCategories(foundCategory.children);
     } else {
       const parentCategory = categories.find((cat) =>
-        cat.children.some((child) => child.id == formData.category_id)
+        cat.children.some((child) => child.id == formData.category_id),
       );
       if (parentCategory) {
         setFormData((prev) => ({ ...prev, category_id: parentCategory.id }));
@@ -114,25 +117,17 @@ const UpdateProduct = () => {
     }
   }, [categories, formData.category_id]);
 
-  // handle add sub-categories array in local state
-  const handleAttributes = (e) => {
-    if (!attributeInput) {
-      return;
-    }
+  // add new attribute
+  const addAttribute = () => {
+    if (!attributeInput.name || !attributeInput.price) return;
 
-    if (e.key === "Enter" || e.type === "click") {
-      e.preventDefault();
-      setAttributes([...attributes, attributeInput]);
-      setAttributeInput("");
-    }
+    setAttributes((prev) => [...prev, attributeInput]);
+    setAttributeInput({ name: "", price: "" });
   };
 
   // remove attribute from local attributes array
-  const removeAttribute = (indexToRemove) => {
-    const filteredAttributes = attributes.filter(
-      (_, index) => index !== indexToRemove
-    );
-    setAttributes(filteredAttributes);
+  const removeAttribute = (index) => {
+    setAttributes((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Fetch all categories
@@ -179,31 +174,46 @@ const UpdateProduct = () => {
 
     setLoader(true);
 
+    if (formData.discount) {
+      const originalPrice = Number(formData.price);
+      const discountPrice = Number(formData.discount);
+
+      if (discountPrice >= originalPrice) {
+        toast.error("Discount price must be less than the original price");
+        setLoader(false);
+        return;
+      }
+    }
+
     const payload = new FormData();
     payload.append("title", formData.title);
     payload.append(
       "category_id",
-      subCategory ? subCategory : formData.category_id
+      subCategory ? subCategory : formData.category_id,
     );
     payload.append("price", formData.price);
     payload.append("description", value);
-    payload.append("discount", formData.discount);
+    // payload.append("discount", formData.discount);
     payload.append("quantity", formData.quantity);
     payload.append("is_featured", formData.is_featured);
     payload.append("is_best_selling", formData.is_best_selling);
-    payload.append("on_flash_sal", formData.on_flash_sale);
-    payload.append("shipping_charge", formData.shipping_charge);
+    payload.append("on_flash_sale", formData.on_flash_sale);
+    // payload.append("shipping_charge", formData.shipping_charge);
+
     if (thumbnail) {
       payload.append("thumbnail", thumbnail);
     }
 
-    attributes.forEach((attribute) => {
-      payload.append(`attributes[]`, attribute);
-    });
-
-    if (images?.length) {
+    if (images && images.length > 0) {
       images.forEach((img) => {
         payload.append("gallery[]", img);
+      });
+    }
+
+    if (attributes && attributes.length > 0) {
+      attributes.forEach((attribute, i) => {
+        payload.append(`attributes[${i}][name]`, attribute.name);
+        payload.append(`attributes[${i}][price]`, attribute.price);
       });
     }
 
@@ -212,19 +222,26 @@ const UpdateProduct = () => {
         `https://api.talukderhomes.com.au/api/products/update/${productId}`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
           body: payload,
-        }
+        },
       );
 
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.msg || "Failed to create product");
+      }
+
       if (data.status === true) {
         toast.success(data.msg);
-        setLoader(false);
         navigate("/admin/manage-products");
       }
     } catch (error) {
       console.error("Error:", error);
-      setLoader(false);
+      toast.error(error.message);
     } finally {
       setLoader(false);
     }
@@ -255,7 +272,7 @@ const UpdateProduct = () => {
         <label className="font-semibold">
           Select Thumbnail{" "}
           <span className="text-xs font-semibold text-red-500">
-            (Maximum Image Size is 2MB)
+            (Maximum Image Size is 2MB) *
           </span>
         </label>
         <input
@@ -297,7 +314,7 @@ const UpdateProduct = () => {
         <label className="font-semibold">
           Select Image{" "}
           <span className="text-xs font-semibold text-red-500">
-            (Maximum Image Size is 2MB)
+            (Maximum Image Size is 2MB) *
           </span>{" "}
         </label>
         <input
@@ -323,14 +340,14 @@ const UpdateProduct = () => {
         {/* TODO: add api image delete feature */}
         {imagesPreview?.map((image, index) => (
           <div key={index} className="aspect-w-1 aspect-h-1 relative">
-            <IoCloseCircleSharp
+            {/* <IoCloseCircleSharp
               className="absolute right-2 top-2 cursor-pointer text-xl text-red-500 shadow"
               onClick={() => removeImage(index)}
-            />
+            /> */}
             <img
               src={image?.image}
               alt={`Uploaded Image ${index + 1}`}
-              className="h-[200px] w-full rounded object-cover md:h-[250px]"
+              className="h-[200px] w-full rounded border object-contain md:h-[250px]"
               loading="lazy"
             />
           </div>
@@ -345,7 +362,7 @@ const UpdateProduct = () => {
             <img
               src={URL.createObjectURL(image)}
               alt={`Uploaded Image ${index + 1}`}
-              className="h-[200px] w-full rounded object-cover md:h-[250px]"
+              className="h-[200px] w-full rounded border object-contain md:h-[250px]"
             />
           </div>
         ))}
@@ -364,7 +381,9 @@ const UpdateProduct = () => {
       <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
         {/* category select dropdown */}
         <div className="flex flex-col gap-2.5">
-          <label className="font-semibold">Category</label>
+          <label className="font-semibold">
+            Category <span className="text-red-600">*</span>
+          </label>
           <select
             name="category_id"
             value={formData.category_id}
@@ -372,7 +391,7 @@ const UpdateProduct = () => {
               const selectedId = e.target.value;
               setFormData((prev) => ({ ...prev, category_id: selectedId }));
               const selectedCategory = categories.find(
-                (cat) => cat.id == selectedId
+                (cat) => cat.id == selectedId,
               );
               setSubCategories(selectedCategory?.children || []);
               setSubCategory("");
@@ -405,51 +424,6 @@ const UpdateProduct = () => {
             ))}
           </select>
         </div>
-
-        {/* attribute input field */}
-        <div className="col-span-full flex flex-col gap-2.5">
-          <label htmlFor="attributeName" className="font-semibold">
-            Attribute Name
-          </label>
-
-          <div className="flex items-center justify-between rounded border border-gray-400 px-4 pr-1">
-            <input
-              type="text"
-              id="attributeName"
-              name="attributeName"
-              value={attributeInput}
-              onChange={(e) => setAttributeInput(e.target.value)}
-              onKeyDown={handleAttributes}
-              className="w-full py-2 outline-none"
-            />
-            {attributeInput && (
-              <button
-                className="min-w-fit cursor-pointer rounded bg-orange-500 px-4 py-1 text-white"
-                onClick={handleAttributes}
-              >
-                Add
-              </button>
-            )}
-          </div>
-
-          {/* TODO: render api attibutes along with user input attributes */}
-          <div className="flex flex-wrap gap-1.5">
-            {attributes.map((attribute, i) => (
-              <div
-                key={i}
-                className="inline-flex items-center gap-1 rounded-lg bg-orange-50 px-2 py-0.5 text-sm text-orange-500"
-              >
-                <p>{attribute}</p>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => removeAttribute(i)}
-                >
-                  <MdOutlineClose className="text-lg" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-x-5 gap-y-2.5 md:grid-cols-2">
@@ -464,24 +438,24 @@ const UpdateProduct = () => {
         />
 
         {/* discount price */}
-        <InputField
+        {/* <InputField
           label="Discount Amount"
           id="discount_price"
           name="discount"
           value={formData.discount}
           required={true}
           handleInputChange={handleInputChange}
-        />
+        /> */}
 
         {/* shipping charge */}
-        <InputField
+        {/* <InputField
           label="Shipping Charge"
           id="shipping_charge"
           name="shipping_charge"
           value={formData.shipping_charge}
           required={true}
           handleInputChange={handleInputChange}
-        />
+        /> */}
 
         {/* quantity */}
         <InputField
@@ -492,6 +466,101 @@ const UpdateProduct = () => {
           required={true}
           handleInputChange={handleInputChange}
         />
+      </div>
+
+      {/* attributes container */}
+      <div className="col-span-full">
+        <p className="mb-2 font-semibold">
+          Attributes{" "}
+          <span className="text-xs font-normal text-gray-500">
+            (e.g. 8ft x 4ft - $30)
+          </span>
+        </p>
+
+        <div className="grid grid-cols-12 gap-x-5 gap-y-2.5 rounded border border-gray-400 bg-gray-50 px-2 py-3">
+          {/* attribute name input field */}
+          <div className="col-span-6 flex flex-col gap-2.5">
+            <label htmlFor="attributeName" className="font-semibold">
+              Attribute Name
+            </label>
+
+            <div className="overflow-hidden rounded border border-gray-400">
+              <input
+                type="text"
+                id="attributeName"
+                name="attributeName"
+                value={attributeInput.name}
+                onChange={(e) =>
+                  setAttributeInput({ ...attributeInput, name: e.target.value })
+                }
+                className="w-full px-4 py-2 outline-none"
+              />
+            </div>
+          </div>
+
+          {/* attribute price input field */}
+          <div className="col-span-6 flex flex-col gap-2.5">
+            <label htmlFor="attributePrice" className="font-semibold">
+              Attribute Price
+            </label>
+
+            <div className="flex items-center justify-between overflow-hidden rounded border border-gray-400">
+              <input
+                type="text"
+                id="attributePrice"
+                name="attributePrice"
+                value={attributeInput.price}
+                onChange={(e) =>
+                  setAttributeInput({
+                    ...attributeInput,
+                    price: e.target.value,
+                  })
+                }
+                className="w-full px-4 py-2 outline-none"
+              />
+              <button
+                onClick={addAttribute}
+                disabled={!attributeInput.name || !attributeInput.price}
+                className={`inline-flex items-center rounded-r px-4 py-2 text-white ${attributeInput.name && attributeInput.price ? "cursor-pointer bg-primary hover:bg-primary-hover" : "bg-primary/50"}`}
+              >
+                <FiPlus /> Add
+              </button>
+            </div>
+          </div>
+
+          {/* attributes */}
+          {attributes && attributes?.length > 0 && (
+            <div className="col-span-12 flex items-center gap-2 py-2 text-sm">
+              <p className="font-semibold">Added Attributes:</p>
+
+              <div className="flex flex-wrap gap-2">
+                {attributes.map((attribute, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 transition-all hover:bg-gray-100"
+                  >
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-sm font-medium text-gray-800">
+                        {attribute.name} -
+                      </span>
+                      <span className="text-emerald-600 text-sm">
+                        ${attribute.price}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => removeAttribute(i)}
+                      className="text-gray-400 transition-colors hover:text-red-500 focus:outline-none"
+                    >
+                      <FiTrash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* checkboxes container */}
