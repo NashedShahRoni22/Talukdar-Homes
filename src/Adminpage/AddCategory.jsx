@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiCheck, BiEdit, BiPlus } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { ImSpinner } from "react-icons/im";
 import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
+import { AuthContext } from "../Providers/AuthProvider";
 
 export default function AddCategory() {
+  const { user } = useContext(AuthContext);
   const [loader, setLoader] = useState(false);
   const [showEditBox, setShowEditBox] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -38,7 +40,7 @@ export default function AddCategory() {
     setLoader(true);
 
     const data = {
-      parent_id: parentId,
+      ...(parentId && { parent_id: parentId }),
       title: title,
     };
 
@@ -49,9 +51,10 @@ export default function AddCategory() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
           },
           body: JSON.stringify(data),
-        },
+        }
       );
 
       const result = await response.json();
@@ -85,9 +88,10 @@ export default function AddCategory() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
           },
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       const result = await res.json();
@@ -118,7 +122,10 @@ export default function AddCategory() {
         `https://api.talukderhomes.com.au/api/categories/delete/${categoryId}`,
         {
           method: "GET", // Using GET (again, not recommended for deletion)
-        },
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
       );
 
       if (!response.ok) {

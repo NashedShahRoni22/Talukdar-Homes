@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Spinner } from "@material-tailwind/react";
 import ReactQuill from "react-quill";
 import toast from "react-hot-toast";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import InputField from "../components/admin/InputField";
 import "react-quill/dist/quill.snow.css";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const modules = {
   toolbar: [
@@ -38,6 +39,7 @@ const formats = [
 
 const AddService = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [loader, setLoader] = useState(false);
   const [content, setContent] = useState(null);
   const [icon, setIcon] = useState(null);
@@ -87,8 +89,11 @@ const AddService = () => {
         "https://api.talukderhomes.com.au/api/services/store",
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
           body: payload,
-        },
+        }
       );
 
       const data = await res.json();

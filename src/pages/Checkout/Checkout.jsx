@@ -4,6 +4,7 @@ import { Spinner } from "@material-tailwind/react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import { CartContext } from "../../Providers/CartProvider";
 import stripeIcon from "../../assets/stipe.png";
+import toast from "react-hot-toast";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -44,11 +45,11 @@ export default function Checkout() {
     const fetchCountries = async () => {
       try {
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name",
+          "https://restcountries.com/v3.1/all?fields=name"
         );
         const data = await res.json();
         const sortedCountries = data?.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common),
+          a.name.common.localeCompare(b.name.common)
         );
         setCountries(sortedCountries);
       } catch (error) {
@@ -93,7 +94,7 @@ export default function Checkout() {
       if (item.attribute) {
         purchasePayload.append(
           `references[${i}][attribute]`,
-          item.attribute.name,
+          item.attribute.name
         );
       }
     });
@@ -119,7 +120,9 @@ export default function Checkout() {
       if (data?.status === true) {
         localStorage.removeItem("cartItems");
         setCarts([]);
-        // window.location.href = data?.data?.checkout_url;
+        window.location.href = data?.data?.checkout_url;
+      } else {
+        toast.error(data?.msg);
       }
     } catch (error) {
       console.error("purchase error:", error);
@@ -132,7 +135,7 @@ export default function Checkout() {
     <>
       {carts && carts.length > 0 && (
         <section className="flex flex-col-reverse justify-between gap-8 px-5 py-10 md:container md:mx-auto md:flex-row md:px-0 md:py-20">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 md:py-4">
             <h2 className="text-xl font-medium">Payment Method</h2>
 
             <button
@@ -314,7 +317,7 @@ export default function Checkout() {
                 <button
                   disabled={isDisabled || isLoading.checkout}
                   onClick={handleConfirmOrder}
-                  className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
+                  className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-primary/50" : "cursor-pointer bg-primary hover:bg-primary-hover transition-all duration-200 ease-in-out"}`}
                 >
                   {isLoading.checkout ? (
                     <Spinner className="mx-auto h-4 w-4" />
@@ -326,7 +329,7 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 md:bg-gray-50">
+          <div className="w-full md:w-1/2 md:p-4 md:rounded-md md:bg-gray-50">
             <h2 className="text-center text-2xl font-medium md:text-left">
               Your Order
             </h2>
@@ -394,7 +397,7 @@ export default function Checkout() {
               <button
                 disabled={isDisabled || isLoading.checkout}
                 onClick={handleConfirmOrder}
-                className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-orange-200" : "cursor-pointer bg-orange-500"}`}
+                className={`min-w-[134px] rounded px-4 py-2 text-center font-medium text-white ${isDisabled ? "cursor-not-allowed bg-primary/50" : "cursor-pointer bg-primary hover:bg-primary-hover transition-all duration-200 ease-in-out"}`}
               >
                 {isLoading.checkout ? (
                   <Spinner className="mx-auto h-4 w-4" />

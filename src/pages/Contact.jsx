@@ -38,7 +38,7 @@ export default function Contact() {
           headers: {
             // Add any necessary headers, such as authorization
           },
-        },
+        }
       );
       const data = await response.json();
       if (data.status === true) {

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 export default function ServiceRow({ service, setServices }) {
   const { id, thumbnail, title, slug } = service;
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   // Delete service
@@ -17,7 +19,10 @@ export default function ServiceRow({ service, setServices }) {
         `https://api.talukderhomes.com.au/api/services/delete/${id}`,
         {
           method: "GET",
-        },
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
       );
 
       const data = await response.json();

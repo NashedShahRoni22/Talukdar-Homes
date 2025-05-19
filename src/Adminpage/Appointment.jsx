@@ -1,5 +1,5 @@
 import { Card, Typography } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -9,7 +9,9 @@ import {
 } from "@material-tailwind/react";
 import { AiFillEye } from "react-icons/ai";
 import LoaderPage from "../Adminpage/LoaderPage";
+import { AuthContext } from "../Providers/AuthProvider";
 const Appointment = () => {
+  const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [loader, setLoader] = useState(true);
   const [appointments, setAppointments] = useState([]);
@@ -20,30 +22,35 @@ const Appointment = () => {
     setOpen(!open);
     setSingleAppointment(data);
   };
+
   //get appointment..
   useEffect(() => {
-    fetch("https://api.talukderhomes.com.au/api/appointments")
+    fetch("https://api.talukderhomes.com.au/api/appointments", {
+      headers: {
+        Authorization: `Bearer ${user?.token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setAppointments(data.data);
         setLoader(false);
       });
-  }, []);
+  }, [user]);
 
   //Delete Appointment
   const handaleDeleteAppointment = (oneAppointment) => {
     const aggre = window.confirm(
-      `You want to delete, ${oneAppointment.first_name}. appointment for ${oneAppointment.service_name} ?`,
+      `You want to delete, ${oneAppointment.first_name}. appointment for ${oneAppointment.service_name} ?`
     );
     if (aggre) {
       fetch(
-        `https://api.talukderhomes.com.au/api/appointments/delete/${oneAppointment.id}`,
+        `https://api.talukderhomes.com.au/api/appointments/delete/${oneAppointment.id}`
       )
         .then((res) => res.json())
         .then((data) => {
           if (data.status === true) {
             const newQueryData = appointments.filter(
-              (appoint) => appoint.id !== oneAppointment.id,
+              (appoint) => appoint.id !== oneAppointment.id
             );
             alert(data.msg);
             setAppointments(newQueryData);
@@ -66,7 +73,7 @@ const Appointment = () => {
   // Slice the appointments array to get appointments for the current page
   const currentAppointments = appointments.slice(
     indexOfFirstAppointment,
-    indexOfLastAppointment,
+    indexOfLastAppointment
   );
 
   // Function to handle page navigation

@@ -1,9 +1,10 @@
 import { Button, Spinner } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const modules = {
   toolbar: [
@@ -37,6 +38,7 @@ const formats = [
 export default function UpdateBlog() {
   const { slug, id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [content, setContent] = useState("");
   const [uploadedPreviewImg, setUploadedPreviewImg] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
@@ -82,8 +84,11 @@ export default function UpdateBlog() {
         `https://api.talukderhomes.com.au/api/blogs/update/${id}`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
           body: payload,
-        },
+        }
       );
       const data = await response.json();
       if (data.status === true) {

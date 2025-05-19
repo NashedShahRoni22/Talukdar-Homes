@@ -1,5 +1,4 @@
 import {
-  Button,
   Input,
   Option,
   Select,
@@ -34,8 +33,10 @@ export default function BookingForm({ handleOpen }) {
 
   //post appointment
   const addAppointment = async (e) => {
-    setLoader(true);
     e.preventDefault();
+
+    setLoader(true);
+
     const formData = new FormData();
     formData.append("service_id", loanType);
     formData.append("first_name", firstName);
@@ -50,10 +51,7 @@ export default function BookingForm({ handleOpen }) {
         {
           method: "POST",
           body: formData,
-          headers: {
-            // Add any necessary headers, such as authorization
-          },
-        },
+        }
       );
       const data = await response.json();
       if (data.status === true) {

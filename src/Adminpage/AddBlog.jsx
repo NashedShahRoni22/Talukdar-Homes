@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { Button, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import { IoCloseCircleSharp, IoImagesSharp } from "react-icons/io5";
 import "react-quill/dist/quill.snow.css";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const modules = {
   toolbar: [
@@ -37,6 +38,7 @@ const formats = [
 
 const AddBlog = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [loader, setLoader] = useState(false);
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
@@ -61,6 +63,9 @@ const AddBlog = () => {
         "https://api.talukderhomes.com.au/api/blogs/store",
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
           body: formData,
         }
       );
