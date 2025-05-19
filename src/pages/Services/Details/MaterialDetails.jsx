@@ -14,7 +14,7 @@ import LoaderPage from "../../../Adminpage/LoaderPage";
 import { CartContext } from "../../../Providers/CartProvider";
 import { AuthContext } from "../../../Providers/AuthProvider";
 
-const MaterialDetails = () => {
+const ProductDetails = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
   const { user } = useContext(AuthContext);
@@ -53,7 +53,7 @@ const MaterialDetails = () => {
           // Automatically select the lowest priced attribute (if any)
           if (data?.data?.attributes?.length > 0) {
             const lowestPriceAttr = [...data.data.attributes].sort(
-              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+              (a, b) => parseFloat(a.price) - parseFloat(b.price),
             )[0];
             setSelectedAttribute(lowestPriceAttr);
           }
@@ -248,4 +248,4 @@ const MaterialDetails = () => {
   );
 };
 
-export default MaterialDetails;
+export default ProductDetails;

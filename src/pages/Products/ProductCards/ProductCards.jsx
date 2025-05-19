@@ -7,6 +7,7 @@ import getPriceRange from "../../../utils/getPriceRange";
 export default function ProductCards({ products }) {
   const { addToCart } = useContext(CartContext);
 
+  // add item to cart
   const handleAddtoCart = (item) => {
     const { id, title, thumbnail, price, slug } = item;
 
@@ -28,7 +29,7 @@ export default function ProductCards({ products }) {
           key={product?.id}
           className="group flex flex-col rounded border border-gray-200 bg-gray-50 duration-300 ease-linear hover:shadow-primary"
         >
-          <Link to={`/service-details/${product?.slug}`} className="p-2.5">
+          <Link to={`/products/${product?.slug}`} className="p-2.5">
             <div className="h-[200px] w-full overflow-hidden rounded-md border border-gray-200 bg-white md:h-[250px]">
               <img
                 src={product?.thumbnail}
@@ -41,7 +42,7 @@ export default function ProductCards({ products }) {
 
           <div className="flex-1 px-4">
             <Link
-              to={`/service-details/${product?.slug}`}
+              to={`/products/${product?.slug}`}
               className="text-lg transition-all duration-200 ease-in-out hover:text-primary"
             >
               {product?.title}
@@ -84,7 +85,7 @@ export default function ProductCards({ products }) {
 
             {product?.attributes?.length > 0 ? (
               <Link
-                to={`/service-details/${product?.slug}`}
+                to={`/products/${product?.slug}`}
                 className="flex items-center justify-center gap-2 rounded border border-primary p-2.5 text-primary shadow duration-300 ease-linear hover:bg-primary hover:text-white"
               >
                 <FaCartPlus className="text-lg" />

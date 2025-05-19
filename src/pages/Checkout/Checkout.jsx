@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Spinner } from "@material-tailwind/react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import { CartContext } from "../../Providers/CartProvider";
 import stripeIcon from "../../assets/stipe.png";
-import { Spinner } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -44,11 +44,11 @@ export default function Checkout() {
     const fetchCountries = async () => {
       try {
         const res = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name"
+          "https://restcountries.com/v3.1/all?fields=name",
         );
         const data = await res.json();
         const sortedCountries = data?.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common)
+          a.name.common.localeCompare(b.name.common),
         );
         setCountries(sortedCountries);
       } catch (error) {
@@ -91,7 +91,10 @@ export default function Checkout() {
       purchasePayload.append(`references[${i}][id]`, item.id);
       purchasePayload.append(`references[${i}][quantity]`, item.quantity);
       if (item.attribute) {
-        purchasePayload.append(`references[${i}][attribute]`, item.attribute);
+        purchasePayload.append(
+          `references[${i}][attribute]`,
+          item.attribute.name,
+        );
       }
     });
 
@@ -116,7 +119,7 @@ export default function Checkout() {
       if (data?.status === true) {
         localStorage.removeItem("cartItems");
         setCarts([]);
-        window.location.href = data?.data?.checkout_url;
+        // window.location.href = data?.data?.checkout_url;
       }
     } catch (error) {
       console.error("purchase error:", error);
@@ -132,14 +135,20 @@ export default function Checkout() {
           <div className="w-full md:w-1/2">
             <h2 className="text-xl font-medium">Payment Method</h2>
 
-            <div className="bg-neutral-100 mt-4 flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-orange-200 px-4 py-2">
+            <button
+              type="button"
+              className="mt-4 flex w-fit items-center gap-2 rounded-lg border border-primary/20 bg-primary/10 px-4 py-2 text-left"
+              aria-current="true"
+            >
               <img
                 src={stripeIcon}
-                alt="image of stripe icon"
+                alt="Stripe payment icon"
                 className="size-8 min-w-fit object-contain"
               />
-              <h4 className="text-sm font-medium">Online Payment (Stripe)</h4>
-            </div>
+              <span className="text-sm font-medium text-gray-900">
+                Online Payment (Stripe)
+              </span>
+            </button>
 
             {/* shipping details */}
             <div className="mt-8">
@@ -317,14 +326,16 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 bg-gray-50">
-            <h2 className="text-xl font-medium">Your Order</h2>
+          <div className="w-full md:w-1/2 md:bg-gray-50">
+            <h2 className="text-center text-2xl font-medium md:text-left">
+              Your Order
+            </h2>
 
             <ul className="mt-4 space-y-4">
-              {carts?.map((cart) => (
+              {carts?.map((cart, i) => (
                 <li
-                  key={cart.id}
-                  className="flex border items-center bg-white rounded p-2 justify-between gap-8"
+                  key={i}
+                  className="flex items-center justify-between gap-8 rounded border bg-white p-2"
                 >
                   <div className="flex flex-1 items-center gap-1.5">
                     <img
@@ -349,7 +360,7 @@ export default function Checkout() {
                       )}
 
                       {/* quantity */}
-                      <div className="flex mt-0.5 items-center gap-0.5">
+                      <div className="mt-0.5 flex items-center gap-0.5">
                         <p className="text-xs font-semibold text-primary">
                           Quantity:
                         </p>

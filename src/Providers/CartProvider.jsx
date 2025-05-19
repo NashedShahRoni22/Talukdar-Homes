@@ -8,8 +8,6 @@ export default function CartProvider({ children }) {
 
   const [carts, setCarts] = useState(savedCarts ? JSON.parse(savedCarts) : []);
 
-  console.log(carts);
-
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(carts));
   }, [carts]);
@@ -61,7 +59,7 @@ export default function CartProvider({ children }) {
 
         // Case 3: mismatch in attribute existence, keep it
         return true;
-      })
+      }),
     );
 
     toast.success("Item removed from cart");

@@ -1,5 +1,3 @@
-import React from "react";
-
 const featuresData = [
   {
     src: "https://img.icons8.com/pulsar-line/96/fast-delivery.png",
@@ -21,17 +19,16 @@ const featuresData = [
 
 export default function Features() {
   return (
-    <div className="mx-5 md:container lg:w-1/2 md:mx-auto flex gap-8 justify-between my-5 py-8 px-16 shadow-md rounded-md">
+    <div className="mx-5 my-5 flex justify-between gap-8 rounded-md px-16 py-8 shadow-md md:container md:mx-auto lg:w-1/2">
       {featuresData.map((feature, index) => (
-        <div className="flex flex-col items-center">
+        <div key={index} className="flex flex-col items-center">
           <img
-            key={index}
-            className="h-[48px] lg:h-[64px] w-[48px] lg:w-[64px]"
+            className="h-[48px] w-[48px] lg:h-[64px] lg:w-[64px]"
             src={feature.src}
             alt={feature.name}
             title={feature.name}
           />
-          <p className="mt-1 text-xs lg:text-sm text-center">{feature.name}</p>
+          <p className="mt-1 text-center text-xs lg:text-sm">{feature.name}</p>
         </div>
       ))}
     </div>

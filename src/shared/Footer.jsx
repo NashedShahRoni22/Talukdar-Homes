@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { BiCopyright, BiWorld } from "react-icons/bi";
 import {
   BsFacebook,
@@ -9,35 +9,36 @@ import {
 } from "react-icons/bs";
 import { MdEmail, MdOutlineArrowOutward } from "react-icons/md";
 import { PiPhoneCall } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import logo from "../assets/logo/logo-1.png";
+
+const menus = [
+  {
+    name: "Home",
+    link: "/",
+  },
+  {
+    name: "Services",
+    link: "/services",
+  },
+  {
+    name: "Products",
+    link: "/products",
+  },
+  {
+    name: "About",
+    link: "/about",
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+  },
+  {
+    name: "Blogs",
+    link: "/",
+  },
+];
 
 export default function Footer() {
-  const menus = [
-    {
-      name: "Home",
-      link: "/",
-    },
-    {
-      name: "Services",
-      link: "/services",
-    },
-    {
-      name: "Products",
-      link: "/products",
-    },
-    {
-      name: "About",
-      link: "/about",
-    },
-    {
-      name: "Contact",
-      link: "/contact",
-    },
-    {
-      name: "Blogs",
-      link: "/",
-    },
-  ];
   return (
     <footer className="border-t-4 border-primary bg-black/90 py-5 md:py-10">
       <section className="mx-5 md:container md:mx-auto">
@@ -46,7 +47,7 @@ export default function Footer() {
             <PiPhoneCall className="text-2xl text-gray-600 md:text-4xl" />
             <div>
               <p className="font-semibold text-gray-600 md:text-xl">Call Us</p>
-              <p className="text-white lg:text-xl">0452 246 490</p>
+              <p className="text-white lg:text-xl">0452 246 490</p>
             </div>
           </div>
           <div className="flex gap-5">
@@ -63,7 +64,7 @@ export default function Footer() {
             <div>
               <p className="font-semibold text-gray-600 md:text-xl">Office</p>
               <p className="text-white lg:text-xl">
-                Suit 15/186 Queen St, Campbelltown NSW 2560
+                Suit 15/186 Queen St, Campbelltown, NSW 2560
               </p>
             </div>
           </div>
@@ -71,9 +72,13 @@ export default function Footer() {
         <div className="my-5 h-0.5 w-full bg-gray-600 md:my-10"></div>
         <div className="mt-5 grid gap-5 md:mt-10 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
           <div>
-            <h5 className="text-2xl font-extrabold uppercase text-primary md:text-4xl">
-              TH
-            </h5>
+            <Link to="/">
+              <img
+                src={logo}
+                alt="talukdar homes logo"
+                className="h-10 object-cover"
+              />
+            </Link>
             <div className="mt-5 flex gap-5 md:mt-10">
               <BsFacebook className="text-xl text-white hover:text-primary md:text-2xl lg:text-3xl" />
               <BsTwitter className="text-xl text-white hover:text-primary md:text-2xl lg:text-3xl" />

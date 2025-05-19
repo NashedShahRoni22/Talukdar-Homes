@@ -20,7 +20,7 @@ import Development from "./pages/Services/Details/Development.jsx";
 import AddBlog from "./Adminpage/AddBlog.jsx";
 import ManageBlog from "./Adminpage/ManageBlog.jsx";
 import Products from "./pages/Products/Products.jsx";
-import MaterialDetails from "./pages/Services/Details/MaterialDetails.jsx";
+import ProductDetails from "./pages/Services/Details/MaterialDetails.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import Dashboard from "./Adminpage/Dashboard.jsx";
@@ -96,8 +96,8 @@ const router = createBrowserRouter([
         element: <BlogDetails />,
       },
       {
-        path: "/service-details/:slug",
-        element: <MaterialDetails />,
+        path: "/products/:slug",
+        element: <ProductDetails />,
       },
       {
         path: "/checkout",
