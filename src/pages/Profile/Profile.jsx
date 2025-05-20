@@ -5,6 +5,7 @@ import { CartContext } from "../../Providers/CartProvider";
 import { BiCart } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate";
+import { formatPrice } from "../../utils/formatPrice";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
@@ -29,7 +30,7 @@ export default function Profile() {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
-          }
+          },
         );
         const data = await res.json();
         if (data?.status === true) {
@@ -41,7 +42,7 @@ export default function Profile() {
         setLoading(false);
       }
     },
-    [user?.token]
+    [user?.token],
   );
 
   // fetch purchase history
@@ -111,12 +112,10 @@ export default function Profile() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200 text-gray-900 text-left">
-                    <th className="p-3">Order #</th>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Items</th>
-                    <th className="p-3">Variant</th>
-                    <th className="p-3">Quantity</th>
+                  <tr className="border-b border-gray-200 text-left text-gray-900">
+                    <th className="hidden p-3 md:table-cell">Order ID</th>
+                    <th className="hidden p-3 md:table-cell">Ordered At</th>
+                    <th className="p-3">Products</th>
                     <th className="p-3">Total</th>
                     <th className="p-3">Status</th>
                   </tr>
@@ -132,13 +131,13 @@ export default function Profile() {
                         {index === 0 ? (
                           <>
                             <td
-                              className="p-3 text-sm text-gray-700"
+                              className="hidden p-3 text-sm text-gray-700 md:table-cell"
                               rowSpan={order.reference_items.length}
                             >
-                              {order.invoice}
+                              #{order?.invoice}
                             </td>
                             <td
-                              className="p-3 text-sm text-gray-700"
+                              className="hidden p-3 text-sm text-gray-700 md:table-cell"
                               rowSpan={order.reference_items.length}
                             >
                               {formatDate(order.created_at)}
@@ -146,28 +145,34 @@ export default function Profile() {
                           </>
                         ) : null}
                         {/* reference items data */}
-                        <td className="p-3 text-gray-700 text-sm ">
-                          {item.title}
+                        <td className="p-3 text-gray-700">
+                          <p className="text-sm font-medium text-gray-900">
+                            {item.title}
+                          </p>
+                          <p className="mt-1 text-xs">
+                            <span className="font-semibold">Quantity:</span>{" "}
+                            {item.quantity}
+                          </p>
+                          {item.attribute && (
+                            <p className="mt-1 text-xs">
+                              <span className="font-semibold">Variant:</span>{" "}
+                              {item.attribute}
+                            </p>
+                          )}
                         </td>
-                        <td className="p-3 text-gray-700 text-sm">
-                          {item.attribute}
-                        </td>
-                        <td className="p-3 text-center text-sm text-gray-700">
-                          {item.quantity}
-                        </td>
-                        <td className="p-3 text-gray-700 text-sm">
-                          ${(item.price * item.quantity).toFixed(2)}
+                        <td className="p-3 text-sm text-gray-700">
+                          ${formatPrice(item.price * item.quantity)}
                         </td>
                         {index === 0 ? (
                           <td
-                            className={`p-3 text-gray-700 text-sm ${order.status === "1" ? "text-green-600" : "text-primary"}`}
+                            className={`p-3 text-sm text-gray-700 ${order.status === "1" ? "text-green-600" : "text-primary"}`}
                             rowSpan={order.reference_items.length}
                           >
                             {order.status === "1" ? "Completed" : "Pending"}
                           </td>
                         ) : null}
                       </tr>
-                    ))
+                    )),
                   )}
                 </tbody>
               </table>

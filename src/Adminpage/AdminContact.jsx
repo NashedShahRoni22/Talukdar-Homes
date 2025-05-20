@@ -41,17 +41,17 @@ const AdminContact = () => {
   //Delete contacts
   const handaleDeleteAppointment = (oneAppointment) => {
     const aggre = window.confirm(
-      `You want to delete, ${oneAppointment.name} message ?`
+      `You want to delete, ${oneAppointment.name} message ?`,
     );
     if (aggre) {
       fetch(
-        `https://api.talukderhomes.com.au/api/contacts/delete/${oneAppointment.id}`
+        `https://api.talukderhomes.com.au/api/contacts/delete/${oneAppointment.id}`,
       )
         .then((res) => res.json())
         .then((data) => {
           if (data.status === true) {
             const newQueryData = appointments.filter(
-              (appoint) => appoint.id !== oneAppointment.id
+              (appoint) => appoint.id !== oneAppointment.id,
             );
             alert(data.msg);
             setAppointments(newQueryData);
@@ -74,7 +74,7 @@ const AdminContact = () => {
   // Slice the appointments array to get appointments for the current page
   const currentAppointments = appointments.slice(
     indexOfFirstAppointment,
-    indexOfLastAppointment
+    indexOfLastAppointment,
   );
 
   // Function to handle page navigation
@@ -87,12 +87,12 @@ const AdminContact = () => {
       pageNumbers.push(i);
     }
     return (
-      <div className="flex justify-center gap-2 mt-5">
+      <div className="mt-5 flex justify-center gap-2">
         {pageNumbers.map((number) => (
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`px-4 py-2 rounded-full border ${
+            className={`rounded-full border px-4 py-2 ${
               currentPage === number ? "bg-orange-600 text-white" : ""
             }`}
           >
@@ -102,6 +102,7 @@ const AdminContact = () => {
       </div>
     );
   };
+
   return (
     <div className="p-5">
       <h5 className="font-semibold">Messages : {appointments.length}</h5>
@@ -159,10 +160,10 @@ const AdminContact = () => {
                         {appointment?.email}
                       </Typography>
                     </td>
-                    <td className="p-4 flex">
+                    <td className="flex p-4">
                       <button
                         onClick={() => handleOpen(appointment)}
-                        className="px-2 py-1 shadow-md rounded-full border border-orange-600 text-orange-600 flex items-center gap-2"
+                        className="flex items-center gap-2 rounded-full border border-orange-600 px-2 py-1 text-orange-600 shadow-md"
                       >
                         <AiFillEye className="text-xl" />
                         View
@@ -190,7 +191,7 @@ const AdminContact = () => {
               <span className="font-semibold text-orange-600">Phone : </span>
               {singleAppointment?.phone}
             </p>
-            <p className="mt-2.5 fo">
+            <p className="fo mt-2.5">
               <span className="font-semibold text-orange-600">Email : </span>
               {singleAppointment?.email}
             </p>
