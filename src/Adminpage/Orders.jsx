@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import Pagination from "../components/Pagination";
 import OrderRow from "../components/admin/OrderRow";
+import LoaderPage from "./LoaderPage";
 
 export default function Orders() {
   const { user } = useContext(AuthContext);
@@ -20,7 +21,7 @@ export default function Orders() {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
-          },
+          }
         );
         const data = await res.json();
         if (data.status === true) {
@@ -32,46 +33,53 @@ export default function Orders() {
         setLoading(false);
       }
     },
-    [user?.token],
+    [user?.token]
   );
 
   useEffect(() => {
     fetchPageData(1);
   }, [fetchPageData]);
 
+  if (loading) {
+    return <LoaderPage />;
+  }
+
   return (
     <section className="p-5">
-      {loading && <p>Loading...</p>}
-
       {/* order table */}
       {orders && orders?.data?.length > 0 && (
-        <div className="w-full overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th>Invoice ID</th>
-                <th>Ordered At</th>
-                <th>Email</th>
-                <th>Products</th>
-                <th>Payment Method</th>
-                <th>Total Price</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders?.data?.map((order) =>
-                order?.reference_items?.map((item, j) => (
-                  <OrderRow
-                    key={j}
-                    order={order}
-                    item={item}
-                    itemIndex={j}
-                    itemCount={order.reference_items.length}
-                  />
-                )),
-              )}
-            </tbody>
-          </table>
+        <div className="w-full overflow-x-auto mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
+
+          <div className="rounded border border-gray-200 p-6 overflow-x-auto mt-4">
+            <table className="w-full border-collapse">
+              <thead className="border-b border-gray-200 text-left text-gray-900">
+                <tr>
+                  <th className="p-3">Invoice ID</th>
+                  <th className="p-3">Ordered At</th>
+                  <th className="p-3">Email</th>
+                  <th className="p-3">Products</th>
+                  <th className="p-3">Payment Method</th>
+                  <th className="p-3">Total Price</th>
+                  <th className="p-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders?.data?.map((order, i) =>
+                  order?.reference_items?.map((item, j) => (
+                    <OrderRow
+                      key={j}
+                      order={order}
+                      item={item}
+                      orderIndex={i}
+                      itemIndex={j}
+                      itemCount={order.reference_items.length}
+                    />
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

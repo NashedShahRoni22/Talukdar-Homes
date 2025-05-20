@@ -6,11 +6,13 @@ import { BiCart } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate";
 import { formatPrice } from "../../utils/formatPrice";
+import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const { carts } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [purchaseHistory, setPurchaseHistory] = useState({
     data: [],
     current_page: 1,
@@ -18,6 +20,14 @@ export default function Profile() {
     total: 0,
     links: [],
   });
+
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedOrder(null);
+  };
 
   // fetch purchase history
   const fetchPurchaseHistory = useCallback(
@@ -30,7 +40,7 @@ export default function Profile() {
             headers: {
               Authorization: `Bearer ${user?.token}`,
             },
-          },
+          }
         );
         const data = await res.json();
         if (data?.status === true) {
@@ -42,7 +52,7 @@ export default function Profile() {
         setLoading(false);
       }
     },
-    [user?.token],
+    [user?.token]
   );
 
   // fetch purchase history
@@ -125,7 +135,8 @@ export default function Profile() {
                     order.reference_items.map((item, index) => (
                       <tr
                         key={item.id}
-                        className={`${i % 2 === 0 && "bg-gray-50"} ${index === 0 && "border-t border-gray-200"}`}
+                        onClick={() => handleOrderClick(order)}
+                        className={`cursor-pointer ${i % 2 === 0 && "bg-gray-50"} ${index === 0 && "border-t border-gray-200"}`}
                       >
                         {/* Show invoice and date only on the first product row of each order */}
                         {index === 0 ? (
@@ -144,6 +155,7 @@ export default function Profile() {
                             </td>
                           </>
                         ) : null}
+
                         {/* reference items data */}
                         <td className="p-3 text-gray-700">
                           <p className="text-sm font-medium text-gray-900">
@@ -160,6 +172,7 @@ export default function Profile() {
                             </p>
                           )}
                         </td>
+
                         <td className="p-3 text-sm text-gray-700">
                           ${formatPrice(item.price * item.quantity)}
                         </td>
@@ -172,7 +185,7 @@ export default function Profile() {
                           </td>
                         ) : null}
                       </tr>
-                    )),
+                    ))
                   )}
                 </tbody>
               </table>
@@ -228,6 +241,15 @@ export default function Profile() {
           </>
         )}
       </div>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <OrderDetailsModal
+          open={!!selectedOrder}
+          handleClose={handleCloseModal}
+          order={selectedOrder}
+        />
+      )}
     </section>
   );
 }

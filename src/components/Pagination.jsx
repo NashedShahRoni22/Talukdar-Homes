@@ -4,7 +4,7 @@ export default function Pagination({ current, last, onPageChange }) {
   const pages = getPaginationRange(current, last);
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center justify-center gap-1">
       <button
         onClick={() => onPageChange(current - 1)}
         disabled={current === 1}
@@ -30,7 +30,7 @@ export default function Pagination({ current, last, onPageChange }) {
           >
             {page}
           </button>
-        ),
+        )
       )}
 
       <button

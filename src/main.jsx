@@ -223,5 +223,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </CartProvider>
       </ThemeProvider>
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
