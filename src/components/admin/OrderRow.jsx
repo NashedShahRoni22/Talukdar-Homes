@@ -2,6 +2,7 @@ import { useState } from "react";
 import { formatDate } from "../../utils/formatDate";
 import { formatPrice } from "../../utils/formatPrice";
 import OrderDetailsModal from "./OrderDetailsModal";
+import { AiFillEye } from "react-icons/ai";
 
 export default function OrderRow({
   order,
@@ -28,7 +29,6 @@ export default function OrderRow({
   return (
     <>
       <tr
-        onClick={toggleModal}
         className={`cursor-pointer ${orderIndex % 2 === 0 && "bg-gray-50"} ${itemIndex === 0 && "border-t border-gray-200"}`}
       >
         {itemIndex === 0 && (
@@ -42,23 +42,6 @@ export default function OrderRow({
             <td className="p-3 text-sm text-gray-700" rowSpan={itemCount}>
               {order?.client?.email}
             </td>
-          </>
-        )}
-
-        <td className="p-3 text-gray-700">
-          <p className="text-sm font-medium text-gray-900">{item.title}</p>
-          <p className="mt-1 text-xs">
-            <span className="font-semibold">Quantity:</span> {item.quantity}
-          </p>
-          {item.attribute && (
-            <p className="mt-1 text-xs">
-              <span className="font-semibold">Variant:</span> {item.attribute}
-            </p>
-          )}
-        </td>
-
-        {itemIndex === 0 && (
-          <>
             <td rowSpan={itemCount} className="p-3 text-sm text-gray-700">
               {order?.gateway?.title}
             </td>
@@ -67,6 +50,15 @@ export default function OrderRow({
             </td>
             <td rowSpan={itemCount} className="p-3 text-sm text-gray-700">
               {order?.gateway?.status === "1" ? "Paid" : "Unpaid"}
+            </td>
+            <td rowSpan={itemCount} className="p-3 text-sm text-gray-700">
+              <button
+                onClick={toggleModal}
+                className="flex items-center gap-2 rounded border border-orange-600 px-2 py-1 text-orange-600 shadow"
+              >
+                <AiFillEye className="text-xl" />
+                View
+              </button>
             </td>
           </>
         )}

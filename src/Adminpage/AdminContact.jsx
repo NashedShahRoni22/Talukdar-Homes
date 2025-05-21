@@ -163,7 +163,7 @@ const AdminContact = () => {
                     <td className="flex p-4">
                       <button
                         onClick={() => handleOpen(appointment)}
-                        className="flex items-center gap-2 rounded-full border border-orange-600 px-2 py-1 text-orange-600 shadow-md"
+                        className="flex items-center gap-2 rounded border border-orange-600 px-2 py-1 text-orange-600 shadow"
                       >
                         <AiFillEye className="text-xl" />
                         View
