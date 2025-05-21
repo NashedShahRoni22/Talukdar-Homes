@@ -47,7 +47,7 @@ const Customers = () => {
   );
 
   const handleDelete = (customerId) => {
-    fetch(`https://api.talukderhomes.com.au/api/clients/${customerId}`, {
+    fetch(`https://api.talukderhomes.com.au/api/clients/delete/${customerId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${user?.token}`,
