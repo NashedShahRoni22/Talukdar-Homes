@@ -13,7 +13,7 @@ export default function ProductFilter({
   trackColor = "#cecece",
   onChange,
   rangeColor = "#99a1af",
-  width = "165px",
+  width = "210px",
   currencyText = "$",
   showFilter,
   setShowFilter,
@@ -67,7 +67,7 @@ export default function ProductFilter({
 
   return (
     <div
-      className={`fixed right-0 top-0 z-50 flex h-[calc(100vh-0px)] w-full min-w-[207px] max-w-[207px] flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 transition-transform duration-200 ease-linear md:relative md:top-0 md:h-fit ${showFilter ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"}`}
+      className={`fixed right-0 top-0 z-50 flex h-[calc(100vh-0px)] w-full min-w-64 max-w-64 flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 transition-transform duration-200 ease-linear md:relative md:top-0 md:h-fit md:min-w-[207px] md:max-w-[207px] ${showFilter ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"}`}
     >
       {/* mobile filter menu close button */}
       <div className="md:hidden">
@@ -99,7 +99,10 @@ export default function ProductFilter({
           </div>
 
           {/* Style the price range slider */}
-          <div className="multi-slide-input-container mt-2" style={{ width }}>
+          <div
+            className="multi-slide-input-container mt-2 md:!w-[165px]"
+            style={{ width }}
+          >
             <input
               type="range"
               min={min}
@@ -109,7 +112,7 @@ export default function ProductFilter({
                 const value = Math.min(Number(event.target.value), maxVal - 1);
                 setMinVal(value);
               }}
-              className="thumb thumb-left"
+              className="thumb thumb-left md:!w-[165px]"
               style={{
                 width,
                 zIndex: minVal > max - 100 || minVal === maxVal ? 5 : undefined,
@@ -125,7 +128,7 @@ export default function ProductFilter({
                 const value = Math.max(Number(event.target.value), minVal + 1);
                 setMaxVal(value);
               }}
-              className="thumb thumb-right"
+              className="thumb thumb-right md:!w-[165px]"
               style={{
                 width,
                 zIndex: minVal > max - 100 || minVal === maxVal ? 4 : undefined,

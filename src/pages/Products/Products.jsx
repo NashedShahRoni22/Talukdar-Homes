@@ -47,7 +47,7 @@ export default function Products() {
       }
       setSearchParams(params);
     }, 300),
-    [searchParams]
+    [searchParams],
   );
 
   // add filtering search params in url
@@ -65,7 +65,7 @@ export default function Products() {
         setSubCategories(
           selectedCategory?.children?.length > 0
             ? selectedCategory?.children
-            : []
+            : [],
         );
       } else {
         params.delete("category");
@@ -129,15 +129,8 @@ export default function Products() {
 
     const params = new URLSearchParams(searchParams.toString());
 
-    if (params.has("subcategory")) {
-      const sub = params.get("subcategory");
-      params.set("category", sub);
-    }
-
-    params.delete("subcategory");
-
     fetch(
-      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -169,10 +162,10 @@ export default function Products() {
 
   if (!allProducts?.length > 0) {
     return (
-      <div className="mx-5 py-5 md:container flex flex-col justify-center min-h-[calc(100vh-80px)] md:mx-auto md:py-10 text-center text-gray-600">
+      <div className="mx-5 flex min-h-[calc(100vh-80px)] flex-col justify-center py-5 text-center text-gray-600 md:container md:mx-auto md:py-10">
         <MdOutlineInventory2 className="mx-auto text-[40px] text-[#ff5722]" />
-        <p className="text-xl font-semibold mt-4">No products found</p>
-        <p className="text-sm mt-2">
+        <p className="mt-4 text-xl font-semibold">No products found</p>
+        <p className="mt-2 text-sm">
           Looks like there&apos;s nothing here right now.
         </p>
       </div>
@@ -180,7 +173,7 @@ export default function Products() {
   }
 
   return (
-    <section className="mx-5 py-5 md:container min-h-[calc(100vh-80px)] md:mx-auto md:py-10">
+    <section className="mx-5 min-h-[calc(100vh-80px)] py-5 md:container md:mx-auto md:py-10">
       <div className="relative mt-5 flex items-start gap-5">
         <ProductFilter
           min={absolutePriceRange.min}
