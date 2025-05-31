@@ -2,11 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import LoaderPage from "../../Adminpage/LoaderPage.jsx";
 import ProductCards from "./ProductCards/ProductCards.jsx";
 import ProductFilter from "./ProductFilter/ProductFilter.jsx";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { debounce } from "../../utils/debounce.js";
 import { getMaxPrice } from "../../utils/maxPrice.js";
 import { FaBarsStaggered } from "react-icons/fa6";
-import { MdOutlineInventory2 } from "react-icons/md";
 import { Spinner } from "@material-tailwind/react";
 
 export default function Products() {
@@ -14,7 +13,7 @@ export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState({ initial: false, filter: false });
-  const [allProducts, setAllProducts] = useState([]);
+  const [data, setData] = useState({});
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -23,7 +22,6 @@ export default function Products() {
     max: 0,
   });
   const [rangeValues, setRangeValues] = useState({ min: 0, max: 0 });
-  const maxPrice = getMaxPrice(allProducts); // Get max price from all products
 
   // Debounced handleRangeChange function
   const handleRangeChange = useCallback(
@@ -47,7 +45,7 @@ export default function Products() {
       }
       setSearchParams(params);
     }, 300),
-    [searchParams],
+    [searchParams]
   );
 
   // add filtering search params in url
@@ -65,7 +63,7 @@ export default function Products() {
         setSubCategories(
           selectedCategory?.children?.length > 0
             ? selectedCategory?.children
-            : [],
+            : []
         );
       } else {
         params.delete("category");
@@ -107,7 +105,7 @@ export default function Products() {
         ]);
 
         if (prodData.status === true) {
-          setAllProducts(prodData.data); // for max price
+          setData(prodData.data);
         }
 
         if (catData.status === true) {
@@ -130,22 +128,24 @@ export default function Products() {
     const params = new URLSearchParams(searchParams.toString());
 
     fetch(
-      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`
     )
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
-          setProducts(data.data);
-          setAbsolutePriceRange({ min: 0, max: maxPrice });
+          const max = getMaxPrice(data.data.data);
+          setProducts(data.data.data);
+          setData(data.data);
+          setAbsolutePriceRange({ min: 0, max });
 
           const priceParam = searchParams.get("price");
           if (!priceParam) {
-            setRangeValues({ min: 0, max: maxPrice });
+            setRangeValues({ min: 0, max });
           }
           setLoading((prev) => ({ ...prev, filter: false }));
         }
       });
-  }, [searchParams, maxPrice]);
+  }, [searchParams]);
 
   // set price range values from URL params
   useEffect(() => {
@@ -158,18 +158,6 @@ export default function Products() {
 
   if (loading.initial) {
     return <LoaderPage />;
-  }
-
-  if (!allProducts?.length > 0) {
-    return (
-      <div className="mx-5 flex min-h-[calc(100vh-80px)] flex-col justify-center py-5 text-center text-gray-600 md:container md:mx-auto md:py-10">
-        <MdOutlineInventory2 className="mx-auto text-[40px] text-[#ff5722]" />
-        <p className="mt-4 text-xl font-semibold">No products found</p>
-        <p className="mt-2 text-sm">
-          Looks like there&apos;s nothing here right now.
-        </p>
-      </div>
-    );
   }
 
   return (
@@ -246,6 +234,24 @@ export default function Products() {
                 </p>
               </div>
             )}
+
+            {/* pagination buttons */}
+            <div className="flex items-center flex-wrap justify-center gap-5 mt-5 md:mt-10">
+              {data?.links?.length > 1 &&
+                data?.links?.slice(1, data?.links?.length - 1)?.map((page) => (
+                  <Link
+                    key={page?.label}
+                    to={`/products?page=${page?.label}`}
+                    className={`rounded border transition-all duration-200 ease-in-out px-3 py-1 ${
+                      page?.active === true
+                        ? "bg-primary text-white  cursor-default"
+                        : "cursor-pointer hover:bg-[#FFE4D6]"
+                    }`}
+                  >
+                    {page?.label}
+                  </Link>
+                ))}
+            </div>
           </div>
         </div>
       </div>

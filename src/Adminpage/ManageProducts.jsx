@@ -13,7 +13,7 @@ const ManageProducts = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
-          setProducts(data.data);
+          setProducts(data.data.data);
           setLoading(false);
         }
       });
