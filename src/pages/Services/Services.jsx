@@ -11,28 +11,28 @@ export default function Services() {
     {
       title: "Construction",
       img: construction,
-      link:"/construction-services"
+      link: "/construction-services",
     },
     {
       title: "Material Supply",
       img: supply,
-      link:"/products"
+      link: "/products",
     },
     {
       title: "House Renovation",
       img: renovation,
-      link:"/renovation-services"
+      link: "/renovation-services",
     },
     {
       title: "Development",
       img: architecture,
-      link:"/development-services"
+      link: "/development-services",
     },
   ];
   return (
     <section className="my-5 md:my-10 lg:my-20">
       <div className="mx-5 md:container md:mx-auto">
-        <h5 className="text-3xl md:text-6xl lg:text-8xl font-extrabold uppercase text-end">
+        <h5 className="text-end text-3xl font-extrabold uppercase md:text-6xl lg:text-8xl">
           Services
         </h5>
       </div>
@@ -46,11 +46,11 @@ export default function Services() {
             LEADING GLOBAL <br /> BUILDER AND <br /> DEVELOPER
           </p>
         </div> */}
-      <div className="mt-10 md:mt-20 grid md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid md:mt-20 md:grid-cols-2 lg:grid-cols-4">
         {data.map((d, i) => (
           <div
             key={i}
-            className="relative group overflow-hidden"
+            className="group relative overflow-hidden"
             data-aos="fade-up"
             data-aos-easing="linear"
             data-aos-duration="1500"
@@ -58,15 +58,18 @@ export default function Services() {
             <img
               src={d.img}
               alt=""
-              className="md:h-[650px] object-cover group-hover:scale-110 group-hover:-rotate-6 ease-linear duration-300"
+              className="object-cover duration-300 ease-linear group-hover:-rotate-6 group-hover:scale-110 md:h-[650px]"
             />
-            <div className="absolute top-0 left-0 bg-black/80 group-hover:bg-black/50 h-full w-full flex flex-col justify-center items-center">
-              <p className="text-xl md:text-2xl lg:text-4xl font-extrabold text-white text-center">
+            <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center bg-black/80 group-hover:bg-black/50">
+              <p className="text-center text-xl font-extrabold text-white md:text-2xl lg:text-4xl">
                 {d.title}
               </p>
-              <Link to={d.link} className="mt-5 bg-black text-white hover:text-black hover:bg-white hidden group-hover:flex gap-2 items-center px-5 py-2 rounded-full shadow border hover:shadow-xl hover:border-primary  w-fit group ease-linear duration-300">
+              <Link
+                to={d.link}
+                className="group mt-5 hidden w-fit items-center gap-2 rounded-full border bg-black px-5 py-2 text-white shadow duration-300 ease-linear hover:border-primary hover:bg-white hover:text-black hover:shadow-xl group-hover:flex"
+              >
                 Explore{" "}
-                <span className="bg-primary p-2.5 rounded-full text-white">
+                <span className="rounded-full bg-primary p-2.5 text-white">
                   <MdOutlineArrowOutward />
                 </span>
               </Link>

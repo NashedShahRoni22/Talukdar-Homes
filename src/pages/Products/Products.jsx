@@ -2,26 +2,30 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import LoaderPage from "../../Adminpage/LoaderPage.jsx";
 import ProductCards from "./ProductCards/ProductCards.jsx";
 import ProductFilter from "./ProductFilter/ProductFilter.jsx";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { debounce } from "../../utils/debounce.js";
 import { getMaxPrice } from "../../utils/maxPrice.js";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { Spinner } from "@material-tailwind/react";
+import Pagination from "./Pagination/Pagination.jsx";
 
 export default function Products() {
-  const hasMounted = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState({ initial: false, filter: false });
   const [data, setData] = useState({});
   const [products, setProducts] = useState([]);
+  const [nextProducts, setNextProducts] = useState(null);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [sortValue, setSortValue] = useState("");
   const [absolutePriceRange, setAbsolutePriceRange] = useState({
     min: 0,
     max: 0,
   });
   const [rangeValues, setRangeValues] = useState({ min: 0, max: 0 });
+  const hasMounted = useRef(false);
 
   // Debounced handleRangeChange function
   const handleRangeChange = useCallback(
@@ -45,14 +49,12 @@ export default function Products() {
       }
       setSearchParams(params);
     }, 300),
-    [searchParams]
+    [searchParams],
   );
 
   // add filtering search params in url
   const handleSearchParams = (e) => {
     const { name, value, type, id, checked } = e.target;
-
-    const params = new URLSearchParams(searchParams.toString());
 
     if (name === "category") {
       if (checked) {
@@ -63,7 +65,7 @@ export default function Products() {
         setSubCategories(
           selectedCategory?.children?.length > 0
             ? selectedCategory?.children
-            : []
+            : [],
         );
       } else {
         params.delete("category");
@@ -78,12 +80,49 @@ export default function Products() {
       } else {
         params.delete(name);
       }
-    } else {
-      params.set(name, value);
     }
 
-    if (value === "") {
-      params.delete(name);
+    if (name === "order") {
+      setSortValue(value); // Track selected option for UI
+
+      if (value === "price_asc") {
+        const existingOrder = searchParams.get("order");
+        if (existingOrder === "asc" || existingOrder === "desc") {
+          params.set("order", existingOrder);
+        } else {
+          params.delete("order");
+        }
+        params.set(
+          "price",
+          `${absolutePriceRange.min},${absolutePriceRange.max}`,
+        );
+      } else if (value === "price_desc") {
+        const existingOrder = searchParams.get("order");
+        if (existingOrder === "asc" || existingOrder === "desc") {
+          params.set("order", existingOrder);
+        } else {
+          params.delete("order");
+        }
+        params.set(
+          "price",
+          `${absolutePriceRange.max},${absolutePriceRange.min}`,
+        );
+      } else if (value === "asc" || value === "desc") {
+        params.set("order", value);
+        params.delete("price");
+      } else {
+        params.delete("order");
+        params.delete("price");
+      }
+    }
+
+    // Handle other input types
+    if (type !== "checkbox" && name !== "order") {
+      if (value === "") {
+        params.delete(name);
+      } else {
+        params.set(name, value);
+      }
     }
 
     setSearchParams(params);
@@ -127,14 +166,21 @@ export default function Products() {
 
     const params = new URLSearchParams(searchParams.toString());
 
+    if (params.has("subcategory")) {
+      const sub = params.get("subcategory");
+      params.set("category", sub);
+    }
+
+    params.delete("subcategory");
+
     fetch(
-      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
     )
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
           const max = getMaxPrice(data.data.data);
-          setProducts(data.data.data);
+          setNextProducts(data.data.data);
           setData(data.data);
           setAbsolutePriceRange({ min: 0, max });
 
@@ -147,14 +193,38 @@ export default function Products() {
       });
   }, [searchParams]);
 
-  // set price range values from URL params
   useEffect(() => {
+    if (!loading.filter && nextProducts !== null) {
+      setProducts(nextProducts);
+      setNextProducts(null);
+    }
+  }, [loading.filter, nextProducts]);
+
+  // keep the query parameter on url after page reload
+  useEffect(() => {
+    const orderParam = searchParams.get("order");
+    const priceParam = searchParams.get("price");
+
+    if (priceParam && orderParam) {
+      const [min, max] = priceParam.split(",").map(Number);
+      if (Number(orderParam) === 0 || orderParam === "asc") {
+        setSortValue(min < max ? "price_asc" : "price_desc");
+      } else {
+        setSortValue("price_desc");
+      }
+    } else {
+      setSortValue(orderParam || "");
+    }
+  }, [searchParams]);
+
+  // set price range values from URL params
+  /* useEffect(() => {
     const priceParam = searchParams.get("price");
     if (priceParam) {
       const [min, max] = priceParam.split(",").map(Number);
       setRangeValues({ min, max });
     }
-  }, [searchParams]);
+  }, [searchParams]); */
 
   if (loading.initial) {
     return <LoaderPage />;
@@ -200,31 +270,33 @@ export default function Products() {
               <select
                 className="rounded border border-gray-300 bg-white p-1 text-sm text-gray-700 outline-none"
                 name="order"
-                value={searchParams.get("order") || ""}
+                value={sortValue}
                 onChange={handleSearchParams}
               >
                 <option value="">Default</option>
-                <option value="asc">Price: Low to High</option>
-                <option value="desc">Price: High to Low</option>
+                <option value="asc">Alphabetically: A-Z</option>
+                <option value="desc">Alphabetically: Z-A</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
               </select>
             </div>
           </div>
 
           {/* filtered product loading indicator */}
           <div className="mt-4">
-            {loading.filter && (
+            {loading.filter && products.length === 0 && (
               <div className="flex items-center justify-center">
                 <Spinner className="h-7 w-7" />
               </div>
             )}
 
-            {!loading.filter && products?.length > 0 && (
+            {products.length > 0 && (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
                 <ProductCards products={products} />
               </div>
             )}
 
-            {!loading.filter && products?.length === 0 && (
+            {!loading.filter && products.length === 0 && (
               <div>
                 <p className="text-center text-lg font-semibold text-gray-700">
                   No products found
@@ -236,22 +308,7 @@ export default function Products() {
             )}
 
             {/* pagination buttons */}
-            <div className="flex items-center flex-wrap justify-center gap-5 mt-5 md:mt-10">
-              {data?.links?.length > 1 &&
-                data?.links?.slice(1, data?.links?.length - 1)?.map((page) => (
-                  <Link
-                    key={page?.label}
-                    to={`/products?page=${page?.label}`}
-                    className={`rounded border transition-all duration-200 ease-in-out px-3 py-1 ${
-                      page?.active === true
-                        ? "bg-primary text-white  cursor-default"
-                        : "cursor-pointer hover:bg-[#FFE4D6]"
-                    }`}
-                  >
-                    {page?.label}
-                  </Link>
-                ))}
-            </div>
+            <Pagination data={data} />
           </div>
         </div>
       </div>

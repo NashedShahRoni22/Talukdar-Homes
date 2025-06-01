@@ -5,7 +5,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
 
-export default function ProductRow({ product, setProducts }) {
+export default function ProductRow({ index, product, setProducts }) {
   const {
     id,
     slug,
@@ -48,7 +48,9 @@ export default function ProductRow({ product, setProducts }) {
   };
 
   return (
-    <tr className="border-b border-gray-200 last:border-b-0">
+    <tr
+      className={`border-b border-gray-200 last:border-b-0 ${index % 2 === 0 && "bg-gray-50"}`}
+    >
       <td className="px-2.5 py-2">
         <div className="flex items-center gap-2.5">
           <Link>

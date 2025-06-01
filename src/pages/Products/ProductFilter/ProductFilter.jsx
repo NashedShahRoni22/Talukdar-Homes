@@ -31,7 +31,7 @@ export default function ProductFilter({
   );
 
   // set width of the range to decrease from the left side
-  useEffect(() => {
+  /* useEffect(() => {
     const minPercent = getPercent(minVal);
     const maxPercent = getPercent(maxValRef.current);
 
@@ -39,31 +39,31 @@ export default function ProductFilter({
       range.current.style.left = `${minPercent}%`;
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
-  }, [minVal, getPercent]);
+  }, [minVal, getPercent]); */
 
   // set the width of the range to decrease from right side
-  useEffect(() => {
+  /* useEffect(() => {
     const minPercent = getPercent(minValRef.current);
     const maxPercent = getPercent(maxVal);
 
     if (range.current) {
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
-  }, [maxVal, getPercent]);
+  }, [maxVal, getPercent]); */
 
   // Get min and max values when their state changes
-  useEffect(() => {
+  /* useEffect(() => {
     if (minVal != minValRef.current || maxVal != maxValRef.current) {
       onChange({ min: minVal, max: maxVal });
       minValRef.current = minVal;
       maxValRef.current = maxVal;
     }
-  }, [minVal, maxVal, onChange]);
+  }, [minVal, maxVal, onChange]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     setMinVal(currentMin >= min ? currentMin : min);
     setMaxVal(currentMax <= max ? currentMax : max);
-  }, [min, max, currentMin, currentMax]);
+  }, [min, max, currentMin, currentMax]); */
 
   return (
     <div
@@ -80,10 +80,9 @@ export default function ProductFilter({
       </div>
 
       {/* pricing */}
-      <div className="rounded border border-gray-200 bg-white px-1 py-3">
+      {/* <div className="rounded border border-gray-200 bg-white px-1 py-3">
         <h4 className="px-1 font-medium text-gray-800">Price Range</h4>
         <div className="mt-2 flex w-full flex-col items-center justify-center pb-3">
-          {/* Display Price Value */}
           <div className="flex w-full items-center justify-between gap-x-5 px-1">
             <p className="text-sm font-medium text-gray-800">
               {currencyText}
@@ -98,7 +97,6 @@ export default function ProductFilter({
             </p>
           </div>
 
-          {/* Style the price range slider */}
           <div
             className="multi-slide-input-container mt-2 md:!w-[165px]"
             style={{ width }}
@@ -149,7 +147,7 @@ export default function ProductFilter({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* category */}
       <div className="rounded border border-gray-200 bg-white px-1 py-3">

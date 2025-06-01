@@ -22,10 +22,10 @@ const metrics = [
 ];
 
 const quickLinks = [
-  { label: "Add Product", href: "/admin/products/new" },
-  { label: "Add Blog Post", href: "/admin/blogs/new" },
+  { label: "Add Product", href: "/admin/add-product" },
+  { label: "Add Blog Post", href: "/admin/add-blog" },
   { label: "Manage Orders", href: "/admin/orders" },
-  { label: "View Messages", href: "/admin/messages" },
+  { label: "View Messages", href: "/admin/contacts" },
 ];
 
 export default function Dashboard() {

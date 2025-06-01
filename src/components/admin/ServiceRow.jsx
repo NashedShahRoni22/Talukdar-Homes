@@ -5,7 +5,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../Providers/AuthProvider";
 
-export default function ServiceRow({ service, setServices }) {
+export default function ServiceRow({ index, service, setServices }) {
   const { id, thumbnail, title, slug } = service;
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function ServiceRow({ service, setServices }) {
           headers: {
             Authorization: `Bearer ${user?.token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -38,7 +38,9 @@ export default function ServiceRow({ service, setServices }) {
   };
 
   return (
-    <tr className="border-b border-gray-200 last:border-b-0">
+    <tr
+      className={`border-b border-gray-200 last:border-b-0 ${index % 2 === 0 && "bg-gray-50"}`}
+    >
       <td className="px-2.5 py-2">
         <div className="flex items-center gap-2.5">
           <Link>

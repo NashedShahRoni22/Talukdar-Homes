@@ -130,58 +130,66 @@ const Leftbar = ({ setShow }) => {
           className="mx-auto h-10 object-cover"
         />
       </Link>
-      {menus.map((m, i) => (
-        <div key={i} className="px-5">
-          {m?.childs?.length === 0 ? (
-            <Link
-              to={m.link}
-              onClick={() => setShow(false)}
-              className="flex min-w-full items-center gap-2.5 p-2.5 text-center text-sm font-semibold md:text-left"
-            >
-              <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
-                {m.icon}
-              </span>
-              {m.name}
-            </Link>
-          ) : (
-            <>
-              <button
-                onClick={() =>
-                  setShowChild({ state: !showChild.state, id: m.id })
-                }
-                className="flex min-w-full items-center justify-between p-2.5 text-center text-sm font-semibold md:text-left"
+
+      <div className="flex-1">
+        {menus.map((m, i) => (
+          <div key={i} className="px-5">
+            {m?.childs?.length === 0 ? (
+              <Link
+                to={m.link}
+                onClick={() => setShow(false)}
+                className="flex min-w-full items-center gap-2.5 p-2.5 text-center text-sm font-semibold md:text-left"
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
-                    {m.icon}
-                  </span>
-                  {m.name}
-                </div>
-                {showChild.state && showChild.id === m.id ? (
-                  <BiChevronUpSquare className="text-xl text-primary" />
-                ) : (
-                  <BiChevronDownSquare className="text-xl text-primary" />
+                <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
+                  {m.icon}
+                </span>
+                {m.name}
+              </Link>
+            ) : (
+              <>
+                <button
+                  onClick={() =>
+                    setShowChild({ state: !showChild.state, id: m.id })
+                  }
+                  className="flex min-w-full items-center justify-between p-2.5 text-center text-sm font-semibold md:text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="rounded-full bg-orange-50 p-2 text-primary shadow">
+                      {m.icon}
+                    </span>
+                    {m.name}
+                  </div>
+                  {showChild.state && showChild.id === m.id ? (
+                    <BiChevronUpSquare className="text-xl text-primary" />
+                  ) : (
+                    <BiChevronDownSquare className="text-xl text-primary" />
+                  )}
+                </button>
+                {showChild.state && showChild.id === m.id && (
+                  <div className="ml-8 flex flex-col gap-2.5">
+                    {m.childs &&
+                      m.childs.map((mc, i) => (
+                        <Link
+                          key={i}
+                          to={mc.link}
+                          className="flex gap-2 text-sm"
+                        >
+                          <MdOutlineSubdirectoryArrowRight className="text-primary" />
+                          {mc.name}
+                        </Link>
+                      ))}
+                  </div>
                 )}
-              </button>
-              {showChild.state && showChild.id === m.id && (
-                <div className="ml-8 flex flex-col gap-2.5">
-                  {m.childs &&
-                    m.childs.map((mc, i) => (
-                      <Link key={i} to={mc.link} className="flex gap-2 text-sm">
-                        <MdOutlineSubdirectoryArrowRight className="text-primary" />
-                        {mc.name}
-                      </Link>
-                    ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      ))}
-      <div className="absolute bottom-4 flex min-w-full justify-center">
+              </>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex min-w-full justify-center pb-4">
         <button
           onClick={handleLogout}
-          className="flex w-fit items-center gap-2 rounded bg-red-500 px-4 py-2 text-sm text-white shadow"
+          className="flex w-fit items-center gap-2 rounded border border-orange-300 px-4 py-2 text-sm text-primary transition-all duration-200 ease-linear hover:bg-primary hover:text-white active:scale-95"
         >
           <GoSignOut className="text-xl" /> Log Out
         </button>

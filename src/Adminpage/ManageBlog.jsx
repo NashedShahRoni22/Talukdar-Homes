@@ -20,28 +20,33 @@ const ManageBlog = () => {
   }, []);
 
   return (
-    <section className="mt-5 md:mt-0 md:p-5 lg:p-10">
+    <section className="p-5">
       {loading ? (
         <LoaderPage />
       ) : (
         <>
-          <h5 className="px-5 py-2.5 text-xl font-semibold text-orange-500">
-            Total Blogs: {blogs?.length || 0}
-          </h5>
+          <h1 className="text-3xl font-bold text-gray-800">Manage Blogs</h1>
           {blogs && blogs.length > 0 ? (
-            <table className="w-full overflow-x-auto">
-              <thead className="bg-orange-50">
-                <tr>
-                  <th className="px-2.5 py-2">Title</th>
-                  <th className="px-2.5 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {blogs.map((blog) => (
-                  <BlogRow key={blog.id} blog={blog} setBlogs={setBlogs} />
-                ))}
-              </tbody>
-            </table>
+            <div className="mt-4 overflow-x-auto rounded border border-gray-200 p-6">
+              <table className="w-full border-collapse">
+                <thead className="border-b border-gray-200 text-gray-900">
+                  <tr>
+                    <th className="px-2.5 py-2 text-left">Title</th>
+                    <th className="px-2.5 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {blogs.map((blog, i) => (
+                    <BlogRow
+                      key={blog.id}
+                      index={i}
+                      blog={blog}
+                      setBlogs={setBlogs}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <p className="px-5 text-xl font-semibold">No Blogs added yet!</p>
           )}
