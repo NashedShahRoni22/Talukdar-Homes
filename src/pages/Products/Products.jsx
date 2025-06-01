@@ -14,7 +14,7 @@ export default function Products() {
   const params = new URLSearchParams(searchParams.toString());
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState({ initial: false, filter: false });
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
   const [products, setProducts] = useState([]);
   const [nextProducts, setNextProducts] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -49,7 +49,7 @@ export default function Products() {
       }
       setSearchParams(params);
     }, 300),
-    [searchParams],
+    [searchParams]
   );
 
   // add filtering search params in url
@@ -57,6 +57,7 @@ export default function Products() {
     const { name, value, type, id, checked } = e.target;
 
     if (name === "category") {
+      params.delete("page");
       if (checked) {
         params.set(name, value);
         params.delete("subcategory");
@@ -65,7 +66,7 @@ export default function Products() {
         setSubCategories(
           selectedCategory?.children?.length > 0
             ? selectedCategory?.children
-            : [],
+            : []
         );
       } else {
         params.delete("category");
@@ -94,7 +95,7 @@ export default function Products() {
         }
         params.set(
           "price",
-          `${absolutePriceRange.min},${absolutePriceRange.max}`,
+          `${absolutePriceRange.min},${absolutePriceRange.max}`
         );
       } else if (value === "price_desc") {
         const existingOrder = searchParams.get("order");
@@ -105,7 +106,7 @@ export default function Products() {
         }
         params.set(
           "price",
-          `${absolutePriceRange.max},${absolutePriceRange.min}`,
+          `${absolutePriceRange.max},${absolutePriceRange.min}`
         );
       } else if (value === "asc" || value === "desc") {
         params.set("order", value);
@@ -118,6 +119,7 @@ export default function Products() {
 
     // Handle other input types
     if (type !== "checkbox" && name !== "order") {
+      params.delete("page");
       if (value === "") {
         params.delete(name);
       } else {
@@ -144,7 +146,7 @@ export default function Products() {
         ]);
 
         if (prodData.status === true) {
-          setData(prodData.data);
+          // setData(prodData.data);
         }
 
         if (catData.status === true) {
@@ -174,14 +176,14 @@ export default function Products() {
     params.delete("subcategory");
 
     fetch(
-      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`,
+      `https://api.talukderhomes.com.au/api/products${params && `?${params.toString()}`}`
     )
       .then((res) => res.json())
       .then((data) => {
         if (data.status === true) {
           const max = getMaxPrice(data.data.data);
-          setNextProducts(data.data.data);
-          setData(data.data);
+          setNextProducts(data.data);
+          // setData(data.data);
           setAbsolutePriceRange({ min: 0, max });
 
           const priceParam = searchParams.get("price");
@@ -193,6 +195,7 @@ export default function Products() {
       });
   }, [searchParams]);
 
+  // stale product update
   useEffect(() => {
     if (!loading.filter && nextProducts !== null) {
       setProducts(nextProducts);
@@ -216,6 +219,25 @@ export default function Products() {
       setSortValue(orderParam || "");
     }
   }, [searchParams]);
+
+  // render sub-category list if page reload when category params are available in the query parameter
+  useEffect(() => {
+    const selectedCategorySlug = searchParams.get("category");
+
+    if (selectedCategorySlug && categories.length > 0) {
+      const selectedCategory = categories.find(
+        (cat) => cat.slug === selectedCategorySlug
+      );
+
+      if (selectedCategory?.children?.length > 0) {
+        setSubCategories(selectedCategory.children);
+      } else {
+        setSubCategories([]);
+      }
+    } else {
+      setSubCategories([]);
+    }
+  }, [searchParams, categories]);
 
   // set price range values from URL params
   /* useEffect(() => {
@@ -284,19 +306,19 @@ export default function Products() {
 
           {/* filtered product loading indicator */}
           <div className="mt-4">
-            {loading.filter && products.length === 0 && (
+            {loading.filter && products?.data?.length === 0 && (
               <div className="flex items-center justify-center">
                 <Spinner className="h-7 w-7" />
               </div>
             )}
 
-            {products.length > 0 && (
+            {products?.data?.length > 0 && (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
-                <ProductCards products={products} />
+                <ProductCards products={products?.data} />
               </div>
             )}
 
-            {!loading.filter && products.length === 0 && (
+            {!loading.filter && products?.data?.length === 0 && (
               <div>
                 <p className="text-center text-lg font-semibold text-gray-700">
                   No products found
@@ -308,7 +330,7 @@ export default function Products() {
             )}
 
             {/* pagination buttons */}
-            <Pagination data={data} />
+            <Pagination data={products} />
           </div>
         </div>
       </div>
