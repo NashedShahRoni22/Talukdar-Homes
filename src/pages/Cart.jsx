@@ -68,13 +68,16 @@ export default function Cart() {
   if (!carts?.length > 0) {
     return (
       <div className="mx-5 flex min-h-[calc(100vh-80px)] flex-col items-center justify-center py-5 text-center text-gray-600 md:container md:mx-auto md:py-10">
-        <BsCartX className="mx-auto text-[40px] text-[#ff5722]" />
-        <p className="mt-4 text-xl font-semibold">No items added yet!</p>
+        <BsCartX className="text-[40px] text-[#ff5722]" />
+        <p className="mt-4 text-xl font-semibold">Your cart is empty</p>
+        <p className="mt-2 text-sm">
+          Looks like you haven’t added anything yet.
+        </p>
         <Link
           to="/products"
-          className="mt-2 w-fit rounded bg-primary px-4 py-2 text-center text-sm font-medium text-white transition-all duration-200 ease-in-out hover:bg-primary-hover"
+          className="mt-4 w-fit rounded border border-primary px-4 py-2 text-sm font-medium text-primary transition-all duration-200 ease-in-out hover:bg-primary hover:text-white"
         >
-          Add Your First Item
+          Browse Products
         </Link>
       </div>
     );

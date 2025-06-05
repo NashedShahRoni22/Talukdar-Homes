@@ -1,6 +1,5 @@
-import React from "react";
-import { MdOutlineArrowOutward } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { MdOutlineArrowOutward } from "react-icons/md";
 
 export default function WhatWeBuild() {
   const data = [
@@ -231,7 +230,7 @@ export default function WhatWeBuild() {
         </svg>
       ),
       title: "Residential",
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum ipsam eius totam molestiae temporibus accusantium voluptatum. Perspiciatisqui perferendis dolor dicta commodi aperiam, cum optio blanditiiseos quasi asperiores numquam, eum aliquam pariatur, fugiat liberoitaque rerum inventore hic rem ad id sed. Eos eum eius repellendusnemo nisi maxime.",
+      desc: "We build homes that last—combining quality materials and modern design to create comfortable, durable living spaces for families.",
     },
     {
       icon: (
@@ -392,7 +391,7 @@ export default function WhatWeBuild() {
         </svg>
       ),
       title: "Industrial",
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum ipsam eius totam molestiae temporibus accusantium voluptatum. Perspiciatisqui perferendis dolor dicta commodi aperiam, cum optio blanditiiseos quasi asperiores numquam, eum aliquam pariatur, fugiat liberoitaque rerum inventore hic rem ad id sed. Eos eum eius repellendusnemo nisi maxime.",
+      desc: "From warehouses to factories, we deliver robust, large-scale infrastructure built to meet heavy-duty operational demands.",
     },
     {
       icon: (
@@ -532,9 +531,10 @@ export default function WhatWeBuild() {
         </svg>
       ),
       title: "Comercial",
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum ipsam eius totam molestiae temporibus accusantium voluptatum. Perspiciatisqui perferendis dolor dicta commodi aperiam, cum optio blanditiiseos quasi asperiores numquam, eum aliquam pariatur, fugiat liberoitaque rerum inventore hic rem ad id sed. Eos eum eius repellendusnemo nisi maxime.",
+      desc: "Our commercial projects range from retail outlets to office complexes—engineered for functionality, efficiency, and style.",
     },
   ];
+
   return (
     <section className="mx-5 my-5 py-5 md:container md:mx-auto md:my-10 md:py-10">
       <div className="flex flex-col gap-5 md:flex-row md:items-center md:gap-10">
@@ -560,7 +560,7 @@ export default function WhatWeBuild() {
             <p className="text-xl font-semibold group-hover:text-primary md:text-3xl">
               {d.title}
             </p>
-            <p className="text-gray-600">{d.desc.slice(0, 150)}</p>
+            <p className="flex-1 text-gray-600">{d.desc.slice(0, 150)}</p>
             <Link
               to={"/services"}
               className="group mt-5 flex w-fit items-center gap-2 rounded border bg-black px-5 py-2 text-white shadow duration-300 ease-linear hover:border-primary hover:bg-white hover:text-black hover:shadow-xl"

@@ -6,6 +6,7 @@ import aboutimg from "../../assets/about.jpg";
 import about1 from "../../assets/about1.jpg";
 import about2 from "../../assets/about2.jpg";
 import { Link } from "react-router-dom";
+
 export default function About() {
   const [view, setView] = useState(1);
   const vision = {
@@ -22,14 +23,14 @@ export default function About() {
   };
   const values = {
     title: "Integrated building design for enhanced efficiency",
-    desc: "Across this diversity, one thing all our clients share is the trust theyput in us tomanage and deliver construction projects of the highest quality it is what we have built ourreputation on.",
+    desc: "Our values drive every project we undertake—from choosing sustainable materials to ensuring clear communication and uncompromising quality. We believe in building smarter, safer, and more responsibly.",
     list: [
-      "Building inch by inch",
-      "Building to last",
-      "Building for the future",
-      "Building with trust",
-      "Building together",
-      "Building safely",
+      "Integrity in every process",
+      "Sustainable material choices",
+      "Client-first collaboration",
+      "Innovation through design",
+      "Efficiency at every stage",
+      "Excellence in execution",
     ],
   };
   return (

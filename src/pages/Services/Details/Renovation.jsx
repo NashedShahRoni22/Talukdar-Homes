@@ -21,113 +21,116 @@ export default function Renovation() {
     thumnail: renovation,
     slug: "renovation",
     title:
-      "We offer commitment at all levels of building project, from renovation to management services.",
-    desc: "Across this diversity, one thing all our clients share is the trust they put in us to manage and deliver renovation projects of the highest quality, on time and on budget – it’s what we’ve built our reputation on.",
-    addonsDesc: "From concept and building design to project and renovation management, our flexible, multi-skilled team provides comprehensive, innovative, forward-thinking solutions. And as your renovation partner, our services can even extend to helping you acquire and develop land to deliver one streamlined package of work, eliminating the headache of extra administrative steps",
+      "Tailored renovation services—from interior upgrades to complete structural transformation.",
+    desc: "Whether restoring heritage properties or modernizing commercial spaces, our clients trust us to deliver renovations of exceptional quality—on time, within budget, and with minimal disruption. Our reputation is built on attention to detail and long-lasting results.",
+    addonsDesc:
+      "From interior design and structural changes to complete project management, our agile, multi-disciplinary team delivers end-to-end renovation solutions. We work closely with clients to modernize existing spaces while preserving character, adding value, and improving functionality.",
+
     features: {
-      title:
-        "No matter the challenge, we build on what we know works and elevate your vision of success",
+      title: "Reimagine your space with smart, seamless renovation strategies",
       details: [
         {
-          topic: "Quality & Reliable",
-          desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+          topic: "Customized Renovation Planning",
+          desc: "We create tailored plans that respect the integrity of the space while achieving modern goals—no two projects are alike.",
         },
         {
-          topic: "Quality & Reliable",
-          desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+          topic: "Minimal Disruption Execution",
+          desc: "Our renovation workflow is optimized to ensure the least interference with your ongoing operations or home life.",
         },
         {
-          topic: "Quality & Reliable",
-          desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+          topic: "Adaptive Structural Modifications",
+          desc: "We evaluate load-bearing structures, plumbing, and electrical systems to enable safe and efficient upgrades.",
         },
         {
-          topic: "Quality & Reliable",
-          desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+          topic: "Style Meets Functionality",
+          desc: "Our design-first approach ensures that every renovated element is both visually impressive and practically effective.",
         },
       ],
     },
 
     benifits: {
-      title:
-        "No matter the challenge, we build on what we know works and elevate your vision of success",
+      title: "Why choose us for your renovation journey?",
       details: [
         {
-          topic: "Building the future powered by innovation",
+          topic: "Modern upgrades that respect original design",
         },
         {
-          topic: "Building the future powered by innovation",
+          topic: "Increased property value and energy efficiency",
         },
         {
-          topic: "Building the future powered by innovation",
+          topic: "Expert handling of permits, codes, and compliance",
         },
         {
-          topic: "Building the future powered by innovation",
+          topic: "Trusted craftsmanship with decades of expertise",
         },
       ],
     },
+
     faqs: [
       {
-        topic: "Quality & Reliable",
-        desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+        topic: "Do you handle both residential and commercial renovations?",
+        desc: "Yes. We specialize in both sectors, from luxury apartment updates to full-scale commercial space redesigns.",
       },
       {
-        topic: "Quality & Reliable",
-        desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+        topic: "Can renovations be done in occupied buildings?",
+        desc: "Absolutely. We plan renovations in phases to minimize impact and ensure safety for occupants during the process.",
       },
       {
-        topic: "Quality & Reliable",
-        desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+        topic: "Do you assist with design and material selection?",
+        desc: "Yes. Our in-house designers help choose finishes, fixtures, and layouts that align with your vision and budget.",
       },
       {
-        topic: "Quality & Reliable",
-        desc: "Focusing on medium to large-scale commercial renovation projects, we work with both investors and developers to create landmarks that make an impact.",
+        topic: "How do you manage unexpected issues during renovation?",
+        desc: "We conduct thorough pre-renovation assessments and maintain transparent communication if any structural or logistical challenges arise.",
       },
     ],
   };
 
   return (
-    <section className="mx-5 md:container lg:w-1/2 md:mx-auto my-5 md:my-10 flex flex-col gap-8 md:gap-16">
+    <section className="mx-5 my-5 flex flex-col gap-8 md:container md:mx-auto md:my-10 md:gap-16 lg:w-1/2">
       <div>
         <div className="relative">
           <img
             src={data.thumnail}
             alt="cover_photo_of_service"
-            className="lg:h-[50vh] w-full"
+            className="w-full lg:h-[50vh]"
           />
-          <div className="absolute top-0 left-0 h-full w-full bg-black/70 flex justify-center items-center">
-            <p className="text-2xl md:text-4xl lg:text-6xl font-extrabold uppercase text-white">{data.slug}</p>
+          <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/70">
+            <p className="text-2xl font-extrabold uppercase text-white md:text-4xl lg:text-6xl">
+              {data.slug}
+            </p>
           </div>
         </div>
-        <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold my-2.5 md:my-5">
+        <h1 className="my-2.5 text-xl font-extrabold md:my-5 md:text-2xl lg:text-3xl">
           {data.title}
         </h1>
         <p>{data.desc}</p>
         <p className="mt-2.5 md:mt-5">{data.addonsDesc}</p>
       </div>
-      <ul className="grid md:grid-cols-2 gap-5">
+      <ul className="grid gap-5 md:grid-cols-2">
         {data.features.details.map((fd, i) => (
           <li key={i} className="flex flex-col gap-2.5">
-            <span className="text-primary md:text-xl font-bold">0{i + 1}.</span>
-            <h5 className="md:text-xl font-semibold">{fd.topic}</h5>
+            <span className="font-bold text-primary md:text-xl">0{i + 1}.</span>
+            <h5 className="font-semibold md:text-xl">{fd.topic}</h5>
             <p className="text-sm md:text-base">{fd.desc}</p>{" "}
           </li>
         ))}
       </ul>
       <div>
-        <p className="text-xl md:text-2xl lg:text-3xl font-extrabold">
+        <p className="text-xl font-extrabold md:text-2xl lg:text-3xl">
           {data.benifits.title}
         </p>
-        <ul className="grid md:grid-cols-2 gap-5 mt-5 md:mt-10">
+        <ul className="mt-5 grid gap-5 md:mt-10 md:grid-cols-2">
           {data.benifits.details.map((bd, i) => (
-            <li key={i} className="flex gap-2 items-center">
-              <BsCheckCircleFill className="text-xl md:text-3xl text-primary" />
+            <li key={i} className="flex items-center gap-2">
+              <BsCheckCircleFill className="text-xl text-primary md:text-3xl" />
               {bd.topic}
             </li>
           ))}
         </ul>
       </div>
       <div>
-        <p className="text-xl md:text-2xl lg:text-3xl font-extrabold">
+        <p className="text-xl font-extrabold md:text-2xl lg:text-3xl">
           Frequently asked questions
         </p>
         <div className="mt-2.5 md:mt-5">

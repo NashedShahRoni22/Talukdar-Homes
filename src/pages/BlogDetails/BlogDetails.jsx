@@ -30,8 +30,6 @@ export default function BlogDetails() {
     return <LoaderPage />;
   }
 
-  console.log(blog);
-
   return (
     <section className="mx-5 py-10 md:container md:mx-auto md:py-20">
       <div className="mx-auto max-w-4xl">

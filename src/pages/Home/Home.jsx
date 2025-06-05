@@ -1,4 +1,3 @@
-import React from "react";
 import LandingBanner from "./LandingBanner";
 import Contact from "../Contact";
 import KeywordsMerque from "./KeywordsMerque";
