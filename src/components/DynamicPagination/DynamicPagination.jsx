@@ -29,7 +29,7 @@ export default function DynamicPagination({ data, url }) {
               ? `${url}?page=${data?.current_page - 1}`
               : ""
           }
-          className={`rounded border px-3 py-1 transition-all duration-200 ease-in-out ${data?.current_page > 1 ? "cursor-pointer bg-primary text-white hover:bg-primary-hover" : "cursor-default"}`}
+          className={`rounded border px-3 py-1 transition-all duration-200 ease-in-out min-w-[88px] text-center ${data?.current_page > 1 ? "cursor-pointer bg-primary text-white hover:bg-primary-hover" : "cursor-default bg-secondary text-gray-500"}`}
         >
           Previous
         </Link>
@@ -40,10 +40,10 @@ export default function DynamicPagination({ data, url }) {
               ? `${url}?page=${data?.current_page + 1}`
               : `${url}?page=${data?.current_page}`
           }
-          className={`rounded border px-3 py-1 transition-all duration-200 ease-in-out ${
+          className={`rounded border px-3 py-1 transition-all duration-200 ease-in-out min-w-[88px] text-center ${
             data?.current_page < data?.last_page
               ? "cursor-pointer bg-primary text-white hover:bg-primary-hover"
-              : "cursor-pointer hover:bg-[#FFE4D6]"
+              : "cursor-default bg-secondary text-gray-500"
           }`}
         >
           Next

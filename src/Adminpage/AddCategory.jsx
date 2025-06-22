@@ -195,10 +195,7 @@ export default function AddCategory() {
       </div>
       <div className="mt-5 grid grid-cols-2 gap-5 lg:grid-cols-3">
         {categories.map((c, i) => (
-          <div
-            key={i}
-            className="relative h-[350px] overflow-y-auto rounded shadow"
-          >
+          <div key={i} className="relative rounded shadow">
             <div className="flex items-center justify-between bg-primary p-2.5 text-white">
               {editingParentId === c?.id ? (
                 <div className="flex w-full items-center gap-1">
@@ -259,7 +256,7 @@ export default function AddCategory() {
             </div>
 
             {/* Child Categories List */}
-            <ul className="list-disc text-sm">
+            <ul className="list-disc h-[350px] overflow-y-auto text-sm">
               {c?.children?.map((cc, k) => (
                 <li
                   key={k}
@@ -355,7 +352,7 @@ export default function AddCategory() {
               </div>
             ) : (
               <button
-                className="absolute bottom-0 left-0 flex w-full items-center justify-center gap-2 bg-primary py-1.5 text-sm font-semibold text-white"
+                className="flex w-full items-center justify-center gap-2 bg-primary py-1.5 text-sm font-semibold text-white"
                 onClick={() => setParentId(c?.id)}
               >
                 <BiPlus className="text-2xl" />
