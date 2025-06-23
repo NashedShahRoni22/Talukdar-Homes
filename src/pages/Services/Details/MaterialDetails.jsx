@@ -13,6 +13,7 @@ import { AiOutlineThunderbolt } from "react-icons/ai";
 import LoaderPage from "../../../Adminpage/LoaderPage";
 import { CartContext } from "../../../Providers/CartProvider";
 import { AuthContext } from "../../../Providers/AuthProvider";
+import SimilarProducts from "../../Products/SimilarProducts/SimilarProducts";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const ProductDetails = () => {
   const [selectedAttribute, setSelectedAttribute] = useState("");
 
   // destructure product info
-  const { id, title, thumbnail, price, attributes } = service;
+  const { id, title, thumbnail, price, attributes, category } = service;
 
   // newly updated product info to save in cart
   const productCartInfo = {
@@ -53,7 +54,7 @@ const ProductDetails = () => {
           // Automatically select the lowest priced attribute (if any)
           if (data?.data?.attributes?.length > 0) {
             const lowestPriceAttr = [...data.data.attributes].sort(
-              (a, b) => parseFloat(a.price) - parseFloat(b.price),
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
             )[0];
             setSelectedAttribute(lowestPriceAttr);
           }
@@ -214,6 +215,9 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Similar Products */}
+      <SimilarProducts categorySlug={category?.slug} />
 
       <Dialog
         open={open}

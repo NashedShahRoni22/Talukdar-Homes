@@ -54,10 +54,11 @@ export default function Products() {
 
   // add filtering search params in url
   const handleSearchParams = (e) => {
+    params.delete("page");
+
     const { name, value, type, id, checked } = e.target;
 
     if (name === "category") {
-      params.delete("page");
       if (checked) {
         params.set(name, value);
         params.delete("subcategory");
