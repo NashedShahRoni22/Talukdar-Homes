@@ -56,12 +56,12 @@ export default function Orders() {
               <thead className="border-b border-gray-200 text-left text-gray-900">
                 <tr>
                   <th className="p-3">Invoice ID</th>
-                  <th className="p-3">Date</th>
+                  <th className="p-3">Ordered At</th>
                   <th className="p-3">Email</th>
-                  <th className="p-3">Payment</th>
+                  <th className="p-3">Payment Status</th>
                   <th className="p-3">Amount</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Details</th>
+                  <th className="p-3">Order Status</th>
+                  <th className="p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>

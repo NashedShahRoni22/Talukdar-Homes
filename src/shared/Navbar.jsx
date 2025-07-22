@@ -103,14 +103,7 @@ export default function Navbar() {
           </button>
           {show && (
             <div className="fixed left-0 top-0 min-h-screen min-w-[300px] rounded bg-white p-5 shadow md:min-w-[500px]">
-              <div className="flex items-center justify-between">
-                <Link to="/">
-                  <img
-                    src={logo}
-                    alt="talukdar homes logo"
-                    className="h-12 w-[140px] object-cover"
-                  />
-                </Link>
+              <div className="flex items-center justify-end">
                 <button onClick={() => setShow(!show)}>
                   <IoMdClose className="text-2xl md:text-4xl" />
                 </button>

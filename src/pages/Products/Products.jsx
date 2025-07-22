@@ -314,7 +314,7 @@ export default function Products() {
             )}
 
             {products?.data?.length > 0 && (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 md:gap-10 xl:grid-cols-4">
                 <ProductCards products={products?.data} />
               </div>
             )}

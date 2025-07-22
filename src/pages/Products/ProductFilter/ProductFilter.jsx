@@ -27,7 +27,7 @@ export default function ProductFilter({
   // convert to percentage
   const getPercent = useCallback(
     (value) => Math.round(((value - min) / (max - min)) * 100),
-    [min, max],
+    [min, max]
   );
 
   // set width of the range to decrease from the left side
@@ -67,7 +67,7 @@ export default function ProductFilter({
 
   return (
     <div
-      className={`fixed right-0 top-0 z-50 flex h-[calc(100vh-0px)] w-full min-w-64 max-w-64 flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 transition-transform duration-200 ease-linear md:relative md:top-0 md:h-fit md:min-w-[207px] md:max-w-[207px] ${showFilter ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"}`}
+      className={`fixed right-0 top-0 z-50 flex h-[calc(100vh-0px)] w-full min-w-64 max-w-64 flex-col gap-4 overflow-y-auto rounded border border-gray-200 bg-gray-50 p-3 transition-transform duration-200 ease-linear md:relative md:top-0 md:h-fit ${showFilter ? "translate-x-0" : "translate-x-[100%] md:translate-x-0"}`}
     >
       {/* mobile filter menu close button */}
       <div className="md:hidden">

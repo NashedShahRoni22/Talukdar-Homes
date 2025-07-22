@@ -329,7 +329,7 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 md:p-4 md:rounded-md md:bg-gray-50">
+          <div className="w-full md:w-1/2 h-fit md:p-4 md:rounded-md md:bg-gray-50">
             <h2 className="text-center text-2xl font-medium md:text-left">
               Your Order
             </h2>
