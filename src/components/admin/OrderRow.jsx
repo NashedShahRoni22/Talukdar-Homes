@@ -49,7 +49,7 @@ export default function OrderRow({
               ${formatPrice(totalPrice)}
             </td>
             <td rowSpan={itemCount} className="p-3 text-sm text-gray-700">
-              {order?.gateway?.status === "1" ? "Paid" : "Unpaid"}
+              {order?.gateway?.status === 1 ? "Paid" : "Unpaid"}
             </td>
             <td rowSpan={itemCount} className="p-3 text-sm text-gray-700">
               <button

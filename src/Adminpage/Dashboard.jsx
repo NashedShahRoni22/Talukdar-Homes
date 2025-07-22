@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   FaCalendarAlt,
   FaComments,
@@ -9,11 +9,16 @@ import {
   FaPenNib,
   FaLink,
 } from "react-icons/fa";
+import { AuthContext } from "../Providers/AuthProvider";
 import { getApi } from "../api/getApi";
+import OrderDetailsModal from "../components/admin/OrderDetailsModal";
+import { formatDate } from "../utils/formatDate";
+import { formatPrice } from "../utils/formatPrice";
+import { AiFillEye } from "react-icons/ai";
 
 const metrics = [
   { label: "Appointments", key: "appointments", icon: FaCalendarAlt },
-  { label: "Messages", key: "messages", icon: FaComments },
+  { label: "Messages", key: "contacts", icon: FaComments },
   { label: "Customers", key: "customers", icon: FaUsers },
   { label: "Orders", key: "orders", icon: FaBoxOpen },
   { label: "Products", key: "products", icon: FaShoppingBag },
@@ -29,15 +34,27 @@ const quickLinks = [
 ];
 
 export default function Dashboard() {
+  const { user } = useContext(AuthContext);
   const [dashboardData, setDashboardData] = useState({
-    appointments: [],
-    messages: [],
-    customers: [],
-    orders: [],
-    products: [],
-    services: [],
-    blogs: [],
+    appointments: 0,
+    messages: 0,
+    customers: 0,
+    orders: 0,
+    products: 0,
+    services: 0,
+    blogs: 0,
   });
+  const [orders, setOrders] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const toggleModal = () => setShowModal((prev) => !prev);
+
+  const handleOpen = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
 
   const formateDate = (created_at) => {
     const date = new Date(created_at);
@@ -58,40 +75,41 @@ export default function Dashboard() {
 
   // get all data
   useEffect(() => {
-    const fetchAllData = async () => {
-      const apiCalls = [
-        getApi("https://api.talukderhomes.com.au/api/appointments"),
-        getApi("https://api.talukderhomes.com.au/api/contacts"),
-        // getApi("https://api.example.com/customers"),
-        // getApi("https://api.example.com/orders", { Authorization: `Bearer ${token}` }),
-        getApi("https://api.talukderhomes.com.au/api/products"),
-        getApi("https://api.talukderhomes.com.au/api/services"),
-        getApi("https://api.talukderhomes.com.au/api/blogs"),
-      ];
+    const fetchData = async () => {
+      const headers = {
+        Authorization: `Bearer ${user?.token}`,
+      };
 
-      const [
-        appointments,
-        messages,
-        customers,
-        orders,
-        products,
-        services,
-        blogs,
-      ] = await Promise.all(apiCalls);
+      try {
+        const [dashboardRes, ordersRes, appointmentsRes] = await Promise.all([
+          getApi("https://api.talukderhomes.com.au/api/dashboard", headers),
+          getApi(
+            "https://api.talukderhomes.com.au/api/purchase-histories",
+            headers
+          ),
+          getApi("https://api.talukderhomes.com.au/api/appointments", headers),
+        ]);
 
-      setDashboardData({
-        appointments: appointments?.status ? appointments.data : [],
-        messages: messages?.status ? messages.data : [],
-        customers: [], // placeholder for future call
-        orders: [], // placeholder for future call
-        products: products?.status ? products.data : [],
-        services: services?.status ? services.data : [],
-        blogs: blogs?.status ? blogs.data : [],
-      });
+        if (dashboardRes?.status === true) {
+          setDashboardData(dashboardRes.data);
+        }
+
+        if (ordersRes?.status === true) {
+          setOrders(ordersRes?.data?.data); // optional: set state for orders
+        }
+
+        if (appointmentsRes?.status === true) {
+          setAppointments(appointmentsRes.data); // optional: set state for appointments
+        }
+      } catch (error) {
+        console.error("Error fetching multiple dashboard data:", error);
+      }
     };
 
-    fetchAllData();
-  }, []);
+    if (user?.token) {
+      fetchData();
+    }
+  }, [user?.token]);
 
   return (
     <div className="space-y-8 p-5">
@@ -111,7 +129,7 @@ export default function Dashboard() {
             <div>
               <p className="text-sm text-gray-500">{label}</p>
               <p className="text-xl font-bold text-gray-800">
-                {dashboardData[key]?.length ?? 0}
+                {dashboardData[key] ?? 0}
               </p>
             </div>
           </div>
@@ -125,8 +143,8 @@ export default function Dashboard() {
             Recent Appointments
           </h2>
           <ul className="text-sm">
-            {dashboardData?.appointments?.length > 0 &&
-              dashboardData?.appointments
+            {appointments?.length > 0 &&
+              appointments
                 ?.slice(0, 5)
                 ?.map(
                   ({
@@ -165,7 +183,7 @@ export default function Dashboard() {
                         <span>{email}</span>
                       </div>
                     </li>
-                  ),
+                  )
                 )}
           </ul>
         </div>
@@ -175,17 +193,37 @@ export default function Dashboard() {
           <h2 className="border-b bg-gray-50 px-4 py-2 text-lg font-semibold text-gray-900">
             Recent Orders
           </h2>
-          <ul className="text-sm text-gray-800">
-            <li className="border-b px-4 py-3 last:border-b-0 hover:bg-gray-50">
-              #1023 - Sarah - $120.00
-            </li>
-            <li className="border-b px-4 py-3 last:border-b-0 hover:bg-gray-50">
-              #1022 - Ahmed - $89.99
-            </li>
-            <li className="border-b px-4 py-3 last:border-b-0 hover:bg-gray-50">
-              #1021 - Emma - $45.50
-            </li>
+          <ul className="divide-y text-sm text-gray-700">
+            {orders?.slice(0, 5).map((order) => {
+              return (
+                <li
+                  key={order.id}
+                  onClick={() => handleOpen(order)}
+                  className="flex flex-wrap justify-between items-center gap-2 px-5 py-3 hover:bg-gray-50 transition-colors text-sm text-gray-700 border-b border-gray-200 cursor-pointer"
+                >
+                  <div className="w-full sm:w-auto font-medium text-gray-900">
+                    #{order?.invoice}
+                  </div>
+                  <div className="w-full sm:w-auto truncate">
+                    {order?.client?.email}
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    {order?.gateway?.status === 1 ? "Paid" : "Unpaid"}
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    {formatDate(order?.created_at)}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
+
+          {/* Order Modal */}
+          <OrderDetailsModal
+            open={showModal}
+            handleClose={toggleModal}
+            order={selectedOrder}
+          />
         </div>
 
         {/* Quick Links */}

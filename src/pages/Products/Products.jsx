@@ -94,10 +94,7 @@ export default function Products() {
         } else {
           params.delete("order");
         }
-        params.set(
-          "price",
-          `${absolutePriceRange.min},${absolutePriceRange.max}`
-        );
+        params.set("price", "low-to-high");
       } else if (value === "price_desc") {
         const existingOrder = searchParams.get("order");
         if (existingOrder === "asc" || existingOrder === "desc") {
@@ -105,10 +102,7 @@ export default function Products() {
         } else {
           params.delete("order");
         }
-        params.set(
-          "price",
-          `${absolutePriceRange.max},${absolutePriceRange.min}`
-        );
+        params.set("price", "high-to-low");
       } else if (value === "asc" || value === "desc") {
         params.set("order", value);
         params.delete("price");
@@ -209,15 +203,21 @@ export default function Products() {
     const orderParam = searchParams.get("order");
     const priceParam = searchParams.get("price");
 
-    if (priceParam && orderParam) {
-      const [min, max] = priceParam.split(",").map(Number);
-      if (Number(orderParam) === 0 || orderParam === "asc") {
-        setSortValue(min < max ? "price_asc" : "price_desc");
-      } else {
-        setSortValue("price_desc");
-      }
-    } else {
-      setSortValue(orderParam || "");
+    // Handle price-based sorting
+    if (priceParam === "low-to-high") {
+      setSortValue("price_asc");
+    } else if (priceParam === "high-to-low") {
+      setSortValue("price_desc");
+    }
+    // Handle alphabetical sorting
+    else if (orderParam === "asc") {
+      setSortValue("asc");
+    } else if (orderParam === "desc") {
+      setSortValue("desc");
+    }
+    // Default case
+    else {
+      setSortValue("");
     }
   }, [searchParams]);
 

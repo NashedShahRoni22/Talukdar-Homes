@@ -10,6 +10,8 @@ import {
 import { formatDateTime } from "../../utils/formatDateTime";
 
 const OrderDetailsModal = ({ open, handleClose, order }) => {
+  if (!order) return null;
+
   const {
     invoice,
     client,
