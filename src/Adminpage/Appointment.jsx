@@ -10,6 +10,7 @@ import {
 import { AiFillEye } from "react-icons/ai";
 import LoaderPage from "../Adminpage/LoaderPage";
 import { AuthContext } from "../Providers/AuthProvider";
+import toast from "react-hot-toast";
 const Appointment = () => {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
@@ -17,6 +18,7 @@ const Appointment = () => {
   const [appointments, setAppointments] = useState([]);
   const [singleAppointment, setSingleAppointment] = useState({});
   const TABLE_HEAD = ["Loan type", "Name", "Phone number", "Email", "View"];
+  const [confirmDeleteChecked, setConfirmDeleteChecked] = useState(false);
 
   const handleOpen = (data) => {
     setOpen(!open);
@@ -39,22 +41,35 @@ const Appointment = () => {
 
   //Delete Appointment
   const handaleDeleteAppointment = (oneAppointment) => {
-    const aggre = window.confirm(
-      `You want to delete, ${oneAppointment.first_name}. appointment for ${oneAppointment.service_name} ?`
-    );
-    if (aggre) {
+    if (confirmDeleteChecked) {
       fetch(
-        `https://api.talukderhomes.com.au/api/appointments/delete/${oneAppointment.id}`
+        `https://api.talukderhomes.com.au/api/appointments/delete/${oneAppointment.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
       )
-        .then((res) => res.json())
+        .then(async (res) => {
+          if (!res.ok) {
+            throw new Error("Server error occurred");
+          }
+          return res.json();
+        })
         .then((data) => {
           if (data.status === true) {
             const newQueryData = appointments.filter(
               (appoint) => appoint.id !== oneAppointment.id
             );
-            alert(data.msg);
+            toast.success(data.msg);
             setAppointments(newQueryData);
+          } else {
+            toast.error(data.msg || "Deletion failed");
           }
+        })
+        .catch((err) => {
+          toast.error("Something went wrong");
+          console.error("Delete error:", err);
         });
     }
   };
@@ -213,11 +228,23 @@ const Appointment = () => {
               {singleAppointment?.message}
             </p>
           </DialogBody>
-          <DialogFooter>
-            <div className="flex min-w-full">
+          <DialogFooter className="flex flex-col items-start gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={confirmDeleteChecked}
+                onChange={(e) => setConfirmDeleteChecked(e.target.checked)}
+              />
+              I confirm I want to delete this appointment
+            </label>
+
+            <div className="flex w-full justify-end gap-3">
               <Button
-                onClick={handleOpen}
-                className="mr-4 bg-orange-600"
+                onClick={() => {
+                  setConfirmDeleteChecked(false);
+                  handleOpen();
+                }}
+                className="bg-orange-600"
                 size="sm"
               >
                 <span>Close</span>
@@ -225,11 +252,13 @@ const Appointment = () => {
               <Button
                 onClick={() => {
                   handaleDeleteAppointment(singleAppointment);
+                  setConfirmDeleteChecked(false);
                   handleOpen();
                 }}
                 variant="gradient"
                 color="red"
                 size="sm"
+                disabled={!confirmDeleteChecked}
               >
                 <span>Delete</span>
               </Button>

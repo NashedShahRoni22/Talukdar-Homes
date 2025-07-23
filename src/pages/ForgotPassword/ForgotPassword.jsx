@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Input, Spinner } from "@material-tailwind/react";
 import { FaArrowLeft } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function ForgotPassword() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const isDisabled = email.trim("") === "";
 
@@ -29,20 +29,23 @@ export default function ForgotPassword() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email }),
-        },
+        }
       );
       const data = await res.json();
 
+      console.log(data);
+
       if (data?.status === true) {
         setLoading(false);
-        navigate(
-          `/reset-password?token=${encodeURIComponent(data?.data)}&email=${encodeURIComponent(email)}`,
-        );
+        toast.success(data?.msg);
+        setSuccessMessage(data?.msg);
       }
     } catch (error) {
       setLoading(false);
       console.error("forgot-password-error", error);
     }
+
+    e.target.reset();
   };
 
   return (
@@ -69,6 +72,12 @@ export default function ForgotPassword() {
               password
             </p>
           </div>
+
+          {successMessage && (
+            <p className="text-sm text-center mt-2 font-semibold text-green-500">
+              {successMessage}
+            </p>
+          )}
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <Input

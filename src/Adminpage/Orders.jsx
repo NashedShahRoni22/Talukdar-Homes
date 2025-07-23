@@ -10,6 +10,7 @@ export default function Orders() {
   const [orders, setOrders] = useState({
     data: [],
   });
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchPageData = useCallback(
     async (page = 1) => {
@@ -26,6 +27,7 @@ export default function Orders() {
         const data = await res.json();
         if (data.status === true) {
           setOrders(data.data);
+          setCurrentPage(page);
         }
       } catch (error) {
         console.error("orders", error);
@@ -35,6 +37,29 @@ export default function Orders() {
     },
     [user?.token]
   );
+
+  const updateOrderStatus = useCallback((orderId, confirmStatus) => {
+    setOrders((prevOrders) => ({
+      ...prevOrders,
+      data: prevOrders.data.map((order) =>
+        order.id === orderId
+          ? { ...order, confirmed_at: confirmStatus }
+          : { ...order }
+      ),
+    }));
+  }, []);
+
+  const updateDeletedOrders = useCallback((orderId) => {
+    setOrders((prevOrders) => ({
+      ...prevOrders,
+      data: prevOrders.data.filter((order) => order.id !== orderId),
+    }));
+  }, []);
+
+  // Keep refetch for manual refresh if needed
+  const refetchOrders = useCallback(() => {
+    fetchPageData(currentPage);
+  }, [fetchPageData, currentPage]);
 
   useEffect(() => {
     fetchPageData(1);
@@ -56,8 +81,8 @@ export default function Orders() {
               <thead className="border-b border-gray-200 text-left text-gray-900">
                 <tr>
                   <th className="p-3">Invoice ID</th>
-                  <th className="p-3">Ordered At</th>
-                  <th className="p-3">Email</th>
+                  <th className="p-3">Date</th>
+                  <th className="p-3">Name</th>
                   <th className="p-3">Payment Status</th>
                   <th className="p-3">Amount</th>
                   <th className="p-3">Order Status</th>
@@ -74,6 +99,8 @@ export default function Orders() {
                       orderIndex={i}
                       itemIndex={j}
                       itemCount={order.reference_items.length}
+                      onOrderUpdate={updateOrderStatus}
+                      onOrderDelete={updateDeletedOrders}
                     />
                   ))
                 )}

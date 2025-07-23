@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
+import { LuEye, LuEyeOff, LuMail, LuLock, LuArrowRight } from "react-icons/lu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AuthContext } from "../Providers/AuthProvider";
-import loginImg from "../assets/login.jpg";
+import toast from "react-hot-toast";
+import loginBg from "../assets/login.avif";
+import logo from "../assets/logo/favicon.png";
 
 const AdminLogin = () => {
   const location = useLocation();
@@ -12,6 +12,14 @@ const AdminLogin = () => {
   const { setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const from = location.state?.from?.pathname || "/";
 
@@ -64,87 +72,178 @@ const AdminLogin = () => {
   };
 
   return (
-    <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      {/* Left Side - Form */}
-      <div className="flex items-center justify-center p-4">
-        <form
-          onSubmit={handleLogin}
-          className="w-full rounded-md border p-6 sm:w-[70%] lg:py-14"
-        >
-          <h5 className="text-center text-xl font-semibold md:text-3xl">
-            Login
-          </h5>
-          <h5 className="mt-2 text-center text-sm font-semibold text-gray-600">
-            Please use given email and password
-          </h5>
-          <div className="mt-4 flex flex-col">
-            <Input type="email" name="email" label="Enter Email" />
+    <div className="min-h-screen flex">
+      {/* Left Panel - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          {/* Logo/Brand */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center size-20">
+              <img
+                src={logo}
+                alt="Talukdar Homes Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-gray-500">Sign in to your admin account</p>
+          </div>
 
-            <div className="mt-2 text-right">
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuMail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuLock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                >
+                  {showPassword ? (
+                    <LuEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <LuEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Forgot Password */}
+            <div className="text-right">
               <Link
                 to="/forgot-password"
-                className="text-xs text-primary hover:underline"
+                className="text-sm text-orange-500 hover:text-orange-600 font-medium"
               >
-                Forgot Password?
+                Forgot password?
               </Link>
             </div>
 
-            <div className="relative mt-0.5">
-              <Input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                label="Enter Password"
-                className="pr-10"
-              />
-              <IconButton
-                variant="text"
-                size="sm"
-                className="!absolute right-2 top-2/4 -translate-y-2/4"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <BsEyeSlash className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <BsEye className="h-5 w-5 text-gray-500" />
-                )}
-              </IconButton>
-            </div>
-
-            <Button
+            {/* Login Button */}
+            <button
               type="submit"
               disabled={loading}
-              className="mt-4 bg-primary"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
             >
-              {loading ? <Spinner className="mx-auto h-4 w-4" /> : "Login"}
-            </Button>
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <LuArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Sign Up Link */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-orange-500 hover:text-orange-600 font-semibold"
+              >
+                Sign up
+              </Link>
+            </p>
           </div>
-
-          <p className="mt-5 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="text-primary underline">
-              Signup
-            </Link>
-          </p>
-        </form>
-      </div>
-
-      {/* Right Side - Image */}
-      <div className="relative hidden md:block">
-        <img
-          src={loginImg}
-          alt="Construction materials"
-          className="h-screen w-full object-cover"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/35 p-6">
-          <h2 className="text-center text-6xl font-bold text-white drop-shadow-lg">
-            <span className="block">Built for Builders</span>
-            <span className="mt-4 block text-2xl italic">
-              Quality Materials. Every Order.
-            </span>
-          </h2>
         </div>
       </div>
-    </section>
+
+      {/* Right Panel - Hero Section */}
+      <div className="hidden lg:flex flex-1 bg-gray-900 relative overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('${loginBg}')`,
+          }}
+        ></div>
+
+        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex w-full flex-col justify-center items-center text-center p-12 text-white">
+          <div className="mb-8">
+            <div className="w-24 h-24 bg-white p-2 rounded-3xl flex items-center justify-center mb-8 mx-auto">
+              <img
+                src={logo}
+                alt="Talukdar Homes Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h2 className="text-5xl font-bold mb-6 leading-tight">
+              Everything
+              <br />
+              <span className="text-orange-400">You Build</span>
+            </h2>
+            <p className="text-xl text-gray-300 mb-12 max-w-md mx-auto leading-relaxed">
+              From timber to roofing, bricks to hardware. Complete building
+              supplies for every project.
+            </p>
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 gap-6 max-w-sm">
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Timber, decking & cladding</span>
+            </div>
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Bricks, blocks & concrete</span>
+            </div>
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Roofing & building hardware</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="absolute top-20 right-20 w-32 h-32 border border-orange-400 rounded-full opacity-20"></div>
+        <div className="absolute bottom-32 left-16 w-16 h-16 bg-orange-400 rounded-lg opacity-20 transform rotate-45"></div>
+        <div className="absolute top-1/2 right-8 w-8 h-8 bg-white rounded-full opacity-10"></div>
+      </div>
+    </div>
   );
 };
 

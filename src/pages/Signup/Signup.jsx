@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, IconButton, Input, Spinner } from "@material-tailwind/react";
 import toast from "react-hot-toast";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
-import login from "../../assets/login.jpg";
+import {
+  LuEye,
+  LuEyeOff,
+  LuUser,
+  LuMail,
+  LuLock,
+  LuUserPlus,
+} from "react-icons/lu";
+import { Link, useNavigate } from "react-router-dom";
+import signupImg from "../../assets/signup.avif";
+import logo from "../../assets/logo/favicon.png";
 
-export default function Signup() {
+const Signup = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -58,107 +65,241 @@ export default function Signup() {
   };
 
   return (
-    <section
-      style={{
-        background: `linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), url(${login}) center/cover`,
-      }}
-      className="flex min-h-screen items-center justify-center bg-gray-200 px-5"
-    >
-      <form
-        onSubmit={handleSubmit}
-        className="w-full rounded bg-white p-5 shadow md:w-1/2 lg:w-1/3"
-      >
-        <h5 className="text-center text-xl font-semibold md:text-3xl">
-          Signup
-        </h5>
-        <p className="mt-2 text-center text-sm font-semibold text-gray-600">
-          Please fill in the details below to create an account
-        </p>
-        {/* name */}
-        <div className="mt-5 flex flex-col gap-2.5">
-          <Input
-            label="Name"
-            name="name"
-            type="text"
-            required
-            value={formData.name}
-            placeholder="Enter name"
-            onChange={handleInputChange}
-          />
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            required
-            value={formData.email}
-            placeholder="Enter email address"
-            onChange={handleInputChange}
-          />
-          <div className="relative">
-            <Input
-              label="Password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              required
-              value={formData.password}
-              placeholder="Enter password"
-              onChange={handleInputChange}
-              className="pr-11"
-            />
-            <IconButton
-              variant="text"
-              size="sm"
-              className="!absolute right-2 top-2/4 -translate-y-2/4"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <BsEyeSlash className="h-5 w-5 text-gray-500" />
-              ) : (
-                <BsEye className="h-5 w-5 text-gray-500" />
-              )}
-            </IconButton>
-          </div>
-          <div className="relative">
-            <Input
-              label="Confirm Password"
-              name="password_confirmation"
-              type={showPassword ? "text" : "password"}
-              required
-              value={formData.password_confirmation}
-              placeholder="Enter confirm password"
-              onChange={handleInputChange}
-              className="pr-11"
-            />
-            <IconButton
-              variant="text"
-              size="sm"
-              className="!absolute right-2 top-2/4 -translate-y-2/4"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                <BsEyeSlash className="h-5 w-5 text-gray-500" />
-              ) : (
-                <BsEye className="h-5 w-5 text-gray-500" />
-              )}
-            </IconButton>
+    <div className="min-h-screen flex">
+      {/* Left Panel - Hero Section */}
+      <div className="hidden lg:flex flex-1  bg-gray-900 relative overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('${signupImg}')`,
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+
+        {/* Content */}
+        <div className="relative w-full z-10 flex flex-col justify-center items-center text-center p-12 text-white">
+          <div className="mb-8">
+            <div className="w-24 h-24 bg-white p-2 rounded-3xl flex items-center justify-center mb-8 mx-auto">
+              <img
+                src={logo}
+                alt="Talukdar Homes Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h2 className="text-5xl font-bold mb-6 leading-tight">
+              Join Our
+              <br />
+              <span className="text-orange-400">Community</span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-md mx-auto leading-relaxed">
+              Get access to premium building supplies and exclusive trade
+              pricing.
+            </p>
           </div>
 
-          <Button
-            type="submit"
-            disabled={isDisabled || loading}
-            className="bg-primary"
-          >
-            {loading ? <Spinner className="mx-auto h-4 w-4" /> : "Signup"}
-          </Button>
+          {/* Benefits */}
+          <div className="grid grid-cols-1 gap-6 max-w-sm">
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Exclusive trade discounts</span>
+            </div>
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Priority order processing</span>
+            </div>
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-300">Dedicated account manager</span>
+            </div>
+          </div>
         </div>
 
-        <p className="mt-5 text-center text-sm">
-          Already have an account?{" "}
-          <Link to="/login" className="text-primary underline">
-            Login
-          </Link>
-        </p>
-      </form>
-    </section>
+        {/* Decorative Elements */}
+        <div className="absolute top-20 left-20 w-32 h-32 border border-orange-400 rounded-full opacity-20"></div>
+        <div className="absolute bottom-32 right-16 w-16 h-16 bg-orange-400 rounded-lg opacity-20 transform rotate-45"></div>
+        <div className="absolute top-1/2 left-8 w-8 h-8 bg-white rounded-full opacity-10"></div>
+      </div>
+
+      {/* Right Panel - Signup Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          {/* Logo/Brand */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6">
+              <img
+                src={logo}
+                alt="Talukdar Homes Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Create Account
+            </h1>
+            <p className="text-gray-500">
+              Please fill in the details below to create an account
+            </p>
+          </div>
+
+          {/* Signup Form */}
+          <div className="space-y-6">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Full Name
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuUser className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl  focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuMail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl  focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Enter your email address"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuLock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl  focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                >
+                  {showPassword ? (
+                    <LuEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <LuEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Confirm Password Field */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <LuLock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password_confirmation"
+                  value={formData.password_confirmation}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl  focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                  placeholder="Confirm your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                >
+                  {showPassword ? (
+                    <LuEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <LuEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Password Match Indicator */}
+            {formData.password && formData.password_confirmation && (
+              <div className="text-sm">
+                {formData.password === formData.password_confirmation ? (
+                  <span className="text-green-600 flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    Passwords match
+                  </span>
+                ) : (
+                  <span className="text-red-600 flex items-center">
+                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                    Passwords don&apos;t match
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Signup Button */}
+            <button
+              type="submit"
+              disabled={isDisabled || loading}
+              onClick={handleSubmit}
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <LuUserPlus className="w-4 h-4" />
+                  <span>Create Account</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Login Link */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-orange-500 hover:text-orange-600 font-semibold"
+              >
+                Login
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Signup;

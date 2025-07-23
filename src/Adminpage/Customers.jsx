@@ -4,12 +4,15 @@ import { AuthContext } from "../Providers/AuthProvider";
 import toast from "react-hot-toast";
 import { formatDate } from "../utils/formatDate";
 import LoaderPage from "./LoaderPage";
+import CustomerDeleteModal from "../components/admin/CustomerDeleteModal";
 
 const Customers = () => {
   const { user } = useContext(AuthContext);
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -45,26 +48,6 @@ const Customers = () => {
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleDelete = (customerId) => {
-    fetch(`https://api.talukderhomes.com.au/api/clients/delete/${customerId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${user?.token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.status === true) {
-          toast.success("User deleted successfully!");
-          setCustomers(
-            customers.filter((customer) => customer.id !== customerId)
-          );
-        } else {
-          toast.error(data?.msg);
-        }
-      });
-  };
 
   if (loading) {
     return <LoaderPage />;
@@ -151,7 +134,10 @@ const Customers = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
                       <button
                         className="text-red-500 inline-flex items-center bg-red-50 px-3 py-1 rounded-lg gap-0.5 hover:text-red-700"
-                        onClick={() => handleDelete(customer.id)}
+                        onClick={() => {
+                          setSelectedCustomer(customer);
+                          setDeleteModalOpen(true);
+                        }}
                       >
                         <FiTrash2 />
                         <span className="mt-0.5">Delete</span>
@@ -173,6 +159,15 @@ const Customers = () => {
           </table>
         </div>
       </div>
+
+      <CustomerDeleteModal
+        open={deleteModalOpen}
+        handleClose={() => setDeleteModalOpen(false)}
+        customer={selectedCustomer}
+        onDelete={(id) =>
+          setCustomers(customers.filter((customer) => customer.id !== id))
+        }
+      />
     </section>
   );
 };

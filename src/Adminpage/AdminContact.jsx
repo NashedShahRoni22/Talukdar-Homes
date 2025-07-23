@@ -10,12 +10,15 @@ import {
 import { AiFillEye } from "react-icons/ai";
 import LoaderPage from "../Adminpage/LoaderPage";
 import { AuthContext } from "../Providers/AuthProvider";
+import toast from "react-hot-toast";
+import { LuMessageCircle } from "react-icons/lu";
 const AdminContact = () => {
   const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [loader, setLoader] = useState(true);
   const [appointments, setAppointments] = useState([]);
   const [singleAppointment, setSingleAppointment] = useState({});
+  const [confirmDeleteChecked, setConfirmDeleteChecked] = useState(false);
 
   const TABLE_HEAD = ["Name", "Phone number", "Email", "View"];
 
@@ -40,20 +43,22 @@ const AdminContact = () => {
 
   //Delete contacts
   const handaleDeleteAppointment = (oneAppointment) => {
-    const aggre = window.confirm(
-      `You want to delete, ${oneAppointment.name} message ?`,
-    );
-    if (aggre) {
+    if (confirmDeleteChecked) {
       fetch(
         `https://api.talukderhomes.com.au/api/contacts/delete/${oneAppointment.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
       )
         .then((res) => res.json())
         .then((data) => {
           if (data.status === true) {
             const newQueryData = appointments.filter(
-              (appoint) => appoint.id !== oneAppointment.id,
+              (appoint) => appoint.id !== oneAppointment.id
             );
-            alert(data.msg);
+            toast.success(data.msg);
             setAppointments(newQueryData);
           }
         });
@@ -74,7 +79,7 @@ const AdminContact = () => {
   // Slice the appointments array to get appointments for the current page
   const currentAppointments = appointments.slice(
     indexOfFirstAppointment,
-    indexOfLastAppointment,
+    indexOfLastAppointment
   );
 
   // Function to handle page navigation
@@ -103,79 +108,91 @@ const AdminContact = () => {
     );
   };
 
+  if (loader) {
+    return <LoaderPage />;
+  }
+
   return (
     <div className="p-5">
-      <h5 className="font-semibold">Messages : {appointments.length}</h5>
       <div>
-        {loader ? (
-          <LoaderPage />
+        {appointments && appointments?.length === 0 ? (
+          <div className="mt-10 text-center flex items-center flex-col text-gray-500">
+            <LuMessageCircle className="text-3xl text-primary text-center mb-2" />
+            <p className="text-lg font-medium">No messages found</p>
+            <p className="text-sm mt-1">
+              You have not received any contact messages yet.
+            </p>
+          </div>
         ) : (
-          <Card className="mt-5 h-full overflow-auto">
-            <table className="w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD.map((head) => (
-                    <th
-                      key={head}
-                      className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+          <>
+            <h5 className="font-semibold">Messages : {appointments.length}</h5>
+            <Card className="mt-5 h-full overflow-auto">
+              <table className="w-full min-w-max table-auto text-left">
+                <thead>
+                  <tr>
+                    {TABLE_HEAD.map((head) => (
+                      <th
+                        key={head}
+                        className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentAppointments.map((appointment, i) => (
-                  <tr key={i} className="even:bg-blue-gray-50/50">
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {appointment?.name}
-                      </Typography>
-                    </td>
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {appointment?.phone}
-                      </Typography>
-                    </td>
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {appointment?.email}
-                      </Typography>
-                    </td>
-                    <td className="flex p-4">
-                      <button
-                        onClick={() => handleOpen(appointment)}
-                        className="flex items-center gap-2 rounded border border-orange-600 px-2 py-1 text-orange-600 shadow"
-                      >
-                        <AiFillEye className="text-xl" />
-                        View
-                      </button>
-                    </td>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
+                </thead>
+                <tbody>
+                  {currentAppointments.map((appointment, i) => (
+                    <tr key={i} className="even:bg-blue-gray-50/50">
+                      <td className="p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {appointment?.name}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {appointment?.phone}
+                        </Typography>
+                      </td>
+                      <td className="p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {appointment?.email}
+                        </Typography>
+                      </td>
+                      <td className="flex p-4">
+                        <button
+                          onClick={() => handleOpen(appointment)}
+                          className="flex items-center gap-2 rounded border border-orange-600 px-2 py-1 text-orange-600 shadow"
+                        >
+                          <AiFillEye className="text-xl" />
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>{" "}
+            {renderPaginationButtons()}
+          </>
         )}
-        {renderPaginationButtons()}
 
         <Dialog open={open} handler={handleOpen} size="lg">
           <DialogHeader className="text-orange-600">
@@ -206,11 +223,23 @@ const AdminContact = () => {
               {singleAppointment?.message}
             </p>
           </DialogBody>
-          <DialogFooter>
-            <div className="flex min-w-full">
+          <DialogFooter className="flex flex-col items-start gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={confirmDeleteChecked}
+                onChange={(e) => setConfirmDeleteChecked(e.target.checked)}
+              />
+              I confirm I want to delete this appointment
+            </label>
+
+            <div className="flex w-full justify-end gap-3">
               <Button
-                onClick={handleOpen}
-                className="mr-4 bg-orange-600"
+                onClick={() => {
+                  setConfirmDeleteChecked(false);
+                  handleOpen();
+                }}
+                className="bg-orange-600"
                 size="sm"
               >
                 <span>Close</span>
@@ -218,11 +247,13 @@ const AdminContact = () => {
               <Button
                 onClick={() => {
                   handaleDeleteAppointment(singleAppointment);
+                  setConfirmDeleteChecked(false);
                   handleOpen();
                 }}
                 variant="gradient"
                 color="red"
                 size="sm"
+                disabled={!confirmDeleteChecked}
               >
                 <span>Delete</span>
               </Button>

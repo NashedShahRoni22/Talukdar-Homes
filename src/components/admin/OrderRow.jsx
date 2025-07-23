@@ -5,6 +5,7 @@ import OrderDetailsModal from "./OrderDetailsModal";
 import { AiFillEye, AiOutlineEye } from "react-icons/ai";
 import { LuCheck, LuEye, LuTrash } from "react-icons/lu";
 import { IoMdStopwatch } from "react-icons/io";
+import OrderDeleteModal from "./OrderDeleteModal";
 
 export default function OrderRow({
   order,
@@ -12,8 +13,11 @@ export default function OrderRow({
   orderIndex,
   itemIndex,
   itemCount,
+  onOrderUpdate,
+  onOrderDelete,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // total price of individual order in cents
   const totalPriceInCents = order.reference_items.reduce((acc, item) => {
@@ -26,6 +30,10 @@ export default function OrderRow({
 
   const toggleModal = () => {
     setShowModal((prev) => !prev);
+  };
+
+  const toggleDeleteModal = () => {
+    setShowDeleteModal((prev) => !prev);
   };
 
   return (
@@ -42,7 +50,10 @@ export default function OrderRow({
               {formatDate(order?.created_at)}
             </td>
             <td className="p-3 text-sm text-gray-700" rowSpan={itemCount}>
-              {order?.client?.email}
+              <div>
+                <p className="font-medium">{order?.client?.name}</p>
+                <p className="mt-1">{order?.client?.email}</p>
+              </div>
             </td>
 
             {/* Payment Status - Consistent with Financial UI Patterns */}
@@ -81,7 +92,7 @@ export default function OrderRow({
                 className={`inline-flex items-center min-w-[95px] text-center gap-1 justify-center px-3 py-1 rounded-md text-xs font-medium ${
                   order?.confirmed_at !== null
                     ? "bg-blue-50 text-blue-700 border border-blue-100"
-                    : "bg-gray-100 text-gray-700 border border-gray-200"
+                    : "bg-orange-50 text-orange-500 border border-orange-200"
                 }`}
               >
                 {order?.confirmed_at !== null ? (
@@ -108,6 +119,7 @@ export default function OrderRow({
                   View
                 </button>
                 <button
+                  onClick={toggleDeleteModal}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-red-100 bg-white text-red-400 hover:bg-red-50/50 transition-colors"
                   title="Delete order"
                 >
@@ -120,10 +132,20 @@ export default function OrderRow({
         )}
       </tr>
 
+      {/* details modal */}
       <OrderDetailsModal
         open={showModal}
         handleClose={toggleModal}
         order={order}
+        onOrderUpdate={onOrderUpdate}
+      />
+
+      {/* confirm delte modal */}
+      <OrderDeleteModal
+        open={showDeleteModal}
+        handleClose={toggleDeleteModal}
+        order={order}
+        onOrderDelete={onOrderDelete}
       />
     </>
   );

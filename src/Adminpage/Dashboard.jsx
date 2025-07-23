@@ -11,10 +11,9 @@ import {
 } from "react-icons/fa";
 import { AuthContext } from "../Providers/AuthProvider";
 import { getApi } from "../api/getApi";
-import OrderDetailsModal from "../components/admin/OrderDetailsModal";
 import { formatDate } from "../utils/formatDate";
-import { formatPrice } from "../utils/formatPrice";
-import { AiFillEye } from "react-icons/ai";
+import { LuCheck } from "react-icons/lu";
+import { IoMdStopwatch } from "react-icons/io";
 
 const metrics = [
   { label: "Appointments", key: "appointments", icon: FaCalendarAlt },
@@ -35,47 +34,14 @@ const quickLinks = [
 
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
-  const [dashboardData, setDashboardData] = useState({
-    appointments: 0,
-    messages: 0,
-    customers: 0,
-    orders: 0,
-    products: 0,
-    services: 0,
-    blogs: 0,
-  });
+  const [dashboardData, setDashboardData] = useState({});
   const [orders, setOrders] = useState([]);
   const [appointments, setAppointments] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const toggleModal = () => setShowModal((prev) => !prev);
-
-  const handleOpen = (order) => {
-    setSelectedOrder(order);
-    setShowModal(true);
-  };
-
-  const formateDate = (created_at) => {
-    const date = new Date(created_at);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
-  const formatTime = (created_at) => {
-    const date = new Date(created_at);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  // get all data
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const headers = {
         Authorization: `Bearer ${user?.token}`,
       };
@@ -90,25 +56,17 @@ export default function Dashboard() {
           getApi("https://api.talukderhomes.com.au/api/appointments", headers),
         ]);
 
-        if (dashboardRes?.status === true) {
-          setDashboardData(dashboardRes.data);
-        }
-
-        if (ordersRes?.status === true) {
-          setOrders(ordersRes?.data?.data); // optional: set state for orders
-        }
-
-        if (appointmentsRes?.status === true) {
-          setAppointments(appointmentsRes.data); // optional: set state for appointments
-        }
+        if (dashboardRes?.status) setDashboardData(dashboardRes.data);
+        if (ordersRes?.status) setOrders(ordersRes?.data?.data);
+        if (appointmentsRes?.status) setAppointments(appointmentsRes.data);
       } catch (error) {
-        console.error("Error fetching multiple dashboard data:", error);
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (user?.token) {
-      fetchData();
-    }
+    if (user?.token) fetchData();
   }, [user?.token]);
 
   return (
@@ -118,22 +76,33 @@ export default function Dashboard() {
       </h1>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map(({ label, key, icon: Icon }) => (
-          <div
-            key={label}
-            className="flex items-center gap-4 rounded border border-gray-200 p-4"
-          >
-            <div className="rounded-full bg-[#ff792d]/10 p-3 text-xl text-[#ff792d]">
-              <Icon />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">{label}</p>
-              <p className="text-xl font-bold text-gray-800">
-                {dashboardData[key] ?? 0}
-              </p>
-            </div>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="p-4 border rounded animate-pulse space-y-2"
+              >
+                <div className="h-8 w-8 bg-gray-200 rounded-full" />
+                <div className="h-4 w-24 bg-gray-200 rounded" />
+                <div className="h-5 w-12 bg-gray-300 rounded" />
+              </div>
+            ))
+          : metrics.map(({ label, key, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex items-center gap-4 rounded border border-gray-200 p-4"
+              >
+                <div className="rounded-full bg-[#ff792d]/10 p-3 text-xl text-[#ff792d]">
+                  <Icon />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">{label}</p>
+                  <p className="text-xl font-bold text-gray-800">
+                    {dashboardData[key] ?? 0}
+                  </p>
+                </div>
+              </div>
+            ))}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -143,48 +112,39 @@ export default function Dashboard() {
             Recent Appointments
           </h2>
           <ul className="text-sm">
-            {appointments?.length > 0 &&
-              appointments
-                ?.slice(0, 5)
-                ?.map(
-                  ({
-                    created_at,
-                    id,
-                    first_name,
-                    last_name,
-                    service_name,
-                    phone,
-                    email,
-                  }) => (
-                    <li
-                      key={id}
-                      className="border-b px-4 py-3 last:border-b-0 hover:bg-gray-50"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-gray-800">
-                            {`${first_name} ${last_name}`}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {service_name}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-gray-800">
-                            {formateDate(created_at)}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {formatTime(created_at)}
-                          </p>
-                        </div>
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <li key={i} className="px-4 py-3 animate-pulse border-b">
+                    <div className="h-4 bg-gray-200 w-1/3 mb-2 rounded" />
+                    <div className="h-4 bg-gray-200 w-1/2 rounded" />
+                  </li>
+                ))
+              : appointments.slice(0, 5).map((a) => (
+                  <li
+                    key={a.id}
+                    className="border-b px-4 py-3 last:border-b-0 hover:bg-gray-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-gray-800">
+                          {`${a.first_name} ${a.last_name}`}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {a.service_name}
+                        </p>
                       </div>
-                      <div className="mt-1 flex items-center text-sm text-gray-600">
-                        <span className="mr-2">{phone}</span>
-                        <span>{email}</span>
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-gray-800">
+                          {formatDate(a.created_at)}
+                        </p>
                       </div>
-                    </li>
-                  )
-                )}
+                    </div>
+                    <div className="mt-1 flex items-center text-sm text-gray-600">
+                      <span className="mr-2">{a.phone}</span>
+                      <span>{a.email}</span>
+                    </div>
+                  </li>
+                ))}
           </ul>
         </div>
 
@@ -194,36 +154,52 @@ export default function Dashboard() {
             Recent Orders
           </h2>
           <ul className="divide-y text-sm text-gray-700">
-            {orders?.slice(0, 5).map((order) => {
-              return (
-                <li
-                  key={order.id}
-                  onClick={() => handleOpen(order)}
-                  className="flex flex-wrap justify-between items-center gap-2 px-5 py-3 hover:bg-gray-50 transition-colors text-sm text-gray-700 border-b border-gray-200 cursor-pointer"
-                >
-                  <div className="w-full sm:w-auto font-medium text-gray-900">
-                    #{order?.invoice}
-                  </div>
-                  <div className="w-full sm:w-auto truncate">
-                    {order?.client?.email}
-                  </div>
-                  <div className="w-full sm:w-auto">
-                    {order?.gateway?.status === 1 ? "Paid" : "Unpaid"}
-                  </div>
-                  <div className="w-full sm:w-auto">
-                    {formatDate(order?.created_at)}
-                  </div>
-                </li>
-              );
-            })}
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <li key={i} className="px-5 py-3 animate-pulse border-b">
+                    <div className="h-4 w-1/3 bg-gray-200 rounded mb-2" />
+                    <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                  </li>
+                ))
+              : orders.slice(0, 5).map((order) => (
+                  <li
+                    key={order.id}
+                    className="grid grid-cols-4 gap-2 px-5 py-3 hover:bg-gray-50 transition-colors border-b"
+                  >
+                    <div className="w-full text-wrap sm:w-auto font-medium text-gray-900">
+                      #{order.invoice}
+                    </div>
+                    <div className="w-full text-wrap sm:w-auto">
+                      <p className="font-medium">{order?.client?.name}</p>
+                      <p className="mt-0.5">{order?.client?.email}</p>
+                    </div>
+                    <div className="w-full text-wrap sm:w-fit">
+                      <span
+                        className={`inline-flex items-center gap-0.5 px-3 py-1 rounded-md text-xs font-medium ${
+                          order?.gateway?.status === 1
+                            ? "bg-green-50 text-green-700 border border-green-100"
+                            : "bg-amber-50 text-amber-700 border border-amber-100"
+                        }`}
+                      >
+                        {order?.gateway?.status === 1 ? (
+                          <>
+                            <LuCheck className="shrink-0 text-sm" /> Paid via{" "}
+                            {order?.gateway?.title}
+                          </>
+                        ) : (
+                          <>
+                            <IoMdStopwatch className="text-base shrink-0" />{" "}
+                            Unpaid ({order?.gateway?.title})
+                          </>
+                        )}
+                      </span>
+                    </div>
+                    <div className="w-full text-wrap sm:w-auto">
+                      {formatDate(order.created_at)}
+                    </div>
+                  </li>
+                ))}
           </ul>
-
-          {/* Order Modal */}
-          <OrderDetailsModal
-            open={showModal}
-            handleClose={toggleModal}
-            order={selectedOrder}
-          />
         </div>
 
         {/* Quick Links */}
