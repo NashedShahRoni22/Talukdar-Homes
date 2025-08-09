@@ -10,7 +10,8 @@ import {
 } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import signupImg from "../../assets/signup.avif";
-import logo from "../../assets/logo/favicon.png";
+import favicon from "../../assets/logo/favicon.png";
+import logo from "../../assets/logo/logo-1.png";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -67,58 +68,60 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel - Hero Section */}
-      <div className="hidden lg:flex flex-1  bg-gray-900 relative overflow-hidden">
+      <div className="hidden lg:flex flex-1 bg-gray-900 relative overflow-hidden">
         {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
           style={{
             backgroundImage: `url('${signupImg}')`,
           }}
         ></div>
-        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+
+        {/* Glassmorphism Layer */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-0"></div>
 
         {/* Content */}
-        <div className="relative w-full z-10 flex flex-col justify-center items-center text-center p-12 text-white">
-          <div className="mb-8">
-            <div className="w-24 h-24 bg-white p-2 rounded-3xl flex items-center justify-center mb-8 mx-auto">
-              <img
-                src={logo}
-                alt="Talukdar Homes Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <h2 className="text-5xl font-bold mb-6 leading-tight">
-              Join Our
-              <br />
-              <span className="text-orange-400">Community</span>
+        <div className="relative z-10 flex w-full flex-col justify-center items-start text-left px-16 py-20 text-white">
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-8 max-w-lg border border-white/10 shadow-lg">
+            <img
+              src={logo}
+              alt="Talukdar Homes Logo"
+              className="w-36 object-contain"
+            />
+            <h2 className="mt-4 text-4xl font-bold leading-snug mb-2 tracking-tight">
+              Join <br />
+              <span className="text-orange-400">Talukdar Homes</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-md mx-auto leading-relaxed">
-              Get access to premium building supplies and exclusive trade
-              pricing.
+            <p className="text-base text-white/90 mb-8 leading-relaxed">
+              Create your account to start ordering building materials online
+              and manage your purchases with ease.
             </p>
-          </div>
 
-          {/* Benefits */}
-          <div className="grid grid-cols-1 gap-6 max-w-sm">
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Exclusive trade discounts</span>
+            <div className="grid grid-cols-1 gap-4 text-left">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                <span className="text-white/90">Place and track orders</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                <span className="text-white/90">Save delivery details</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                <span className="text-white/90">View order history</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Priority order processing</span>
-            </div>
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Dedicated account manager</span>
-            </div>
+
+            <p className="text-sm text-white/70 mt-4">
+              Signing up is quick and easy - no payment required until checkout.
+            </p>
           </div>
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute top-20 left-20 w-32 h-32 border border-orange-400 rounded-full opacity-20"></div>
-        <div className="absolute bottom-32 right-16 w-16 h-16 bg-orange-400 rounded-lg opacity-20 transform rotate-45"></div>
-        <div className="absolute top-1/2 left-8 w-8 h-8 bg-white rounded-full opacity-10"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 border border-orange-400 rounded-full opacity-20"></div>
+        <div className="absolute bottom-32 left-16 w-16 h-16 bg-orange-400 rounded-lg opacity-20 transform rotate-45"></div>
+        <div className="absolute top-1/2 right-8 w-8 h-8 bg-white rounded-full opacity-10"></div>
       </div>
 
       {/* Right Panel - Signup Form */}
@@ -126,13 +129,16 @@ const Signup = () => {
         <div className="w-full max-w-md">
           {/* Logo/Brand */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6"
+            >
               <img
-                src={logo}
+                src={favicon}
                 alt="Talukdar Homes Logo"
                 className="w-full h-full object-contain"
               />
-            </div>
+            </Link>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Create Account
             </h1>
@@ -278,7 +284,7 @@ const Signup = () => {
               ) : (
                 <>
                   <LuUserPlus className="w-4 h-4" />
-                  <span>Create Account</span>
+                  <span>Create My Account</span>
                 </>
               )}
             </button>

@@ -4,7 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 import toast from "react-hot-toast";
 import loginBg from "../assets/login.avif";
-import logo from "../assets/logo/favicon.png";
+import favicon from "../assets/logo/favicon.png";
+import logo from "../assets/logo/logo-1.png";
 
 const AdminLogin = () => {
   const location = useLocation();
@@ -78,17 +79,20 @@ const AdminLogin = () => {
         <div className="w-full max-w-md">
           {/* Logo/Brand */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center size-20">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center size-20"
+            >
               <img
-                src={logo}
+                src={favicon}
                 alt="Talukdar Homes Logo"
                 className="w-full h-full object-contain"
               />
-            </div>
+            </Link>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Welcome Back
             </h1>
-            <p className="text-gray-500">Sign in to your admin account</p>
+            <p className="text-gray-500">Sign in to your account</p>
           </div>
 
           {/* Login Form */}
@@ -192,49 +196,57 @@ const AdminLogin = () => {
       <div className="hidden lg:flex flex-1 bg-gray-900 relative overflow-hidden">
         {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
           style={{
             backgroundImage: `url('${loginBg}')`,
           }}
         ></div>
 
-        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+        {/* Glassmorphism Layer */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-0"></div>
 
         {/* Content */}
-        <div className="relative z-10 flex w-full flex-col justify-center items-center text-center p-12 text-white">
-          <div className="mb-8">
-            <div className="w-24 h-24 bg-white p-2 rounded-3xl flex items-center justify-center mb-8 mx-auto">
-              <img
-                src={logo}
-                alt="Talukdar Homes Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <h2 className="text-5xl font-bold mb-6 leading-tight">
-              Everything
-              <br />
-              <span className="text-orange-400">You Build</span>
+        <div className="relative z-10 flex w-full flex-col justify-center items-start text-left px-16 py-20 text-white">
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-8 max-w-lg border border-white/10 shadow-lg">
+            <img
+              src={logo}
+              alt="Talukdar Homes Logo"
+              className="w-36 object-contain"
+            />
+            <h2 className="mt-4 text-4xl font-bold leading-snug mb-2 tracking-tight">
+              Supplying What <br />
+              <span className="text-orange-400">Builders Trust</span>
             </h2>
-            <p className="text-xl text-gray-300 mb-12 max-w-md mx-auto leading-relaxed">
-              From timber to roofing, bricks to hardware. Complete building
-              supplies for every project.
+            <p className="text-base text-white/90 mb-8 leading-relaxed">
+              From premium timber and structural materials to tools, doors, and
+              fasteners. We stock everything your project demands. Reliable
+              supply for tradies, contractors and serious DIYers.
             </p>
-          </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-1 gap-6 max-w-sm">
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Timber, decking & cladding</span>
+            <div className="grid grid-cols-1 gap-4 text-left">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+                <span className="text-white/90">
+                  Timber, decking & flooring
+                </span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+                <span className="text-white/90">
+                  Cladding, sheeting & doors
+                </span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+                <span className="text-white/90">
+                  Hardware, tools & adhesives
+                </span>
+              </div>
             </div>
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Bricks, blocks & concrete</span>
-            </div>
-            <div className="flex items-center space-x-3 text-left">
-              <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-              <span className="text-gray-300">Roofing & building hardware</span>
-            </div>
+
+            <p className="text-sm text-white/70 mt-4">
+              ...and everything else you need - from insulation to safety gear.
+            </p>
           </div>
         </div>
 
